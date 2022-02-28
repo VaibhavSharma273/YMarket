@@ -24,13 +24,16 @@ class Post(models.Model):
     content = models.CharField(max_length=63206) # FB's max char count
     date_posted = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey('users.User', on_delete=models.CASCADE) # TODO: check with User and integrate
-    price = models.DecimalField(max_digits=6, decimal_places=2)
+    price = models.DecimalField(max_digits=9, decimal_places=2)
     buy = models.BooleanField(null=False) # True for buy, False for sell
     images = models.ImageField(upload_to=get_image_path, blank=True, null=True)
     isSold = models.BooleanField(default=False)
     category = models.CharField(max_length=32)
     isAnonymous = models.BooleanField(default=False)
     isDraft = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.title
 
 
 
