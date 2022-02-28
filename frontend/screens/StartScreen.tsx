@@ -15,7 +15,7 @@ export default function StartScreen({ navigation }: any) {
       <View style={styles.separator} />
       <TouchableOpacity 
         style={styles.button}
-        onPress={() => navigation.navigate('Register')}>
+        onPress={() => navigation.navigate('RegisterScreen')}>
         <Text style={styles.title}>Register</Text>
         </TouchableOpacity>
     </View>

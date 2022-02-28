@@ -17,14 +17,24 @@ import NotFoundScreen from '../screens/NotFoundScreen';
 import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 import StartScreen from '../screens/StartScreen';
+import RegisterScreen from '../screens/RegisterScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+
+const LightTheme = {
+  dark: false,
+  colors: {
+    ...DefaultTheme.colors,
+  }
+}
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      // theme={colorScheme === 'dark' ? DefaultTheme : DefaultTheme}
+      theme={LightTheme}
+      >
       <RootNavigator />
     </NavigationContainer>
   );
@@ -40,6 +50,7 @@ function RootNavigator() {
   return (
     <Stack.Navigator initialRouteName="StartScreen" screenOptions={{headerShown: false,}}>
       <Stack.Screen name="StartScreen" component={StartScreen} />
+      <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
