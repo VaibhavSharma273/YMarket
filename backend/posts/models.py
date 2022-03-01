@@ -21,12 +21,11 @@ def get_image_path(instance, filename):
 class Post(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=32)
-    content = models.CharField(max_length=63206) # FB's max char count
+    content = models.TextField()
     date_posted = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey('users.User', on_delete=models.CASCADE) # TODO: check with User and integrate
     price = models.DecimalField(max_digits=9, decimal_places=2)
     buy = models.BooleanField(null=False) # True for buy, False for sell
-    images = models.ImageField(upload_to=get_image_path, blank=True, null=True)
     isSold = models.BooleanField(default=False)
     category = models.CharField(max_length=32)
     isAnonymous = models.BooleanField(default=False)
@@ -37,3 +36,6 @@ class Post(models.Model):
 
 
 
+class PostImages(models.Model):
+    post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to=get_image_path, blank=True, null=True)
