@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post, PostImages
+from .models import Post, PostImage
 
 class PostForm(forms.ModelForm):
     title = forms.CharField(max_length=128)
