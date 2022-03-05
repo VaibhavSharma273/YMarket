@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'posts.apps.PostsConfig', 
     'users.apps.UsersConfig',
 ]
@@ -71,6 +72,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
+AUTH_USER_MODEL = 'users.YmarketUser'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
