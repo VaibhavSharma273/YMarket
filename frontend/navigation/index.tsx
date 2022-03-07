@@ -16,8 +16,11 @@ import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
-import StartScreen from '../screens/StartScreen';
-import RegisterScreen from '../screens/RegisterScreen';
+import UserProfileScreen from '../screens/UserProfileScreen';
+import StartScreen from '../screens/auth/StartScreen';
+import RegisterScreen from '../screens/auth/RegisterScreen';
+import CreateProfileScreen from '../screens/auth/CreateProfileScreen';
+import LoginScreen from '../screens/auth/LoginScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 
@@ -51,6 +54,8 @@ function RootNavigator() {
     <Stack.Navigator initialRouteName="StartScreen" screenOptions={{headerShown: false,}}>
       <Stack.Screen name="StartScreen" component={StartScreen} />
       <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+      <Stack.Screen name="CreateProfileScreen" component={CreateProfileScreen} />
+      <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
@@ -102,6 +107,14 @@ function BottomTabNavigator() {
         component={TabTwoScreen}
         options={{
           title: 'Tab Two',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="UserProfile"
+        component={UserProfileScreen}
+        options={{
+          title: 'UserProfile',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />

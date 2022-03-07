@@ -15,6 +15,8 @@ const linking: LinkingOptions<RootStackParamList> = {
     screens: {
       StartScreen: 'start',
       RegisterScreen: 'register',
+      CreateProfileScreen: 'createProfile',
+      LoginScreen: 'login',
       Root: {
         screens: {
           TabOne: {
@@ -25,6 +27,11 @@ const linking: LinkingOptions<RootStackParamList> = {
           TabTwo: {
             screens: {
               TabTwoScreen: 'two',
+            },
+          },
+          UserProfile: {
+            screens: {
+              UserProfileScreen: 'userProfile',
             },
           },
         },

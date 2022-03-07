@@ -1,34 +1,30 @@
 import React, { useState } from 'react'
 import { StyleSheet } from 'react-native';
 
-import EditScreenInfo from '../components/EditScreenInfo';
-import { Text, View } from '../components/Themed';
-import TextInput from '../components/TextInput'
-import BackButton from '../components/BackButton';
+import EditScreenInfo from '../../components/EditScreenInfo';
+import { Text, View } from '../../components/Themed';
+import TextInput from '../../components/TextInput'
+import BackButton from '../../components/BackButton';
 import { TouchableOpacity } from 'react-native'
 // import { RootStackParamList, RootTabScreenProps } from '../types';
 // import { StackScreenProps } from '@react-navigation/stack';
 
-import { theme } from '../assets/theme'
-import { nameValidator } from '../helpers/nameValidator';
-import { emailValidator } from '../helpers/emailValidator';
-import { phoneValidator } from '../helpers/phoneValidator';
+import { theme } from '../../assets/theme'
+import { nameValidator } from '../../helpers/nameValidator';
+import { phoneValidator } from '../../helpers/phoneValidator';
 
 export default function RegisterScreen({ navigation }: any) {
     const [firstName, setFirstName] = useState({ value: '', error: '' })
     const [lastName, setLastName] = useState({ value: '', error: '' })
-    const [email, setEmail] = useState({ value: '', error: '' })
     const [phone, setPhone] = useState({ value: '', error: '' })
 
     const onSignUpPressed = () => {
         const firstNameError = nameValidator(firstName.value)
         const lastNameError = nameValidator(lastName.value)
-        const emailError = emailValidator(email.value)
         const phoneError = phoneValidator(phone.value)
-        if (firstNameError || lastNameError || emailError || phoneError) {
+        if (firstNameError || lastNameError || phoneError) {
             setFirstName({...firstName, error: firstNameError})
             setLastName({...lastName, error: lastNameError})
-            setEmail({...email, error: emailError})
             setPhone({...phone, error: phoneError})
             return
         }
@@ -59,19 +55,6 @@ export default function RegisterScreen({ navigation }: any) {
         onChangeText={(text: any) => setLastName({ value: text, error: '' })}
         error={!!lastName.error}
         errorText={lastName.error}
-        description
-      />
-      <TextInput
-        label='Yale Email'
-        returnKeyType="next"
-        value={email.value}
-        onChangeText={(text: any) => setEmail({ value: text, error: '' })}
-        error={!!email.error}
-        errorText={email.error}
-        autoCapitalize="none"
-        autoCompleteType="email"
-        textContentType="emailAddress"
-        keyboardType="email-address"
         description
       />
       <TextInput
@@ -120,6 +103,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#0f4d92",
     padding: 10,
-    marginTop: 20
+    marginTop: 20,
+    width: 100
   }
 });
