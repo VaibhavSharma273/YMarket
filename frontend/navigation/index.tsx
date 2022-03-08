@@ -6,7 +6,7 @@
 import { FontAwesome } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack'; //error here
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ColorSchemeName, Pressable } from 'react-native';
 
@@ -24,20 +24,11 @@ import LoginScreen from '../screens/auth/LoginScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 
-const LightTheme = {
-  dark: false,
-  colors: {
-    ...DefaultTheme.colors,
-  }
-}
-
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
-      // theme={colorScheme === 'dark' ? DefaultTheme : DefaultTheme}
-      theme={LightTheme}
-      >
+      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <RootNavigator />
     </NavigationContainer>
   );
@@ -56,7 +47,7 @@ function RootNavigator() {
       <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
       <Stack.Screen name="CreateProfileScreen" component={CreateProfileScreen} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
-      <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
+      <Stack.Screen name="Root" component={BottomTabNavigator} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
@@ -79,6 +70,7 @@ function BottomTabNavigator() {
       initialRouteName="TabOne"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
+        headerShown: false,
       }}>
       <BottomTab.Screen
         name="TabOne"
