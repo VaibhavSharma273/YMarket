@@ -1,4 +1,4 @@
-dj-rest-auth==2.2.3
+asgiref==3.5.0
 Django==4.0.3
 django-allauth==0.49.0
 djangorestframework==3.13.1
