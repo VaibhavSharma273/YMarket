@@ -13,32 +13,26 @@ import { theme } from '../../assets/theme'
 import { emailValidator } from '../../helpers/emailValidator';
 import { passwordValidator } from '../../helpers/passwordValidator';
 
-export default function RegisterScreen({ navigation }: any) {
+export default function ResetPasswordScreen({ navigation }: any) {
     const [email, setEmail] = useState({ value: '', error: '' })
-    const [password, setPassword] = useState({ value: '', error: '' })
 
-    const onLoginPressed = () => {
+    const sendResetPasswordEmail = () => {
         const emailError = emailValidator(email.value)
-        const passwordError = passwordValidator(password.value)
-        if (emailError || passwordError) {
+        if (emailError) {
             setEmail({...email, error: emailError})
-            setPassword({...password, error: passwordError})
             return
         }
-        navigation.reset({
-            index: 0,
-            routes: [{ name: 'Root' }]
-        })
+        navigation.navigate('LoginScreen')
     }
 
   return (
     <View style={styles.container}>
         <BackButton goBack={navigation.goBack} />
       {/* <View style={styles.separator} /> */}
-      <Text style={styles.header}>Welcome Back!</Text>
+      <Text style={styles.header}>Restore Password</Text>
       <TextInput
         label='Yale Email'
-        returnKeyType="next"
+        returnKeyType="done"
         value={email.value}
         onChangeText={(text: any) => setEmail({ value: text, error: '' })}
         error={!!email.error}
@@ -47,36 +41,14 @@ export default function RegisterScreen({ navigation }: any) {
         autoCompleteType="email"
         textContentType="emailAddress"
         keyboardType="email-address"
-        description
+        description="You will receive an email with a password reset link."
       />
-      <TextInput
-        label="Password"
-        returnKeyType="done"
-        value={password.value}
-        onChangeText={(text: any) => setPassword({ value: text, error: '' })}
-        error={!!password.error}
-        errorText={password.error}
-        secureTextEntry
-      />
-      <View style={styles.forgotPassword}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('ResetPasswordScreen')}
-        >
-          <Text style={styles.forgot}>Forgot your password?</Text>
-        </TouchableOpacity>
-      </View>
+      
       <TouchableOpacity 
         style={styles.button}
-        onPress={onLoginPressed}>
-        <Text style={styles.title}>Login</Text>
+        onPress={sendResetPasswordEmail}>
+        <Text style={styles.title}>Send Instructions</Text>
         </TouchableOpacity>
-    <View style={styles.separator} />
-    <View style={styles.row}>
-        <Text>Don’t have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.replace('RegisterScreen')}>
-          <Text style={styles.link}>Sign up</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }
@@ -119,7 +91,7 @@ const styles = StyleSheet.create({
     width: '50%',
   },
   forgotPassword: {
-    width: '80%',
+    width: '100%',
     alignItems: 'flex-end',
     marginBottom: 24,
   },

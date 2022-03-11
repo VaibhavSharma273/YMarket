@@ -19,58 +19,20 @@ export default function RegisterScreen({ navigation }: any) {
     const [phone, setPhone] = useState({ value: '', error: '' })
 
     const onSignUpPressed = () => {
-        const firstNameError = nameValidator(firstName.value)
-        const lastNameError = nameValidator(lastName.value)
-        const phoneError = phoneValidator(phone.value)
-        if (firstNameError || lastNameError || phoneError) {
-            setFirstName({...firstName, error: firstNameError})
-            setLastName({...lastName, error: lastNameError})
-            setPhone({...phone, error: phoneError})
-            return
-        }
         navigation.reset({
             index: 0,
-            routes: [{ name: 'Root' }]
+            routes: [{ name: 'LoginScreen' }]
         })
     }
 
   return (
     <View style={styles.container}>
         <BackButton goBack={navigation.goBack} />
-      {/* <View style={styles.separator} /> */}
-      <Text style={styles.header}>Create Account</Text>
-      <TextInput
-        label='First Name'
-        returnKeyType="next"
-        value={firstName.value}
-        onChangeText={(text: any) => setFirstName({ value: text, error: '' })}
-        error={!!firstName.error}
-        errorText={firstName.error}
-        description
-      />
-      <TextInput
-        label='Last Name'
-        returnKeyType="next"
-        value={lastName.value}
-        onChangeText={(text: any) => setLastName({ value: text, error: '' })}
-        error={!!lastName.error}
-        errorText={lastName.error}
-        description
-      />
-      <TextInput
-        label='Phone Number'
-        returnKeyType="next"
-        value={phone.value}
-        onChangeText={(text: any) => setPhone({ value: text, error: '' })}
-        error={!!phone.error}
-        errorText={phone.error}
-        keyboardType="numeric"
-        description
-      />
+      {/* <View style={styles.separator} /> */}      
       <TouchableOpacity 
         style={styles.button}
         onPress={onSignUpPressed}>
-        <Text style={styles.title}>Sign Up</Text>
+        <Text style={styles.title}>Confirm Email</Text>
         </TouchableOpacity>
     </View>
   );

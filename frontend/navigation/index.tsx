@@ -19,7 +19,8 @@ import TabTwoScreen from '../screens/TabTwoScreen';
 import UserProfileScreen from '../screens/UserProfileScreen';
 import StartScreen from '../screens/auth/StartScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
-import CreateProfileScreen from '../screens/auth/CreateProfileScreen';
+import ConfirmationScreen from '../screens/auth/ConfirmationScreen';
+import ResetPasswordScreen from '../screens/auth/ResetPasswordScreen';
 import LoginScreen from '../screens/auth/LoginScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
@@ -45,7 +46,8 @@ function RootNavigator() {
     <Stack.Navigator initialRouteName="StartScreen" screenOptions={{headerShown: false,}}>
       <Stack.Screen name="StartScreen" component={StartScreen} />
       <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-      <Stack.Screen name="CreateProfileScreen" component={CreateProfileScreen} />
+      <Stack.Screen name="ConfirmationScreen" component={ConfirmationScreen} />
+      <Stack.Screen name="ResetPasswordScreen" component={ResetPasswordScreen} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="Root" component={BottomTabNavigator} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />

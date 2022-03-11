@@ -15,7 +15,8 @@ const linking: LinkingOptions<RootStackParamList> = {
     screens: {
       StartScreen: 'start',
       RegisterScreen: 'register',
-      CreateProfileScreen: 'createProfile',
+      ConfirmationScreen: 'confirm',
+      ResetPasswordScreen: 'resetPassword',
       LoginScreen: 'login',
       Root: {
         screens: {

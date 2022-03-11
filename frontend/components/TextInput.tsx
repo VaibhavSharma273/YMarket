@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 13,
-    color: theme.colors.secondary,
+    color: 'gray',
     paddingTop: 0,
   },
   error: {
