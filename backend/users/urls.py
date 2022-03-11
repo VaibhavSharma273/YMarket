@@ -1,9 +1,10 @@
 from django.urls import path, re_path
 from dj_rest_auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetConfirmView, PasswordChangeView
 from dj_rest_auth.registration.views import RegisterView, VerifyEmailView, ResendEmailVerificationView
-from users.views import JsonConfirmEmailView
+from users.views import JsonConfirmEmailView, UserProfileView
 
 urlpatterns = [
+    path('profile/<uuid:pk>/', UserProfileView.as_view(), name='user-profile-list'),
     path('register/', RegisterView.as_view(), name='account_signup'),
     path('login/', LoginView.as_view(), name='account_login'),
     path('logout/', LogoutView.as_view(), name='account_logout'),

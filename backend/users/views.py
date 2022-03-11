@@ -1,19 +1,21 @@
 from django.http import Http404
-from .models import YmarketUser
-from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
-from .serializers import YmarketUserSerializer
+from .serializers import UserProfileSerializer
 from django.contrib import messages
 from allauth.account.views import ConfirmEmailView, get_adapter
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.contrib.auth import get_user_model
+
+UserModel = get_user_model()
 
 # Create your views here.
-class UserList(ListCreateAPIView):
+class UserProfileView(RetrieveAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = YmarketUser.objects.all()
-    serializer_class = YmarketUserSerializer
+    queryset = UserModel.objects.all()
+    serializer_class = UserProfileSerializer
 
 class JsonConfirmEmailView(APIView, ConfirmEmailView):
     def get(self, *args, **kwargs):

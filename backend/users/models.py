@@ -1,16 +1,17 @@
 import uuid 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.utils.translation import gettext_lazy as _
 from .managers import YmarketUserManager
 
 # Create your models here.
 class YmarketUser(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = None
-    first_name = models.CharField(_("first name"), max_length=150, blank=False)
-    last_name = models.CharField(_("last name"), max_length=150, blank=False)
-    email = models.EmailField(_("email address"), unique=True, blank=False)
+    first_name = models.CharField(max_length=150, blank=False)
+    last_name = models.CharField(max_length=150, blank=False)
+    email = models.EmailField(unique=True, blank=False)
+    biography = models.TextField(blank=True)
+    avatar_url = models.CharField(max_length=250, blank=True)
     
     objects = YmarketUserManager()
 
