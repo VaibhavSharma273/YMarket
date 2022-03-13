@@ -79,19 +79,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-AUTH_USER_MODEL = 'users.YmarketUser'
-
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
-    ]
-}
 # django
 SITE_ID = 1
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+AUTH_USER_MODEL = 'users.YmarketUser'
 
 AUTHENTICATION_BACKENDS = [
-    'allauth.account.auth_backends.AuthenticationBackend',
     'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -100,6 +95,13 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_HOST_USER = "yalemarketapp@gmail.com"
 EMAIL_HOST_PASSWORD = "wtzimcshojbqopqm"
 EMAIL_PORT = 587
+
+# django rest
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+    ]
+}
 
 # allauth
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
