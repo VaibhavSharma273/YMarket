@@ -4,7 +4,7 @@ from dj_rest_auth.registration.views import RegisterView, VerifyEmailView, Resen
 from users.views import JsonConfirmEmailView, UserProfileView
 
 urlpatterns = [
-    path('profile/<uuid:pk>/', UserProfileView.as_view(), name='user-profile-list'),
+    path('profile/<uuid:pk>/', UserProfileView.as_view(), name='profile-detail'),
     path('register/', RegisterView.as_view(), name='account_signup'),
     path('login/', LoginView.as_view(), name='account_login'),
     path('logout/', LogoutView.as_view(), name='account_logout'),
