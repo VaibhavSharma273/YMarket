@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import { StyleSheet } from 'react-native';
 
-import EditScreenInfo from '../../components/EditScreenInfo';
+import API from '../../api/ymarket_api';
+
 import { Text, View } from '../../components/Themed';
 import TextInput from '../../components/TextInput'
 import BackButton from '../../components/BackButton';
 import { TouchableOpacity } from 'react-native'
-// import { RootStackParamList, RootTabScreenProps } from '../types';
-// import { StackScreenProps } from '@react-navigation/stack';
 
 import { theme } from '../../assets/theme'
 import { emailValidator } from '../../helpers/emailValidator';
@@ -17,7 +16,7 @@ export default function RegisterScreen({ navigation }: any) {
     const [email, setEmail] = useState({ value: '', error: '' })
     const [password, setPassword] = useState({ value: '', error: '' })
 
-    const onLoginPressed = () => {
+    const onLoginPressed = async () => {
         const emailError = emailValidator(email.value)
         const passwordError = passwordValidator(password.value)
         if (emailError || passwordError) {
@@ -25,15 +24,30 @@ export default function RegisterScreen({ navigation }: any) {
             setPassword({...password, error: passwordError})
             return
         }
-        navigation.reset({
+
+        const email_val = email.value;
+        const password_val = password.value;
+
+        const response = await API.post('users/login/', {email: email_val, password: password_val})
+        .then((response) => {
+          console.log(response.data)
+          navigation.reset({
             index: 0,
             routes: [{ name: 'Root' }]
+          })
         })
+        .catch((error) => {
+          console.log(error)
+          if (error.response) {
+            setPassword({...password, error: error.response.data[Object.keys(error.response.data)[0]]})
+          }
+        });
     }
 
   return (
     <View style={styles.container}>
-        <BackButton goBack={navigation.goBack} />
+      {/* back button doesnt work if coming from email confirmation */}
+      <BackButton goBack={navigation.goBack} />
       {/* <View style={styles.separator} /> */}
       <Text style={styles.header}>Welcome Back!</Text>
       <TextInput

@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { StyleSheet } from 'react-native';
 
+import API from '../../api/ymarket_api';
+
 import { Text, View } from '../../components/Themed';
 import TextInput from '../../components/TextInput'
 import BackButton from '../../components/BackButton';
@@ -18,7 +20,7 @@ export default function RegisterScreen({ navigation }: any) {
     const [password, setPassword] = useState({ value: '', error: '' })
     const [passwordConfirm, setPasswordConfirm] = useState({ value: '', error: '' })
 
-    const onSignUpPressed = () => {
+    const onSignUpPressed = async () => {
         const firstNameError = nameValidator(firstName.value)
         const lastNameError = nameValidator(lastName.value)
         const emailError = emailValidator(email.value)
@@ -28,7 +30,27 @@ export default function RegisterScreen({ navigation }: any) {
             setPassword({...password, error: passwordError})
             return
         }
-        navigation.navigate('ConfirmationScreen')
+
+        const email_val = email.value;
+        const firstName_val = firstName.value;
+        const lastName_val = lastName.value;
+        const password_val = password.value;
+        const passwordConfirm_val = passwordConfirm.value;
+
+        const response = await API.post('users/register/', {email: email_val, first_name: firstName_val, last_name: lastName_val, password1: password_val, password2: passwordConfirm_val})
+        .then(function(response) {
+          navigation.navigate('ConfirmationScreen')
+        })
+        .catch(function(error) {
+          if (error.response) {
+            setPassword({...password, error: error.response.data[Object.keys(error.response.data)[0]]})
+          }
+          else {
+            console.log(error.toJSON());
+            console.log('Error', error.message);
+          }
+          
+        })
     }
 
   return (
