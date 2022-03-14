@@ -1,11 +1,12 @@
-from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from posts.models import Post 
+from rest_framework import serializers
 from dj_rest_auth.registration.serializers import RegisterSerializer
 
 UserModel = get_user_model()
 
 class YmarketUserSerializer(serializers.ModelSerializer):
-
+    posts = serializers.PrimaryKeyRelatedField(many=True, queryset=Post.objects.all())
     class Meta:
         model = UserModel
         fields = ('id', 'first_name', 'last_name', 'email', 'password')

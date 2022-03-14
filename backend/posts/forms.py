@@ -13,5 +13,5 @@ class PostForm(forms.ModelForm):
 class ImageForm(forms.ModelForm):
     image = forms.ImageField(label='Image')    
     class Meta:
-        model = PostImages
+        model = PostImage
         fields = ('image', )

@@ -1,13 +1,13 @@
 from django.http import Http404
-from .models import YmarketUser
-from rest_framework.generics import ListCreateAPIView
-from rest_framework.permissions import IsAuthenticated
-from .serializers import YmarketUserSerializer
 from django.contrib import messages
-from allauth.account.views import ConfirmEmailView, get_adapter
+from .models import YmarketUser
+from .serializers import YmarketUserSerializer
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.generics import ListCreateAPIView
+from rest_framework.permissions import IsAuthenticated
+from allauth.account.views import ConfirmEmailView, get_adapter
 
 # Create your views here.
 class UserList(ListCreateAPIView):
