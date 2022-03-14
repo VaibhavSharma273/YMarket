@@ -9,6 +9,9 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post 
         fields = ['id', 'title', 'content', 'date_posted', 'author', 'price', 'category', 'postimages']
 
+class PostUpdateSerializer(PostSerializer):
+    title = serializers.CharField(max_length=64, required=False)
+
 class PostImageSerializer(serializers.ModelSerializer):
     class Meta:
 

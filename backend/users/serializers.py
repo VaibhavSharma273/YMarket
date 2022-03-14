@@ -1,15 +1,17 @@
 from django.contrib.auth import get_user_model
-from posts.models import Post 
 from rest_framework import serializers
 from dj_rest_auth.registration.serializers import RegisterSerializer
 
 UserModel = get_user_model()
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    posts = serializers.PrimaryKeyRelatedField(many=True, queryset=Post.objects.all())
+    posts = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    first_name = serializers.CharField(max_length=150, required=False)
+    last_name = serializers.CharField(max_length=150, required=False)
+
     class Meta:
         model = UserModel
-        fields = ('id', 'first_name', 'last_name', 'biography', 'avatar_url', 'email')
+        fields = ('id', 'first_name', 'last_name', 'biography', 'avatar_url', 'email', 'posts')
         read_only_fields = ('email',)
 
 class CustomRegisterSerializer(RegisterSerializer):

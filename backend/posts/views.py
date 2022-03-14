@@ -1,5 +1,5 @@
 from posts.models import Post, PostImage
-from posts.serializers import PostSerializer, PostImageSerializer
+from posts.serializers import PostSerializer, PostImageSerializer, PostUpdateSerializer
 from posts.permissions import IsOwnerOrReadOnly, IsPostOwnerOrReadOnly
 
 from rest_framework import mixins
@@ -36,7 +36,7 @@ class PostList(mixins.ListModelMixin,
         serializer.is_valid(raise_exception=True)
         post = self.perform_create(serializer)
 
-        # save PostImages for this post 
+        # upload image and save PostImages for this post 
         for afile in request.FILES.getlist('files'):
             PostImage(post=post, image_url=upload_image_imgur(afile)).save() 
             
@@ -51,7 +51,7 @@ class PostDetail(mixins.RetrieveModelMixin,
                     mixins.DestroyModelMixin,
                     generics.GenericAPIView):
     queryset = Post.objects.all()
-    serializer_class = PostSerializer
+    serializer_class = PostUpdateSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
 
     def get(self, request, *args, **kwargs):
@@ -64,7 +64,7 @@ class PostDetail(mixins.RetrieveModelMixin,
         serializer.is_valid(raise_exception=True)
         post = self.perform_update(serializer)
 
-        # save PostImages for this post 
+        # upload image and save PostImages for this post 
         for afile in request.FILES.getlist('files'):
             PostImage(post=post, image_url=upload_image_imgur(afile)).save() 
 

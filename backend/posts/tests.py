@@ -7,14 +7,145 @@ from allauth.account.admin import EmailAddress
 UserModel = get_user_model()
 
 # Create your tests here.
-class GetApiTestCase(APITestCase):
-    pass 
+class PostApiTestCase(APITestCase): 
+    def setUp(self):
+        self.user = UserModel.objects.create_user(
+            first_name="first",
+            last_name="name",
+            email="test@yale.edu",
+            password="testpass1"
+        )
 
-class PutApiTestCase(APITestCase):
-    pass 
+        EmailAddress.objects.create(
+            id=1,
+            verified=1,
+            primary=1,
+            user_id = self.user.id,
+            email="test@yale.edu"
+        )
 
-class DeleteApiTestCase(APITestCase):
-    pass 
+    def authorize(self):
+        self.client.post('/users/login/', {'email': "test@yale.edu", 'password': 'testpass1'})
 
-class PostApiTestCase(APITestCase):
-    pass 
+    def test_get_list(self): 
+        self.authorize() 
+        response = self.client.get('/post/', {})
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_unauthenticated_get_list(self): 
+        response = self.client.get('/post/', {})
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_post_list(self): 
+        self.authorize() 
+
+        title = 'first test post' 
+        content = 'first test content' 
+        price = 5.25
+        category = 'testing'
+
+        data = {'title': title, 'content': content, 'price': price, 'category': category}
+        response = self.client.post('/post/', data)
+        assert response.status_code == status.HTTP_201_CREATED
+
+        response_data = response.data 
+
+        assert response_data['title'] == title 
+        assert response_data['content'] == content 
+        assert response_data['author'] == 'test@yale.edu'
+        assert float(response_data['price']) == price 
+        assert response_data['category'] == category
+
+    def test_invalid_post_list(self): 
+        self.authorize() 
+
+        content = 'first test content' 
+        price = 5.25
+        category = 'testing'
+
+        data = {'content': content, 'price': price, 'category': category}
+        response = self.client.post('/post/', data)
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_get_detail(self): 
+        self.authorize() 
+
+        title = 'first test post' 
+        content = 'first test content' 
+        price = 5.25
+        category = 'testing'
+
+        data = {'title': title, 'content': content, 'price': price, 'category': category}
+        response = self.client.post('/post/', data)
+        assert response.status_code == status.HTTP_201_CREATED
+
+        post_id = response.data['id']
+        response = self.client.get('/post/' + str(post_id), {})
+        assert response.status_code == status.HTTP_200_OK
+
+        response_data = response.data 
+
+        assert response_data['title'] == title 
+        assert response_data['content'] == content 
+        assert response_data['author'] == 'test@yale.edu'
+        assert float(response_data['price']) == price 
+        assert response_data['category'] == category
+
+    def test_invalid_get_detail(self): 
+        self.authorize() 
+        post_id = 1
+        response = self.client.get('/post/' + str(post_id), {})
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_put_detail(self): 
+        self.authorize() 
+
+        title = 'first test post' 
+        content = 'first test content' 
+        price = 5.25
+        category = 'testing'
+
+        data = {'title': title, 'content': content, 'price': price, 'category': category}
+        response = self.client.post('/post/', data)
+        assert response.status_code == status.HTTP_201_CREATED
+
+        post_id = response.data['id']
+        new_title = 'new test post title'
+        new_content = 'this content should be changed'
+        data = {'title': new_title, 'content': new_content}
+        response = self.client.put('/post/' + str(post_id), data)
+        assert response.status_code == status.HTTP_200_OK
+
+        response_data = response.data 
+
+        assert response_data['title'] == new_title
+        assert response_data['content'] == new_content  
+        assert response_data['author'] == 'test@yale.edu'
+        assert float(response_data['price']) == price 
+        assert response_data['category'] == category
+
+    def test_delete_detail(self): 
+        self.authorize() 
+
+        title = 'first test post' 
+        content = 'first test content' 
+        price = 5.25
+        category = 'testing'
+
+        data = {'title': title, 'content': content, 'price': price, 'category': category}
+        response = self.client.post('/post/', data)
+        assert response.status_code == status.HTTP_201_CREATED
+
+        post_id = response.data['id']
+        response = self.client.delete('/post/' + str(post_id), {})
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+
+        response = self.client.get('/post/' + str(post_id), {})
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+        
+    def test_delete_get_detail(self): 
+        self.authorize() 
+        post_id = 1
+        response = self.client.delete('/post/' + str(post_id), {})
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+         

@@ -20,7 +20,7 @@ def get_image_path(instance, filename):
 class Post(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=64, blank=False)
-    content = models.TextField()
+    content = models.TextField(blank=True)
     date_posted = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(YmarketUser, related_name="posts", on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=9, decimal_places=2, blank=True, null=True)
