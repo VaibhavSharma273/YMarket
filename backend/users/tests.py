@@ -1,11 +1,12 @@
+from allauth.account.admin import EmailAddress
 from rest_framework import status
 from rest_framework.test import APITestCase
-from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
 
 UserModel = get_user_model()
 
-# Create your tests here.
+
+# API tests
 class RegistrationTestCase(APITestCase):
     def test_valid_registration(self):
         data = {'email': "test@gmail.com", 'first_name': 'first', 'last_name': 'name', 'password1': 'testpass1', 'password2': 'testpass1'}
@@ -33,9 +34,6 @@ class RegistrationTestCase(APITestCase):
         data = {'email': "test@gmail.com", 'first_name': 'first', 'last_name': 'name', 'password1': 'testpass1', 'password2': 'testpass2'}
         response = self.client.post('/users/register/', data)
         assert response.status_code == status.HTTP_400_BAD_REQUEST
-
-
-from allauth.account.admin import EmailAddress
 
 class LoginLogoutTestCase(APITestCase):
     def setUp(self):
@@ -83,11 +81,8 @@ class PasswordTestCase(APITestCase):
             first_name="first",
             last_name="name",
             email="test@yale.edu",
-            password='testpass1'
+            password="testpass1"
         )
-
-        self.token = Token.objects.create(user=self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.token}")
 
         EmailAddress.objects.create(
             id=1,
@@ -96,10 +91,21 @@ class PasswordTestCase(APITestCase):
             user_id = self.user.id,
             email="test@yale.edu"
         )
+
+    def authorize(self):
+        self.client.post('/users/login/', {'email': "test@yale.edu", 'password': 'testpass1'})
     
     def test_valid_password_change(self):
+        self.authorize()
         data = {'new_password1': 'testpass2', 'new_password2': 'testpass2'}
-        response = self.client.post('/users/password/change/', data)
+        response = self.client.post('/users/password-change/', data)
+        assert response.status_code == status.HTTP_200_OK
+
         data = {'email': "test@yale.edu", 'password': 'testpass1'}
         response = self.client.post('/users/login/', data)
         assert response.status_code == status.HTTP_400_BAD_REQUEST
+    
+    def test_unauthorized_password_change(self):
+        data = {'new_password1': 'testpass2', 'new_password2': 'testpass2'}
+        response = self.client.post('/users/password-change/', data)
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
