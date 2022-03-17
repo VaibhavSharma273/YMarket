@@ -19,6 +19,7 @@ from dj_rest_auth.jwt_auth import get_refresh_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('users/', include('users.urls')),
-    path('token/refresh/', get_refresh_view().as_view(), name='token_refresh'),
+    path('api/', include("posts.urls")),
+    path('api/users/', include('users.urls')),
+    path('api/token/refresh/', get_refresh_view().as_view(), name='token_refresh'),
 ]
