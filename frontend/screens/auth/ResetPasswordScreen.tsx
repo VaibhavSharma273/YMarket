@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import { StyleSheet } from 'react-native';
 
-import EditScreenInfo from '../../components/EditScreenInfo';
+import API from '../../api/ymarket_api';
+
 import { Text, View } from '../../components/Themed';
 import TextInput from '../../components/TextInput'
 import BackButton from '../../components/BackButton';
 import { TouchableOpacity } from 'react-native'
-// import { RootStackParamList, RootTabScreenProps } from '../types';
-// import { StackScreenProps } from '@react-navigation/stack';
 
 import { theme } from '../../assets/theme'
 import { emailValidator } from '../../helpers/emailValidator';
@@ -16,12 +15,27 @@ import { passwordValidator } from '../../helpers/passwordValidator';
 export default function ResetPasswordScreen({ navigation }: any) {
     const [email, setEmail] = useState({ value: '', error: '' })
 
-    const sendResetPasswordEmail = () => {
+    const sendResetPasswordEmail = async () => {
         const emailError = emailValidator(email.value)
         if (emailError) {
             setEmail({...email, error: emailError})
             return
         }
+
+        const email_val = email.value;
+
+        const response = await API.post('users/reset-password/', {email: email_val})
+        .then((response) => {
+          console.log(response.data)
+          navigation.navigate('LoginScreen') // dummy screen -- your email has been sent -- add go back to login button
+        })
+        .catch((error) => {
+          console.log(error)
+          if (error.response) {
+            setEmail({...email, error: error.response.data[Object.keys(error.response.data)[0]]})
+          }
+        });
+
         navigation.navigate('LoginScreen')
     }
 

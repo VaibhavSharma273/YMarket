@@ -15,9 +15,12 @@ const linking: LinkingOptions<RootStackParamList> = {
     screens: {
       StartScreen: 'start',
       RegisterScreen: 'register',
+<<<<<<< HEAD
       ConfirmationScreen: 'confirm',
       ResetPasswordScreen: 'resetPassword',
       LoginScreen: 'login',
+=======
+>>>>>>> 07d6e59f3349be41fcab2df185c9a2635a483dfd
       Root: {
         screens: {
           TabOne: {

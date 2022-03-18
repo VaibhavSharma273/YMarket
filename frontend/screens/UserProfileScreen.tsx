@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { StyleSheet, SafeAreaView, StatusBar } from 'react-native';
 
+import API from '../api/ymarket_api';
+
 // import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
@@ -9,12 +11,23 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 export default function UserProfileScreen({ navigation } : RootTabScreenProps<'UserProfile'>) {
     const [user, setUser] = useState(null);
+
+    const getUser = async () => {
+      const response = await API.get('users/')
+      .then((response) => {
+        const userInfo = response.data;
+        setUser(userInfo);
+      })
+      .catch((error) => {
+        console.log(error)
+      });
+    }
     
     return (
         <View style={styles.container}>
             <View style={{marginVertical: 20, height: 1, width: '80%'}}/> 
             <ProfilePhoto/>
-            <Text style={styles.title}>User Profile Name</Text>
+            <Text style={styles.title}>user.first_name</Text>
             <View style={{marginVertical: 5, height: 1, width: '80%'}}/> 
             <Text style={styles.contact}>User Profile Email</Text> 
             <View style={styles.separator}/>
