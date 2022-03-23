@@ -11,18 +11,19 @@
     "test": "jest --watchAll"
   },
   "jest": {
-    "preset": "jest-expo"
+    "preset": "jest-expo",
+    "setupFilesAfterEnv": [
+      "./jest.setup.js"
+    ]
   },
   "dependencies": {
     "@expo/vector-icons": "^12.0.0",
     "@react-navigation/bottom-tabs": "^6.0.5",
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/native-stack": "^6.1.0",
-<<<<<<< HEAD
+    "@types/react-test-renderer": "^17.0.1",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.6",
     "axios": "^0.26.1",
-=======
-    "@react-navigation/stack": "^6.1.1",
->>>>>>> 07d6e59f3349be41fcab2df185c9a2635a483dfd
     "expo": "~44.0.0",
     "expo-asset": "~8.4.4",
     "expo-constants": "~13.0.0",
@@ -35,28 +36,20 @@
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
-<<<<<<< HEAD
-    "react-native-gesture-handler": "~2.1.0",
+    "react-native-gesture-handler": "^2.3.2",
     "react-native-paper": "^4.11.2",
     "react-native-reanimated": "~2.3.1",
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",
-    "react-native-segmented-control-tab": "^4.0.0",
-    "react-native-status-bar-height": "^2.6.0",
-    "react-native-web": "0.17.1",
-    "rn-segmented-control": "^1.1.2"
-=======
-    "react-native-paper": "^4.11.2",
-    "react-native-safe-area-context": "3.3.2",
-    "react-native-screens": "~3.10.1",
     "react-native-status-bar-height": "^2.6.0",
     "react-native-web": "0.17.1"
->>>>>>> 07d6e59f3349be41fcab2df185c9a2635a483dfd
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
+    "@testing-library/react-native": "^9.0.0",
     "@types/react": "~17.0.21",
     "@types/react-native": "~0.64.12",
+    "enzyme": "^3.11.0",
     "jest": "^26.6.3",
     "jest-expo": "~44.0.1",
     "react-test-renderer": "17.0.1",

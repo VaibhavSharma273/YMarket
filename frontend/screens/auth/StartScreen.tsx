@@ -16,14 +16,14 @@ export default function StartScreen({ navigation }: any) {
 
   return (
     <View style={styles.container}>
-        <Logo/>
+      <Logo/>
       <View style={styles.separator} />
       <TouchableOpacity 
         style={styles.button}
         onPress={() => navigation.navigate('LoginScreen')}>
         <Text style={styles.title}>Login</Text>
-        </TouchableOpacity>
-        <View style={styles.separator}/>
+      </TouchableOpacity>
+      <View style={styles.separator}/>
       <TouchableOpacity 
         style={styles.button}
         onPress={() => navigation.navigate('RegisterScreen')}>

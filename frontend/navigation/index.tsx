@@ -16,17 +16,12 @@ import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
-<<<<<<< HEAD
 import UserProfileScreen from '../screens/UserProfileScreen';
 import StartScreen from '../screens/auth/StartScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
 import ConfirmationScreen from '../screens/auth/ConfirmationScreen';
 import ResetPasswordScreen from '../screens/auth/ResetPasswordScreen';
 import LoginScreen from '../screens/auth/LoginScreen';
-=======
-import StartScreen from '../screens/StartScreen';
-import RegisterScreen from '../screens/RegisterScreen';
->>>>>>> 07d6e59f3349be41fcab2df185c9a2635a483dfd
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 
@@ -60,14 +55,10 @@ function RootNavigator() {
     <Stack.Navigator initialRouteName="StartScreen" screenOptions={{headerShown: false,}}>
       <Stack.Screen name="StartScreen" component={StartScreen} />
       <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-<<<<<<< HEAD
       <Stack.Screen name="ConfirmationScreen" component={ConfirmationScreen} />
       <Stack.Screen name="ResetPasswordScreen" component={ResetPasswordScreen} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="Root" component={BottomTabNavigator} />
-=======
-      <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
->>>>>>> 07d6e59f3349be41fcab2df185c9a2635a483dfd
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />

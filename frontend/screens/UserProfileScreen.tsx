@@ -7,7 +7,6 @@ import API from '../api/ymarket_api';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import ProfilePhoto from '../components/ProfilePhoto';
-import { ScrollView } from 'react-native-gesture-handler';
 
 export default function UserProfileScreen({ navigation } : RootTabScreenProps<'UserProfile'>) {
     const [user, setUser] = useState(null);
