@@ -12,7 +12,7 @@ export default function UserProfileScreen({ navigation } : RootTabScreenProps<'U
     const [user, setUser] = useState(null);
 
     const getUser = async () => {
-      const response = await API.get('users/')
+      const response = await API.get('api/users/')
       .then((response) => {
         const userInfo = response.data;
         setUser(userInfo);

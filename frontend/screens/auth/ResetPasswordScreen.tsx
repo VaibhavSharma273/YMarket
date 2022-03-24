@@ -24,7 +24,7 @@ export default function ResetPasswordScreen({ navigation }: any) {
 
         const email_val = email.value;
 
-        const response = await API.post('users/reset-password/', {email: email_val})
+        const response = await API.post('api/users/reset-password/', {email: email_val})
         .then((response) => {
           console.log(response.data)
           navigation.navigate('LoginScreen') // dummy screen -- your email has been sent -- add go back to login button

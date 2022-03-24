@@ -12,6 +12,8 @@ import { theme } from '../../assets/theme'
 import { emailValidator } from '../../helpers/emailValidator';
 import { passwordValidator } from '../../helpers/passwordValidator';
 
+import { getToken, setToken, deleteToken } from '../../storage/tokenStorage';
+
 export default function RegisterScreen({ navigation }: any) {
     const [email, setEmail] = useState({ value: '', error: '' })
     const [password, setPassword] = useState({ value: '', error: '' })
@@ -27,8 +29,10 @@ export default function RegisterScreen({ navigation }: any) {
 
         const email_val = email.value;
         const password_val = password.value;
+        // const token_val = 
 
-        const response = await API.post('users/login/', {email: email_val, password: password_val})
+        const response = await API.post('api/users/login/', 
+                                        {email: email_val, password: password_val})
         .then((response) => {
           console.log(response.data)
           navigation.reset({
@@ -37,8 +41,8 @@ export default function RegisterScreen({ navigation }: any) {
           })
         })
         .catch((error) => {
-          console.log(error)
           if (error.response) {
+            console.log(error.response)
             setPassword({...password, error: error.response.data[Object.keys(error.response.data)[0]]})
           }
         });

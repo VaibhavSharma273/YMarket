@@ -37,12 +37,13 @@ export default function RegisterScreen({ navigation }: any) {
         const password_val = password.value;
         const passwordConfirm_val = passwordConfirm.value;
 
-        const response = await API.post('users/register/', {email: email_val, first_name: firstName_val, last_name: lastName_val, password1: password_val, password2: passwordConfirm_val})
+        const response = await API.post('api/users/register/', {email: email_val, first_name: firstName_val, last_name: lastName_val, password1: password_val, password2: passwordConfirm_val})
         .then(function(response) {
           navigation.navigate('ConfirmationScreen')
         })
         .catch(function(error) {
           if (error.response) {
+            console.log(error.response)
             setPassword({...password, error: error.response.data[Object.keys(error.response.data)[0]]})
           }
           else {
