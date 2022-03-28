@@ -29,12 +29,10 @@ export default function LoginScreen({ navigation }: any) {
 
         const email_val = email.value;
         const password_val = password.value;
-        // const token_val = 
 
         const response = await API.post('api/users/login/', 
                                         {email: email_val, password: password_val})
         .then((response) => {
-          console.log(response.data)
           navigation.reset({
             index: 0,
             routes: [{ name: 'Root' }]

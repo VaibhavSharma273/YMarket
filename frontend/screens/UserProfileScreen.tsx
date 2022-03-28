@@ -8,6 +8,9 @@ import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import ProfilePhoto from '../components/ProfilePhoto';
 
+import { getToken, setToken, deleteToken } from '../storage/tokenStorage';
+import { TouchableOpacity } from 'react-native'
+
 export default function UserProfileScreen({ navigation } : RootTabScreenProps<'UserProfile'>) {
     const [user, setUser] = useState(null);
 
@@ -21,6 +24,13 @@ export default function UserProfileScreen({ navigation } : RootTabScreenProps<'U
         console.log(error)
       });
     }
+
+    const onLogoutPressed = async () => {
+      await setToken('access','')
+      API.post('/api/users/logout/')
+         .catch(error =>  console.log(error.response.data));
+      navigation.navigate("StartScreen")
+    }
     
     return (
         <View style={styles.container}>
@@ -30,6 +40,11 @@ export default function UserProfileScreen({ navigation } : RootTabScreenProps<'U
             <View style={{marginVertical: 5, height: 1, width: '80%'}}/> 
             <Text style={styles.contact}>User Profile Email</Text> 
             <View style={styles.separator}/>
+            <TouchableOpacity 
+              style={styles.button}
+              onPress={onLogoutPressed}>
+              <Text style={styles.title}>Logout</Text>
+            </TouchableOpacity>
         </View>
 
     )
@@ -55,4 +70,10 @@ const styles = StyleSheet.create({
       height: 1,
       width: '80%',
     },
+    button: {
+      alignItems: "center",
+      backgroundColor: "#0f4d92",
+      padding: 10,
+      width: 170,
+    }
   });

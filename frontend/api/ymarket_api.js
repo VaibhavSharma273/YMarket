@@ -14,7 +14,7 @@ ymarket.interceptors.request.use(async (config) => {
     config.headers.Authorization = `Bearer ${token}`;
   }
 
-  console.log(config);
+  // console.log(config);
 
   return config
 });

@@ -8,11 +8,17 @@ import { TouchableOpacity } from 'react-native'
 // import { RootStackParamList, RootTabScreenProps } from '../types';
 // import { StackScreenProps } from '@react-navigation/stack';
 
+import { setToken } from '../../storage/tokenStorage';
+
 import Logo from "../../components/Logo"
 
 export default function StartScreen({ navigation }: any) {
 
-  
+  const onLogoutPressed = async () => {
+    await setToken('access','')
+    API.post('/api/users/logout/')
+       .catch(error =>  console.log(error.response.data));
+  }
 
   return (
     <View style={styles.container}>
@@ -28,7 +34,13 @@ export default function StartScreen({ navigation }: any) {
         style={styles.button}
         onPress={() => navigation.navigate('RegisterScreen')}>
         <Text style={styles.title}>Register</Text>
-        </TouchableOpacity>
+      </TouchableOpacity>
+      <View style={styles.separator}/>
+      <TouchableOpacity 
+        style={styles.button}
+        onPress={onLogoutPressed}>
+        <Text style={styles.title}>Logout</Text>
+      </TouchableOpacity>
     </View>
   );
 }
