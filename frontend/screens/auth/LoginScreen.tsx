@@ -14,7 +14,7 @@ import { passwordValidator } from '../../helpers/passwordValidator';
 
 import { getToken, setToken, deleteToken } from '../../storage/tokenStorage';
 
-export default function RegisterScreen({ navigation }: any) {
+export default function LoginScreen({ navigation }: any) {
     const [email, setEmail] = useState({ value: '', error: '' })
     const [password, setPassword] = useState({ value: '', error: '' })
 
@@ -56,6 +56,7 @@ export default function RegisterScreen({ navigation }: any) {
       <Text style={styles.header}>Welcome Back!</Text>
       <TextInput
         label='Yale Email'
+        test-id="email-input"
         returnKeyType="next"
         value={email.value}
         onChangeText={(text: any) => setEmail({ value: text, error: '' })}
@@ -69,6 +70,7 @@ export default function RegisterScreen({ navigation }: any) {
       />
       <TextInput
         label="Password"
+        test-id="password-input"
         returnKeyType="done"
         value={password.value}
         onChangeText={(text: any) => setPassword({ value: text, error: '' })}
@@ -85,7 +87,8 @@ export default function RegisterScreen({ navigation }: any) {
       </View>
       <TouchableOpacity 
         style={styles.button}
-        onPress={onLoginPressed}>
+        onPress={onLoginPressed}
+        test-id="login-button">
         <Text style={styles.title}>Login</Text>
         </TouchableOpacity>
     <View style={styles.separator} />
