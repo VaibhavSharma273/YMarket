@@ -9,6 +9,7 @@ import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/
 import { createNativeStackNavigator } from '@react-navigation/native-stack'; //error here
 import * as React from 'react';
 import { ColorSchemeName, Pressable } from 'react-native';
+import { useContext } from "react";
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -25,8 +26,7 @@ import LoginScreen from '../screens/auth/LoginScreen';
 import { AuthTabParamList, RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 
-import { getToken, setToken, deleteToken } from '../storage/tokenStorage';
-import API from '../api/ymarket_api';
+import AppContext from "../screens/AppContext";
 
 const LightTheme = {
   dark: false,
@@ -47,18 +47,6 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
   );
 }
 
-// export function onLogoutPressed = async () => {
-//   // change login status to false
-//   await deleteToken('refresh')
-//   API.post('/api/users/logout/')
-//      .catch(error =>  console.log(error.response.data));
-//   console.log("logout pressed")
-//   // navigation.reset({
-//   //   index: 0,
-//   //   routes: [{ name: 'Auth' }]
-//   // })
-// }
-
 /**
  * A root stack navigator is often used for displaying modals on top of all other content.
  * https://reactnavigation.org/docs/modal
@@ -66,31 +54,15 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
-  const [loginStatus, setLoginStatus] = React.useState(false);
+  const myContext = useContext(AppContext)
 
-  React.useEffect(() => {
-    const bootstrapAsync = async () => {
-      const refreshToken = await getToken('refresh');
-      if (refreshToken !== null || refreshToken !== undefined) {
-        setLoginStatus(true)
-      }
-      else {
-        setLoginStatus(false)
-      }
-      console.log(refreshToken)
-      console.log("root:" + loginStatus)
-    }
-    bootstrapAsync();
-  }, []);
-
-
-
+  // based on the loginStatus, return the right screen stack
   return (
     <Stack.Navigator  screenOptions={{ headerShown: false }} >
-      {!loginStatus ? (
-        <Stack.Screen name="Auth" component={AuthNavigator} />
-      ) : (
+      {myContext.loginStatus ? (
         <Stack.Screen name="Root" component={BottomTabNavigator} />
+      ) : (
+        <Stack.Screen name="Auth" component={AuthNavigator} />
       )}
 
     </Stack.Navigator>
@@ -110,17 +82,6 @@ function AuthNavigator() {
     </Auth.Navigator>
   )
 }
-
-// const App = createNativeStackNavigator<RootStackParamList>();
-
-// function AppNavigator() {
-//   return (
-//     <App.Navigator screenOptions={{headerShown: false,}}>
-//       {/* <App.Screen name="Auth" component={AuthNavigator} /> */}
-//       <App.Screen name="Root" component={BottomTabNavigator} />
-//     </App.Navigator>
-//   )
-// }
 
 /**
  * A bottom tab navigator displays tab buttons on the bottom of the display to switch screens.

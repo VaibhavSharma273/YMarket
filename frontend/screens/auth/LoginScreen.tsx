@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { StyleSheet } from 'react-native';
 
 import API from '../../api/ymarket_api';
@@ -12,9 +12,11 @@ import { theme } from '../../assets/theme'
 import { emailValidator } from '../../helpers/emailValidator';
 import { passwordValidator } from '../../helpers/passwordValidator';
 
-import { getToken, setToken, deleteToken } from '../../storage/tokenStorage';
+import AppContext from "../AppContext"
 
 export default function LoginScreen({ navigation }: any) {
+    const myContext = useContext(AppContext)
+
     const [email, setEmail] = useState({ value: '', error: '' })
     const [password, setPassword] = useState({ value: '', error: '' })
 
@@ -33,10 +35,7 @@ export default function LoginScreen({ navigation }: any) {
         const response = await API.post('api/users/login/', 
                                         {email: email_val, password: password_val})
         .then((response) => {
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'Root' }]
-          })
+          myContext.login()
         })
         .catch((error) => {
           if (error.response) {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { StyleSheet, SafeAreaView, StatusBar } from 'react-native';
 
 import API from '../api/ymarket_api';
@@ -11,9 +11,13 @@ import ProfilePhoto from '../components/ProfilePhoto';
 import { getToken, setToken, deleteToken } from '../storage/tokenStorage';
 import { TouchableOpacity } from 'react-native'
 import { StackActions } from '@react-navigation/native';
+import AppContext from "./AppContext"
+import App from '../App';
 
 export default function UserProfileScreen({ navigation } : RootTabScreenProps<'UserProfile'>) {
     const [user, setUser] = useState(null);
+
+    const myContext = useContext(AppContext);
 
     const getUser = async () => {
       const response = await API.get('api/users/')
@@ -27,15 +31,11 @@ export default function UserProfileScreen({ navigation } : RootTabScreenProps<'U
     }
 
     const onLogoutPressed = async () => {
-      // change login status to false
-      await deleteToken('refresh')
+      // only works with access token?
+      await deleteToken('access')
+      myContext.logout()
       API.post('/api/users/logout/')
          .catch(error =>  console.log(error.response.data));
-      console.log("logout pressed")
-      // navigation.reset({
-      //   index: 0,
-      //   routes: [{ name: 'Auth' }]
-      // })
     }
     
     return (
