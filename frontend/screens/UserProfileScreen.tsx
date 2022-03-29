@@ -31,11 +31,12 @@ export default function UserProfileScreen({ navigation } : RootTabScreenProps<'U
     }
 
     const onLogoutPressed = async () => {
-      // only works with access token?
-      await deleteToken('access')
-      myContext.logout()
-      API.post('/api/users/logout/')
+      await API.post('/api/users/logout/')
          .catch(error =>  console.log(error.response.data));
+
+      await deleteToken('access')
+      await deleteToken('refresh')
+      myContext.logout()
     }
     
     return (
