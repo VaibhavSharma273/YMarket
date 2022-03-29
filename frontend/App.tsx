@@ -8,7 +8,7 @@ import Navigation from './navigation';
 
 import { getToken, setToken, deleteToken } from './storage/tokenStorage';
 import AppContext from './screens/AppContext'
-import jwt_decode from "jwt-decode";
+import jwt_decode, { JwtPayload } from "jwt-decode";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -40,7 +40,7 @@ export default function App() {
         setLoginStatus(false)
       }
       // console.log(refreshToken)
-      var decoded = jwt_decode(refreshToken)
+      const decoded = jwt_decode<JwtPayload>(String(refreshToken))
       // this is the user id
       setUser(Object.values(decoded)[4])
     }
