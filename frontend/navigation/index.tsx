@@ -57,6 +57,9 @@ function RootNavigator() {
   const myContext = useContext(AppContext)
 
   // based on the loginStatus, return the right screen stack
+
+  // there are two screen stacks -- auth (has StartScreen, RegisterScreen, etc)
+  // and root (has the feed, profile, etc). If a user is logged in, return the root.
   return (
     <Stack.Navigator  screenOptions={{ headerShown: false }} >
       {myContext.loginStatus ? (
@@ -69,6 +72,8 @@ function RootNavigator() {
   );
 }
 
+
+// auth screen stack
 const Auth = createNativeStackNavigator<AuthTabParamList>();
 
 function AuthNavigator() {

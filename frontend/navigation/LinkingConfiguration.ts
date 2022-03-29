@@ -13,6 +13,7 @@ const linking: LinkingOptions<RootStackParamList> = {
   prefixes: [Linking.makeUrl('/')],
   config: {
     screens: {
+      // screens divided into auth and root
       Auth: {
         screens: {
           StartScreen: 'start',
