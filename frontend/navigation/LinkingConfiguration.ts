@@ -19,7 +19,13 @@ const linking: LinkingOptions<RootStackParamList> = {
       ResetPasswordScreen: 'resetPassword',
       LoginScreen: 'login',
       Root: {
+        // add screen here
         screens: {
+          Feed: {
+            screens: {
+              FeedScreen: 'feed',
+            },
+          },
           TabOne: {
             screens: {
               TabOneScreen: 'one',

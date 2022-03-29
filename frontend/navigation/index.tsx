@@ -22,6 +22,7 @@ import RegisterScreen from '../screens/auth/RegisterScreen';
 import ConfirmationScreen from '../screens/auth/ConfirmationScreen';
 import ResetPasswordScreen from '../screens/auth/ResetPasswordScreen';
 import LoginScreen from '../screens/auth/LoginScreen';
+import FeedScreen from '../screens/feed/FeedScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 
@@ -39,7 +40,7 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
       // theme={colorScheme === 'dark' ? DefaultTheme : DefaultTheme}
       theme={LightTheme}
       >
-      <RootNavigator />
+      <BottomTabNavigator />
     </NavigationContainer>
   );
 }
@@ -78,16 +79,16 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+      initialRouteName="Feed"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
         headerShown: false,
       }}>
       <BottomTab.Screen
-        name="TabOne"
-        component={TabOneScreen}
-        options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
-          title: 'Tab One',
+        name="Feed"
+        component={FeedScreen}
+        options={({ navigation }: RootTabScreenProps<'Feed'>) => ({
+          title: 'Feed',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight: () => (
             <Pressable
