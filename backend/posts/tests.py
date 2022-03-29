@@ -3,6 +3,9 @@ from rest_framework.test import APITestCase
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
 from allauth.account.admin import EmailAddress
+from users.tests import login_path
+
+post_path = '/api/post/'
 
 UserModel = get_user_model()
 
@@ -25,15 +28,15 @@ class PostApiTestCase(APITestCase):
         )
 
     def authorize(self):
-        self.client.post('/users/login/', {'email': "test@yale.edu", 'password': 'testpass1'})
+        self.client.post(login_path, {'email': "test@yale.edu", 'password': 'testpass1'})
 
     def test_get_list(self): 
         self.authorize() 
-        response = self.client.get('/post/', {})
+        response = self.client.get(post_path, {})
         assert response.status_code == status.HTTP_200_OK
 
     def test_unauthenticated_get_list(self): 
-        response = self.client.get('/post/', {})
+        response = self.client.get(post_path, {})
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_post_list(self): 
@@ -45,7 +48,7 @@ class PostApiTestCase(APITestCase):
         category = 'testing'
 
         data = {'title': title, 'content': content, 'price': price, 'category': category}
-        response = self.client.post('/post/', data)
+        response = self.client.post(post_path, data)
         assert response.status_code == status.HTTP_201_CREATED
 
         response_data = response.data 
@@ -64,7 +67,7 @@ class PostApiTestCase(APITestCase):
         category = 'testing'
 
         data = {'content': content, 'price': price, 'category': category}
-        response = self.client.post('/post/', data)
+        response = self.client.post(post_path, data)
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
     def test_get_detail(self): 
@@ -76,11 +79,11 @@ class PostApiTestCase(APITestCase):
         category = 'testing'
 
         data = {'title': title, 'content': content, 'price': price, 'category': category}
-        response = self.client.post('/post/', data)
+        response = self.client.post(post_path, data)
         assert response.status_code == status.HTTP_201_CREATED
 
         post_id = response.data['id']
-        response = self.client.get('/post/' + str(post_id), {})
+        response = self.client.get(post_path + str(post_id), {})
         assert response.status_code == status.HTTP_200_OK
 
         response_data = response.data 
@@ -94,7 +97,7 @@ class PostApiTestCase(APITestCase):
     def test_invalid_get_detail(self): 
         self.authorize() 
         post_id = 1
-        response = self.client.get('/post/' + str(post_id), {})
+        response = self.client.get(post_path + str(post_id), {})
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
     def test_put_detail(self): 
@@ -106,14 +109,14 @@ class PostApiTestCase(APITestCase):
         category = 'testing'
 
         data = {'title': title, 'content': content, 'price': price, 'category': category}
-        response = self.client.post('/post/', data)
+        response = self.client.post(post_path, data)
         assert response.status_code == status.HTTP_201_CREATED
 
         post_id = response.data['id']
         new_title = 'new test post title'
         new_content = 'this content should be changed'
         data = {'title': new_title, 'content': new_content}
-        response = self.client.put('/post/' + str(post_id), data)
+        response = self.client.put(post_path + str(post_id), data)
         assert response.status_code == status.HTTP_200_OK
 
         response_data = response.data 
@@ -133,19 +136,19 @@ class PostApiTestCase(APITestCase):
         category = 'testing'
 
         data = {'title': title, 'content': content, 'price': price, 'category': category}
-        response = self.client.post('/post/', data)
+        response = self.client.post(post_path, data)
         assert response.status_code == status.HTTP_201_CREATED
 
         post_id = response.data['id']
-        response = self.client.delete('/post/' + str(post_id), {})
+        response = self.client.delete(post_path + str(post_id), {})
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
-        response = self.client.get('/post/' + str(post_id), {})
+        response = self.client.get(post_path + str(post_id), {})
         assert response.status_code == status.HTTP_404_NOT_FOUND
         
     def test_delete_get_detail(self): 
         self.authorize() 
         post_id = 1
-        response = self.client.delete('/post/' + str(post_id), {})
+        response = self.client.delete(post_path + str(post_id), {})
         assert response.status_code == status.HTTP_404_NOT_FOUND
          
