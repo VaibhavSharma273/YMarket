@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
-import RegisterScreen from '../Auth/RegisterScreen'
+import RegisterScreen from '../auth/RegisterScreen'
 import { createTestProps } from '../../jest.setup'
 import renderer from 'react-test-renderer';
 

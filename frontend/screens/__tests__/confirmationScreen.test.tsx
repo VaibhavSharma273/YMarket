@@ -1,6 +1,6 @@
 import React from 'react';
 import {shallow, ShallowWrapper} from 'enzyme';
-import ConfirmationScreen from '../Auth/ConfirmationScreen'
+import ConfirmationScreen from '../auth/ConfirmationScreen'
 import { createTestProps } from '../../jest.setup'
 import renderer from 'react-test-renderer';
 

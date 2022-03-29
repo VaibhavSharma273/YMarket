@@ -1,7 +1,7 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 import renderer from 'react-test-renderer';
-import StartScreen from '../Auth/StartScreen'
+import StartScreen from '../auth/StartScreen'
 import { TouchableOpacity } from 'react-native';
 
 describe('Start Screen component', () => {
