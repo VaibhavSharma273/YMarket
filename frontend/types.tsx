@@ -14,14 +14,12 @@ declare global {
 }
 
 export type RootStackParamList = {
-  StartScreen: undefined;
-  RegisterScreen: undefined;
-<<<<<<< HEAD
-  ConfirmationScreen: undefined;
-  ResetPasswordScreen:undefined;
-  LoginScreen: undefined;
-=======
->>>>>>> 07d6e59f3349be41fcab2df185c9a2635a483dfd
+  // StartScreen: undefined;
+  // RegisterScreen: undefined;
+  // ConfirmationScreen: undefined;
+  // ResetPasswordScreen:undefined;
+  // LoginScreen: undefined;
+  Auth: NavigatorScreenParams<AuthTabParamList> | undefined;
   Root: NavigatorScreenParams<RootTabParamList> | undefined;
   Modal: undefined;
   NotFound: undefined;
@@ -36,6 +34,14 @@ export type RootTabParamList = {
   TabOne: undefined;
   TabTwo: undefined;
   UserProfile: undefined;
+};
+
+export type AuthTabParamList = {
+  StartScreen: undefined;
+  RegisterScreen: undefined;
+  ConfirmationScreen: undefined;
+  ResetPasswordScreen:undefined;
+  LoginScreen: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<

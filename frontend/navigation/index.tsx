@@ -22,8 +22,11 @@ import RegisterScreen from '../screens/auth/RegisterScreen';
 import ConfirmationScreen from '../screens/auth/ConfirmationScreen';
 import ResetPasswordScreen from '../screens/auth/ResetPasswordScreen';
 import LoginScreen from '../screens/auth/LoginScreen';
-import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
+import { AuthTabParamList, RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+
+import { getToken, setToken, deleteToken } from '../storage/tokenStorage';
+import API from '../api/ymarket_api';
 
 const LightTheme = {
   dark: false,
@@ -44,6 +47,18 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
   );
 }
 
+// export function onLogoutPressed = async () => {
+//   // change login status to false
+//   await deleteToken('refresh')
+//   API.post('/api/users/logout/')
+//      .catch(error =>  console.log(error.response.data));
+//   console.log("logout pressed")
+//   // navigation.reset({
+//   //   index: 0,
+//   //   routes: [{ name: 'Auth' }]
+//   // })
+// }
+
 /**
  * A root stack navigator is often used for displaying modals on top of all other content.
  * https://reactnavigation.org/docs/modal
@@ -51,21 +66,61 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
+  const [loginStatus, setLoginStatus] = React.useState(false);
+
+  React.useEffect(() => {
+    const bootstrapAsync = async () => {
+      const refreshToken = await getToken('refresh');
+      if (refreshToken !== null || refreshToken !== undefined) {
+        setLoginStatus(true)
+      }
+      else {
+        setLoginStatus(false)
+      }
+      console.log(refreshToken)
+      console.log("root:" + loginStatus)
+    }
+    bootstrapAsync();
+  }, []);
+
+
+
   return (
-    <Stack.Navigator initialRouteName="StartScreen" screenOptions={{headerShown: false,}}>
-      <Stack.Screen name="StartScreen" component={StartScreen} />
-      <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-      <Stack.Screen name="ConfirmationScreen" component={ConfirmationScreen} />
-      <Stack.Screen name="ResetPasswordScreen" component={ResetPasswordScreen} />
-      <Stack.Screen name="LoginScreen" component={LoginScreen} />
-      <Stack.Screen name="Root" component={BottomTabNavigator} />
-      <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
-      <Stack.Group screenOptions={{ presentation: 'modal' }}>
-        <Stack.Screen name="Modal" component={ModalScreen} />
-      </Stack.Group>
+    <Stack.Navigator  screenOptions={{ headerShown: false }} >
+      {!loginStatus ? (
+        <Stack.Screen name="Auth" component={AuthNavigator} />
+      ) : (
+        <Stack.Screen name="Root" component={BottomTabNavigator} />
+      )}
+
     </Stack.Navigator>
   );
 }
+
+const Auth = createNativeStackNavigator<AuthTabParamList>();
+
+function AuthNavigator() {
+  return (
+    <Auth.Navigator initialRouteName='StartScreen' screenOptions={{headerShown: false,}}>
+      <Auth.Screen name="StartScreen" component={StartScreen} />
+      <Auth.Screen name="RegisterScreen" component={RegisterScreen} />
+      <Auth.Screen name="ConfirmationScreen" component={ConfirmationScreen} />
+      <Auth.Screen name="ResetPasswordScreen" component={ResetPasswordScreen} />
+      <Auth.Screen name="LoginScreen" component={LoginScreen} />
+    </Auth.Navigator>
+  )
+}
+
+// const App = createNativeStackNavigator<RootStackParamList>();
+
+// function AppNavigator() {
+//   return (
+//     <App.Navigator screenOptions={{headerShown: false,}}>
+//       {/* <App.Screen name="Auth" component={AuthNavigator} /> */}
+//       <App.Screen name="Root" component={BottomTabNavigator} />
+//     </App.Navigator>
+//   )
+// }
 
 /**
  * A bottom tab navigator displays tab buttons on the bottom of the display to switch screens.

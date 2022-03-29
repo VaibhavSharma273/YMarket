@@ -10,6 +10,7 @@ import ProfilePhoto from '../components/ProfilePhoto';
 
 import { getToken, setToken, deleteToken } from '../storage/tokenStorage';
 import { TouchableOpacity } from 'react-native'
+import { StackActions } from '@react-navigation/native';
 
 export default function UserProfileScreen({ navigation } : RootTabScreenProps<'UserProfile'>) {
     const [user, setUser] = useState(null);
@@ -26,10 +27,15 @@ export default function UserProfileScreen({ navigation } : RootTabScreenProps<'U
     }
 
     const onLogoutPressed = async () => {
-      await setToken('access','')
+      // change login status to false
+      await deleteToken('refresh')
       API.post('/api/users/logout/')
          .catch(error =>  console.log(error.response.data));
-      navigation.navigate("StartScreen")
+      console.log("logout pressed")
+      // navigation.reset({
+      //   index: 0,
+      //   routes: [{ name: 'Auth' }]
+      // })
     }
     
     return (

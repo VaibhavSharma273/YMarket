@@ -8,15 +8,26 @@ import { TouchableOpacity } from 'react-native'
 // import { RootStackParamList, RootTabScreenProps } from '../types';
 // import { StackScreenProps } from '@react-navigation/stack';
 
-import { setToken } from '../../storage/tokenStorage';
+import { setToken, deleteToken } from '../../storage/tokenStorage';
 
 import Logo from "../../components/Logo"
 
 export default function StartScreen({ navigation }: any) {
 
   const onLogoutPressed = async () => {
-    await setToken('access','')
+    await deleteToken('access')
     API.post('/api/users/logout/')
+       .catch(error =>  console.log(error.response.data));
+  }
+
+  const onLoginPressed = async () => {
+    API.post('/api/users/login')
+       .then(response => 
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Root' }]
+          })
+        )
        .catch(error =>  console.log(error.response.data));
   }
 
