@@ -1,34 +1,54 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { StyleSheet, SafeAreaView, StatusBar } from 'react-native';
 
 import API from '../api/ymarket_api';
 
-// import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import ProfilePhoto from '../components/ProfilePhoto';
 
 import { getToken, setToken, deleteToken } from '../storage/tokenStorage';
 import { TouchableOpacity } from 'react-native'
-import { StackActions } from '@react-navigation/native';
 import AppContext from "./AppContext"
-import App from '../App';
+
+import jwt_decode from "jwt-decode";
 
 export default function UserProfileScreen({ navigation } : RootTabScreenProps<'UserProfile'>) {
-    const [user, setUser] = useState(null);
+    const [userName, setUserName] = useState('');
+    const [userEmail, setUserEmail] = useState('');
 
     const myContext = useContext(AppContext);
 
-    const getUser = async () => {
-      const response = await API.get('api/users/')
-      .then((response) => {
-        const userInfo = response.data;
-        setUser(userInfo);
-      })
-      .catch((error) => {
-        console.log(error)
-      });
-    }
+    useEffect(() => {
+      const getUserName = async () => {
+        const path = 'api/users/profile/' + myContext.user
+        const response = await API.get(path)
+                                  .then((response) => {
+                                    // this is bad; change later
+                                    const firstName = Object.values(response.data)[1]
+                                    const lastName = Object.values(response.data)[2]
+                                    const fullName = String(firstName) + ' ' + String(lastName)
+                                    setUserName(fullName)
+                                  })
+                                  .catch((error) => {
+                                    console.log(error)
+                                  });
+      }
+      const getUserEmail = async () => {
+        const path = 'api/users/profile/' + myContext.user
+        const response = await API.get(path)
+                                  .then((response) => {
+                                    // this is bad; change later
+                                    const email = String(Object.values(response.data)[5])
+                                    setUserEmail(email)
+                                  })
+                                  .catch((error) => {
+                                    console.log(error)
+                                  });
+      }
+      getUserName();
+      getUserEmail();
+    }, []);
 
     const onLogoutPressed = async () => {
       await API.post('/api/users/logout/')
@@ -43,15 +63,16 @@ export default function UserProfileScreen({ navigation } : RootTabScreenProps<'U
         <View style={styles.container}>
             <View style={{marginVertical: 20, height: 1, width: '80%'}}/> 
             <ProfilePhoto/>
-            <Text style={styles.title}>user.first_name</Text>
+            <Text style={styles.title}>{userName}</Text>
             <View style={{marginVertical: 5, height: 1, width: '80%'}}/> 
-            <Text style={styles.contact}>User Profile Email</Text> 
+            <Text style={styles.contact}>{userEmail}</Text> 
             <View style={styles.separator}/>
             <TouchableOpacity 
               style={styles.button}
               onPress={onLogoutPressed}>
-              <Text style={styles.title}>Logout</Text>
+              <Text style={styles.logout}>Logout</Text>
             </TouchableOpacity>
+            <View style={styles.separator}/>
         </View>
 
     )
@@ -67,6 +88,11 @@ const styles = StyleSheet.create({
       fontSize: 20,
       fontWeight: 'bold',
       color: '#00356b',
+    },
+    logout: {
+      fontSize: 15,
+      fontWeight: 'bold',
+      color: 'white',
     },
     contact: {
         fontSize: 17,
