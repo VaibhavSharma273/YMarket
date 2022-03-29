@@ -81,7 +81,7 @@ function BottomTabNavigator() {
     <BottomTab.Navigator
       initialRouteName="Feed"
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarActiveTintColor: "#0f4d92",
         headerShown: false,
       }}>
       <BottomTab.Screen
@@ -89,7 +89,7 @@ function BottomTabNavigator() {
         component={FeedScreen}
         options={({ navigation }: RootTabScreenProps<'Feed'>) => ({
           title: 'Feed',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
           headerRight: () => (
             <Pressable
               onPress={() => navigation.navigate('Modal')}
@@ -119,7 +119,7 @@ function BottomTabNavigator() {
         component={UserProfileScreen}
         options={{
           title: 'UserProfile',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
         }}
       />
     </BottomTab.Navigator>
