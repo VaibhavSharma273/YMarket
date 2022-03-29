@@ -11,6 +11,13 @@ import Logo from "../../components/Logo"
 
 export default function StartScreen({ navigation }: any) {
 
+  const onLogoutPressed = async () => {
+    await API.post('/api/users/logout/')
+       .catch(error =>  console.log(error.response.data));
+    await deleteToken('access')
+    await deleteToken('refresh')
+  }
+
   return (
     <View style={styles.container}>
       <Logo/>
@@ -25,6 +32,12 @@ export default function StartScreen({ navigation }: any) {
         style={styles.button}
         onPress={() => navigation.navigate('RegisterScreen')}>
         <Text style={styles.title}>Register</Text>
+      </TouchableOpacity>
+      <View style={styles.separator}/>
+      <TouchableOpacity 
+        style={styles.button}
+        onPress={onLogoutPressed}>
+        <Text style={styles.title}>Logout</Text>
       </TouchableOpacity>
     </View>
   );

@@ -8,6 +8,7 @@ import Navigation from './navigation';
 
 import { getToken, setToken, deleteToken } from './storage/tokenStorage';
 import AppContext from './screens/AppContext'
+import jwt_decode from "jwt-decode";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -15,6 +16,7 @@ export default function App() {
 
   // setting up context to use login status as a global variable
   const [loginStatus, setLoginStatus] = useState(false);
+  const [user, setUser] = useState('')
 
   // function to setup logout to change loginStatus
   const logout = useCallback(() => {
@@ -30,22 +32,29 @@ export default function App() {
   useEffect(() => {
     const checkToken = async () => {
       const refreshToken = await getToken('refresh');
+      // check if refresh token has expired
       if (refreshToken !== null && refreshToken !== undefined) {
         setLoginStatus(true)
       }
       else {
         setLoginStatus(false)
       }
+      // console.log(refreshToken)
+      var decoded = jwt_decode(refreshToken)
+      // this is the user id
+      setUser(Object.values(decoded)[4])
     }
 
-    checkToken();
+    checkToken();    
+    
   }, []);
 
   const contextValue = useMemo(() => ({
+    user,
     loginStatus,
     logout,
     login,
-  }), [loginStatus, logout, login]);
+  }), [user, loginStatus, logout, login]);
 
   if (!isLoadingComplete) {
     return null;
