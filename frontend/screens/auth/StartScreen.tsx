@@ -1,23 +1,31 @@
 import { StyleSheet } from 'react-native';
 
-import EditScreenInfo from '../components/EditScreenInfo';
-import { Text, View } from '../components/Themed';
-import { TouchableOpacity } from 'react-native'
-// import { RootStackParamList, RootTabScreenProps } from '../types';
-// import { StackScreenProps } from '@react-navigation/stack';
+import API from '../../api/ymarket_api';
 
-import Logo from "../components/Logo"
+import { Text, View } from '../../components/Themed';
+import { TouchableOpacity } from 'react-native'
+
+import { deleteToken } from '../../storage/tokenStorage';
+
+import Logo from "../../components/Logo"
 
 export default function StartScreen({ navigation }: any) {
+
   return (
     <View style={styles.container}>
-        <Logo/>
+      <Logo/>
       <View style={styles.separator} />
+      <TouchableOpacity 
+        style={styles.button}
+        onPress={() => navigation.navigate('LoginScreen')}>
+        <Text style={styles.title}>Login</Text>
+      </TouchableOpacity>
+      <View style={styles.separator}/>
       <TouchableOpacity 
         style={styles.button}
         onPress={() => navigation.navigate('RegisterScreen')}>
         <Text style={styles.title}>Register</Text>
-        </TouchableOpacity>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -35,7 +43,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Arial',
   },
   separator: {
-    marginVertical: 10,
+    marginVertical: 5,
     height: 3,
     width: '50%',
   },
@@ -48,7 +56,7 @@ const styles = StyleSheet.create({
   button: {
     alignItems: "center",
     backgroundColor: "#0f4d92",
-    padding: 10
-    
+    padding: 10,
+    width: 170,
   }
 });

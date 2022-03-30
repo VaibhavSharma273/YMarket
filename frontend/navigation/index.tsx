@@ -9,17 +9,22 @@ import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/
 import { createNativeStackNavigator } from '@react-navigation/native-stack'; //error here
 import * as React from 'react';
 import { ColorSchemeName, Pressable } from 'react-native';
+import { useContext } from "react";
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
-import ModalScreen from '../screens/ModalScreen';
-import NotFoundScreen from '../screens/NotFoundScreen';
 import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
-import StartScreen from '../screens/StartScreen';
-import RegisterScreen from '../screens/RegisterScreen';
-import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
+import UserProfileScreen from '../screens/UserProfileScreen';
+import StartScreen from '../screens/auth/StartScreen';
+import RegisterScreen from '../screens/auth/RegisterScreen';
+import ConfirmationScreen from '../screens/auth/ConfirmationScreen';
+import ResetPasswordScreen from '../screens/auth/ResetPasswordScreen';
+import LoginScreen from '../screens/auth/LoginScreen';
+import { AuthTabParamList, RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+
+import AppContext from "../screens/AppContext";
 
 const LightTheme = {
   dark: false,
@@ -47,17 +52,38 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
+  const myContext = useContext(AppContext)
+
+  // based on the loginStatus, return the right screen stack
+
+  // there are two screen stacks -- auth (has StartScreen, RegisterScreen, etc)
+  // and root (has the feed, profile, etc). If a user is logged in, return the root.
   return (
-    <Stack.Navigator initialRouteName="StartScreen" screenOptions={{headerShown: false,}}>
-      <Stack.Screen name="StartScreen" component={StartScreen} />
-      <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-      <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
-      <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
-      <Stack.Group screenOptions={{ presentation: 'modal' }}>
-        <Stack.Screen name="Modal" component={ModalScreen} />
-      </Stack.Group>
+    <Stack.Navigator  screenOptions={{ headerShown: false }} >
+      {myContext.loginStatus ? (
+        <Stack.Screen name="Root" component={BottomTabNavigator} />
+      ) : (
+        <Stack.Screen name="Auth" component={AuthNavigator} />
+      )}
+
     </Stack.Navigator>
   );
+}
+
+
+// auth screen stack
+const Auth = createNativeStackNavigator<AuthTabParamList>();
+
+function AuthNavigator() {
+  return (
+    <Auth.Navigator initialRouteName='StartScreen' screenOptions={{headerShown: false,}}>
+      <Auth.Screen name="StartScreen" component={StartScreen} />
+      <Auth.Screen name="RegisterScreen" component={RegisterScreen} />
+      <Auth.Screen name="ConfirmationScreen" component={ConfirmationScreen} />
+      <Auth.Screen name="ResetPasswordScreen" component={ResetPasswordScreen} />
+      <Auth.Screen name="LoginScreen" component={LoginScreen} />
+    </Auth.Navigator>
+  )
 }
 
 /**
@@ -74,34 +100,29 @@ function BottomTabNavigator() {
       initialRouteName="TabOne"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
+        headerShown: false,
       }}>
       <BottomTab.Screen
         name="TabOne"
         component={TabOneScreen}
-        options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
+        options={{
           title: 'Tab One',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Pressable
-              onPress={() => navigation.navigate('Modal')}
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-              })}>
-              <FontAwesome
-                name="info-circle"
-                size={25}
-                color={Colors[colorScheme].text}
-                style={{ marginRight: 15 }}
-              />
-            </Pressable>
-          ),
-        })}
+        }}
       />
       <BottomTab.Screen
         name="TabTwo"
         component={TabTwoScreen}
         options={{
           title: 'Tab Two',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="UserProfile"
+        component={UserProfileScreen}
+        options={{
+          title: 'UserProfile',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
