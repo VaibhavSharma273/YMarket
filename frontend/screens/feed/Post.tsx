@@ -1,5 +1,7 @@
 import React from 'react';
 import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Swiper from 'react-native-gallery-swiper'; 
+//<Swiper style={styles.listItemImage} images={post.content} />
 
 const Post = (props: { post: any; }) => {
   const { post } = props;
@@ -7,7 +9,7 @@ const Post = (props: { post: any; }) => {
   const renderPostContent = () => {
     return (
       <View style={styles.listItemBody}>
-        <Image style={styles.listItemImage} source={{ uri: post.content }} />
+        <Swiper style={styles.listItemImage} images = { post.content } resizeMode = "cover" />
       </View>
     );
   }
