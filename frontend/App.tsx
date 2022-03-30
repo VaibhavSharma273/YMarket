@@ -10,6 +10,8 @@ import { getToken, setToken, deleteToken } from './storage/tokenStorage';
 import AppContext from './screens/AppContext'
 import jwt_decode from "jwt-decode";
 
+import API from './api/ymarket_api';
+
 interface JwtToken {
   exp: number; 
   iat: number; 
@@ -45,6 +47,19 @@ export default function App() {
     setUserProfile() 
   }, []);
 
+  // function to refresh access token using refresh token
+  const refreshAccessToken = async () => {
+    const path = 'api/token/refresh/'
+    const response = await API.post(path)
+                              .then((response) => {
+                                const accessToken = response.data.access
+                                setToken('access', accessToken)
+                              })
+                              .catch((error) => {
+                                console.log(error)
+                              });
+  }
+
   // function that will run each time App is called -- checks the token value
   useEffect(() => {
     const checkToken = async () => {
@@ -55,7 +70,10 @@ export default function App() {
         // user needs to login if refresh token expires
         if (decoded.exp < Date.now() / 1000) {
           setLoginStatus(false)
-        } else {
+        } 
+        // otherwise user is logged in already and should refresh access token
+        else {
+          refreshAccessToken() 
           setLoginStatus(true)
           setUser(decoded.user_id)
         }

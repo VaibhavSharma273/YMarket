@@ -18,32 +18,23 @@ export default function UserProfileScreen({ navigation } : RootTabScreenProps<'U
     const myContext = useContext(AppContext);
 
     useEffect(() => {
-      const getUserName = async () => {
+      const getUserProfile = async () => {
         const path = 'api/users/profile/' + myContext.user
         const response = await API.get(path)
                                   .then((response) => {
                                     const firstName = response.data.first_name
                                     const lastName = response.data.last_name
+                                    const email = response.data.email
                                     const fullName = String(firstName) + ' ' + String(lastName)
                                     setUserName(fullName)
-                                  })
-                                  .catch((error) => {
-                                    console.log(error)
-                                  });
-      }
-      const getUserEmail = async () => {
-        const path = 'api/users/profile/' + myContext.user
-        const response = await API.get(path)
-                                  .then((response) => {
-                                    const email = response.data.email
                                     setUserEmail(email)
                                   })
                                   .catch((error) => {
                                     console.log(error)
                                   });
       }
-      getUserName();
-      getUserEmail();
+
+      getUserProfile();
     }, []);
 
     const onLogoutPressed = async () => {
