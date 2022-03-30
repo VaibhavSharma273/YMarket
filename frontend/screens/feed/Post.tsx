@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Dimensions, Platform, PixelRatio } from 'react-native';
 
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const {
   width: SCREEN_WIDTH,
   height: SCREEN_HEIGHT,
@@ -19,20 +21,22 @@ export function normalize(size: number) {
   }
 }
 
-const Post = (props: { post: any; }) => {
-  const { post } = props;
+const Post = (props: { post: any, navigation: any; }) => {
+  const { post, navigation } = props;
 
   const renderPostContent = () => {
     return (
       <View style={styles.listItemBody}>
-        <Image style={styles.listItemImage} source={{ uri: post.content }} />
+        <Image style={styles.listItemImage} source={{ uri: post.content[0] }} />
       </View>
     );
   }
 
   return (
     <View style={styles.listItemShadow}>
-      <TouchableOpacity style={styles.listItem}>
+      <TouchableOpacity style={styles.listItem} onPress={() => navigation.push('ViewPost', {
+        postId: post.id
+      })}>
         {renderPostContent()}
         <View style={styles.listItemFooter}>
               <Text style={{ fontWeight: "600", flex: 1, fontSize: normalize(17)}}>{post.title}</Text>
