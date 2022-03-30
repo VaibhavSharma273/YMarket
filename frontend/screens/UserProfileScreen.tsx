@@ -22,7 +22,6 @@ export default function UserProfileScreen({ navigation } : RootTabScreenProps<'U
         const path = 'api/users/profile/' + myContext.user
         const response = await API.get(path)
                                   .then((response) => {
-                                    // this is bad; change later
                                     const firstName = response.data.first_name
                                     const lastName = response.data.last_name
                                     const fullName = String(firstName) + ' ' + String(lastName)
@@ -36,7 +35,6 @@ export default function UserProfileScreen({ navigation } : RootTabScreenProps<'U
         const path = 'api/users/profile/' + myContext.user
         const response = await API.get(path)
                                   .then((response) => {
-                                    // this is bad; change later
                                     const email = response.data.email
                                     setUserEmail(email)
                                   })
