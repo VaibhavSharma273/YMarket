@@ -9,6 +9,35 @@ A one-stop marketplace app that serves the buying and selling needs of Yale affl
 - PostgreSQL
 - Imgur API
 
+## Running the App
+
+Start two terminals. In one of the terminals, make sure you are in the root backend directory. You can run the server for the backend as follows:
+
+```
+python manage.py runserver
+```
+
+You may also need to run `python manage.py migrate` and `python manage.py makemigrations`, which you will be prompted to do so if needed upon running the server.
+
+In the second terminal, make sure you are in the root frontend directory and have expo installed. You can then start the app:
+```
+npm install --global expo-cli
+expo start
+```
+Our app can currently be simulated on XCode (or the Windows equivalent) and not ExpoGo. 
+
+## Installing Dependencies
+
+To install the required dependencies, run the following in the root project directory:
+```
+pip install -r requirements.txt
+```
+
+Then, in the root frontend directory, install yarn:
+```
+yarn install
+```
+
 ## Testing
 
 Please look at the dev branch for the most updated version of the codebase.
