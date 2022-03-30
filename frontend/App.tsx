@@ -49,7 +49,6 @@ export default function App() {
   useEffect(() => {
     const checkToken = async () => {
       const refreshToken = await getToken('refresh');
-      console.log(refreshToken)
       // check if refresh token exists 
       if (refreshToken !== null && refreshToken !== undefined) {
         const decoded = jwt_decode<JwtToken>(String(refreshToken))
