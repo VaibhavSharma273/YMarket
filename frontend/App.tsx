@@ -26,23 +26,34 @@ export default function App() {
   // function to setup login to change loginStatus
   const login = useCallback(() => {
     setLoginStatus(true);
+
+    const checkToken = async () => {
+      const refreshToken = await getToken('refresh');
+      const decoded = jwt_decode<JwtPayload>(String(refreshToken))
+      // this is the user id
+      console.log(Object.values(decoded)[4])
+      setUser(Object.values(decoded)[4])
+    }
+
+    checkToken() 
   }, []);
 
   // function that will run each time App is called -- checks the token value
   useEffect(() => {
     const checkToken = async () => {
       const refreshToken = await getToken('refresh');
+      console.log(refreshToken)
       // check if refresh token has expired
       if (refreshToken !== null && refreshToken !== undefined) {
         setLoginStatus(true)
+        const decoded = jwt_decode<JwtPayload>(String(refreshToken))
+        // this is the user id
+        console.log(Object.values(decoded)[4])
+        setUser(Object.values(decoded)[4])
       }
       else {
         setLoginStatus(false)
-      }
-      // console.log(refreshToken)
-      const decoded = jwt_decode<JwtPayload>(String(refreshToken))
-      // this is the user id
-      setUser(Object.values(decoded)[4])
+      }      
     }
 
     checkToken();    
