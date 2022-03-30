@@ -11,8 +11,6 @@ import { getToken, setToken, deleteToken } from '../storage/tokenStorage';
 import { TouchableOpacity } from 'react-native'
 import AppContext from "./AppContext"
 
-import jwt_decode from "jwt-decode";
-
 export default function UserProfileScreen({ navigation } : RootTabScreenProps<'UserProfile'>) {
     const [userName, setUserName] = useState('');
     const [userEmail, setUserEmail] = useState('');
@@ -25,8 +23,8 @@ export default function UserProfileScreen({ navigation } : RootTabScreenProps<'U
         const response = await API.get(path)
                                   .then((response) => {
                                     // this is bad; change later
-                                    const firstName = Object.values(response.data)[1]
-                                    const lastName = Object.values(response.data)[2]
+                                    const firstName = response.data.first_name
+                                    const lastName = response.data.last_name
                                     const fullName = String(firstName) + ' ' + String(lastName)
                                     setUserName(fullName)
                                   })
@@ -39,7 +37,7 @@ export default function UserProfileScreen({ navigation } : RootTabScreenProps<'U
         const response = await API.get(path)
                                   .then((response) => {
                                     // this is bad; change later
-                                    const email = String(Object.values(response.data)[5])
+                                    const email = response.data.email
                                     setUserEmail(email)
                                   })
                                   .catch((error) => {

@@ -8,7 +8,15 @@ import Navigation from './navigation';
 
 import { getToken, setToken, deleteToken } from './storage/tokenStorage';
 import AppContext from './screens/AppContext'
-import jwt_decode, { JwtPayload } from "jwt-decode";
+import jwt_decode from "jwt-decode";
+
+interface JwtToken {
+  exp: number; 
+  iat: number; 
+  jti: string; 
+  token_type: string;
+  user_id: string
+}
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -27,15 +35,14 @@ export default function App() {
   const login = useCallback(() => {
     setLoginStatus(true);
 
-    const checkToken = async () => {
+    // once logged in, retrieve user profile id from refresh token
+    const setUserProfile = async () => {
       const refreshToken = await getToken('refresh');
-      const decoded = jwt_decode<JwtPayload>(String(refreshToken))
-      // this is the user id
-      console.log(Object.values(decoded)[4])
-      setUser(Object.values(decoded)[4])
+      const decoded = jwt_decode<JwtToken>(String(refreshToken))
+      setUser(decoded.user_id)
     }
 
-    checkToken() 
+    setUserProfile() 
   }, []);
 
   // function that will run each time App is called -- checks the token value
@@ -43,13 +50,16 @@ export default function App() {
     const checkToken = async () => {
       const refreshToken = await getToken('refresh');
       console.log(refreshToken)
-      // check if refresh token has expired
+      // check if refresh token exists 
       if (refreshToken !== null && refreshToken !== undefined) {
-        setLoginStatus(true)
-        const decoded = jwt_decode<JwtPayload>(String(refreshToken))
-        // this is the user id
-        console.log(Object.values(decoded)[4])
-        setUser(Object.values(decoded)[4])
+        const decoded = jwt_decode<JwtToken>(String(refreshToken))
+        // user needs to login if refresh token expires
+        if (decoded.exp < Date.now() / 1000) {
+          setLoginStatus(false)
+        } else {
+          setLoginStatus(true)
+          setUser(decoded.user_id)
+        }
       }
       else {
         setLoginStatus(false)
