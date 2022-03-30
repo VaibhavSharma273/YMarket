@@ -13,6 +13,12 @@ A one-stop marketplace app that serves the buying and selling needs of Yale affl
 
 ### Frontend
 
-We're using `jest` to create tests. In each directory that contains files that need to be tested, there should be a `__tests__` folder, and possibly a `__snapshots__` sub-folder. So far, we've written a few basic unittests that check if a screen's contents have loaded and snapshot tests for the authorization screens. 
+We are using `jest` to create tests. In each directory that contains files that need to be tested, there should be a `__tests__` folder, and possibly a `__snapshots__` sub-folder. So far, we have written a few basic unittests that check if a screen's contents have loaded and snapshot tests for the authorization screens.
 
-To run the tests, type `yarn test` into the terminal.  
+To run the tests, type `yarn test` into the terminal.
+
+### Backend
+
+We are using the `APITestCase` class from Django's REST framework. This class mirrors the existing Django test case classes, but it uses `APIClient` instead of Django's default `Client`. For each feature implemented, there should be a `tests.py` file in the appropriate feature subdirectory. Currently, there are unit tests for the post API in `/posts/tests.py` and for the user authentication system API in `/users/tests.py`. Because our post API requires authentication by nature, there is integration testing between the authentication system and the post API.
+
+To run the tests, type `python manage.py test` into the terminal.
