@@ -26,9 +26,9 @@ const linking: LinkingOptions<RootStackParamList> = {
               FeedScreen: 'feed',
             },
           },
-          TabOne: {
+          Post: {
             screens: {
-              TabOneScreen: 'one',
+              CreatePostScreen: 'post',
             },
           },
           TabTwo: {

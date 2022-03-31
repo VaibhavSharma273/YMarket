@@ -14,7 +14,7 @@ import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
-import TabOneScreen from '../screens/TabOneScreen';
+import CreatePostScreen from '../screens/create_post/CreatePostScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 import UserProfileScreen from '../screens/UserProfileScreen';
 import StartScreen from '../screens/auth/StartScreen';
@@ -89,6 +89,28 @@ function BottomTabNavigator() {
         component={FeedScreen}
         options={({ navigation }: RootTabScreenProps<'Feed'>) => ({
           title: 'Feed',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          headerRight: () => (
+            <Pressable
+              onPress={() => navigation.navigate('Modal')}
+              style={({ pressed }) => ({
+                opacity: pressed ? 0.5 : 1,
+              })}>
+              <FontAwesome
+                name="info-circle"
+                size={25}
+                color={Colors[colorScheme].text}
+                style={{ marginRight: 15 }}
+              />
+            </Pressable>
+          ),
+        })}
+      />
+      <BottomTab.Screen
+        name="Post"
+        component={CreatePostScreen}
+        options={({ navigation }: RootTabScreenProps<'Post'>) => ({
+          title: 'Post',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight: () => (
             <Pressable
