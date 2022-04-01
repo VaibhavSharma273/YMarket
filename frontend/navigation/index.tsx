@@ -14,7 +14,11 @@ import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
+
+import AccessPostScreen from '../screens/create_post/AccessPostScreen';
 import CreatePostScreen from '../screens/create_post/CreatePostScreen';
+import EditPostScreen from '../screens/create_post/EditPostScreen';
+
 import TabTwoScreen from '../screens/TabTwoScreen';
 import UserProfileScreen from '../screens/UserProfileScreen';
 import StartScreen from '../screens/auth/StartScreen';
@@ -92,7 +96,7 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight: () => (
             <Pressable
-              onPress={() => navigation.navigate('Modal')}
+              onPress={() => navigation.navigate('Feed')}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
               })}>
@@ -107,14 +111,14 @@ function BottomTabNavigator() {
         })}
       />
       <BottomTab.Screen
-        name="Post"
-        component={CreatePostScreen}
-        options={({ navigation }: RootTabScreenProps<'Post'>) => ({
+        name="CreateStack"
+        component={CreateNavigator}
+        options={({ navigation }: RootTabScreenProps<'CreateStack'>) => ({
           title: 'Post',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight: () => (
             <Pressable
-              onPress={() => navigation.navigate('Modal')}
+              onPress={() => navigation.navigate('CreateStack')}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
               })}>
@@ -157,3 +161,16 @@ function TabBarIcon(props: {
 }) {
   return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
 }
+
+const CreateStack = createNativeStackNavigator();
+
+function CreateNavigator() {
+  return (
+    <CreateStack.Navigator initialRouteName='AccessPostScreen' screenOptions={{headerShown: false,}}>
+      <CreateStack.Screen name="AccessPostScreen" component={AccessPostScreen} />
+      <CreateStack.Screen name="CreatePostScreen" component={CreatePostScreen} />
+      <CreateStack.Screen name="EditPostScreen" component={EditPostScreen} />
+    </CreateStack.Navigator>
+  );
+}
+

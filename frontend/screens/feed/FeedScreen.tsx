@@ -5,7 +5,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
 // import { useNavigation } from '@react-navigation/native';
 
-import mock from "./data/mock";
+import mock from "./data/mock2";
 
 import Post from './Post';
 

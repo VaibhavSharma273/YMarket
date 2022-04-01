@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { StyleSheet, TouchableOpacity, Alert, ScrollView, Pressable, Modal } from 'react-native';
+import { StyleSheet, TouchableOpacity, Alert, ScrollView} from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown'
 import { MaterialIcons } from '@expo/vector-icons'; 
 
@@ -12,18 +12,27 @@ import { titleValidator } from '../../helpers/titleValidator';
 import { postValidator } from '../../helpers/postValidator';
 import { priceValidator } from '../../helpers/priceValidator';
 
-export default function CreatePostScreen({ navigation }: any) {
-  const [title, setTitle] = useState({ value: '', error: '' })
-  const [caption, setCaption] = useState({ value: '', error: '' })
-  const [price, setPrice] = useState({ value: '', error: '' })
-  const [category, setCategory] = useState({ value: '', error: '' })
+import { RootTabScreenProps } from '../../types';
+import mock from "./data/mock";
+
+export default function EditPostScreen({ route, navigation }: { route: any; navigation: any }) {
+
+  const { postId } = route.params;
+  const post = mock[0].posts.find((obj: { id: any; }) => {
+    return obj.id === postId
+  })
+
+  const [title, setTitle] = useState({ value: post.title, error: '' })
+  const [caption, setCaption] = useState({ value: post.content, error: '' })
+  const [price, setPrice] = useState({ value: post.price, error: '' })
+  const [category, setCategory] = useState({ value: post.category, error: '' })
   const postTypes = ["Buy", "Sell"]
 
   const [postType, setPostType] = useState({ value: '', error: '' })
 
   const confirmPopup = async ()=>{
     Alert.alert(
-      'Post Created!',
+      'Post Edited!',
       '',
       [
         {text: 'Done', onPress: () => navigation.goBack()},
@@ -36,7 +45,7 @@ export default function CreatePostScreen({ navigation }: any) {
 
   const cancelPopup= async ()=>{
     Alert.alert(
-      'Exit Create a Post?',
+      'Exit Edit a Post?',
       'Your changes will not be saved!',
       [
         {text: 'Yes', onPress: () => navigation.goBack()},
@@ -48,7 +57,7 @@ export default function CreatePostScreen({ navigation }: any) {
     );
   }
 
-  const onCreatePostPressed = async () => {
+  const onEditPostPressed = async () => {
     const titleError = titleValidator(title.value)
     const captionError = postValidator(caption.value)
     const priceError = priceValidator(price.value)
@@ -108,10 +117,10 @@ export default function CreatePostScreen({ navigation }: any) {
     <View style ={styles.container}>
       <View style ={{flexDirection: 'row',}}>
       <Text style = {styles.headerText}>
-        {"Create a Post"}
+        {"Edit a Post"}
       </Text>
       <TouchableOpacity  onPress={() => cancelPopup()}>
-      <MaterialIcons name="cancel" size={30} color="#0F4D92" style={{paddingLeft: '12%', alignSelf: 'flex-start'}} />
+      <MaterialIcons name="cancel" size={30} color="#0F4D92" style={{paddingLeft: '21%', alignSelf: 'flex-start'}} />
       </TouchableOpacity>
       </View>
       <View style={{paddingTop:'4%'}}></View>
@@ -196,8 +205,8 @@ export default function CreatePostScreen({ navigation }: any) {
         <UploadImage/>
         <View style={{paddingRight:'100%'}}></View>
         <View style={{paddingBottom: '2%'}}></View>
-        <TouchableOpacity style={styles.button} onPress={onCreatePostPressed}>
-          <Text style={{color: 'white', fontWeight: 'bold', fontSize: 18, fontFamily: 'Arial'}}>Add Post</Text>
+        <TouchableOpacity style={styles.button} onPress={onEditPostPressed}>
+          <Text style={{color: 'white', fontWeight: 'bold', fontSize: 18, fontFamily: 'Arial'}}>Confirm Changes</Text>
         </TouchableOpacity>
       </View>
       <View style={{paddingTop:'4%'}}></View>
