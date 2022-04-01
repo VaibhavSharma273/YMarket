@@ -25,9 +25,10 @@ const linking: LinkingOptions<RootStackParamList> = {
       },
       Root: {
         screens: {
-          TabOne: {
+          PostStack: {
             screens: {
-              TabOneScreen: 'one',
+              FeedScreen: 'feed',
+              ViewPostScreen: 'viewPost',
             },
           },
           Search: {

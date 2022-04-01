@@ -21,6 +21,8 @@ import RegisterScreen from '../screens/auth/RegisterScreen';
 import ConfirmationScreen from '../screens/auth/ConfirmationScreen';
 import ResetPasswordScreen from '../screens/auth/ResetPasswordScreen';
 import LoginScreen from '../screens/auth/LoginScreen';
+import FeedScreen from '../screens/feed/FeedScreen';
+import ViewPostScreen from '../screens/feed/ViewPostScreen';
 import { AuthTabParamList, RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 
@@ -86,6 +88,28 @@ function AuthNavigator() {
   )
 }
 
+// posts (feed + detailed view) screen stack
+const PostStack = createNativeStackNavigator();
+
+function PostNavigator() {
+  return (
+    <PostStack.Navigator 
+    initialRouteName="Post"
+    >
+      <PostStack.Screen 
+      name="Feed" component={FeedScreen} options ={{headerShown: false,}}/>
+      <PostStack.Screen 
+      name="ViewPost" 
+      component={ViewPostScreen} 
+      options ={{
+        title: '',
+        headerTintColor: '#0f4d92',
+        }}/>
+    </PostStack.Navigator>
+  );
+}
+
+
 /**
  * A bottom tab navigator displays tab buttons on the bottom of the display to switch screens.
  * https://reactnavigation.org/docs/bottom-tab-navigator
@@ -97,18 +121,33 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+      initialRouteName="PostStack"
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarActiveTintColor: "#0f4d92",
         headerShown: false,
       }}>
       <BottomTab.Screen
-        name="TabOne"
-        component={TabOneScreen}
-        options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
+        name="PostStack"
+        component={PostNavigator}
+        options={({ navigation }: RootTabScreenProps<'PostStack'>) => ({
+          title: 'Feed',
+          tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
+          headerRight: () => (
+            <Pressable
+              //onPress={() => navigation.navigate('Modal')}
+              style={({ pressed }) => ({
+                opacity: pressed ? 0.5 : 1,
+              })
+              }>
+              <FontAwesome
+                name="info-circle"
+                size={25}
+                color={Colors[colorScheme].text}
+                style={{ marginRight: 15 }}
+              />
+            </Pressable>
+          ),
+        })}
       />
       <BottomTab.Screen
         name="Search"
