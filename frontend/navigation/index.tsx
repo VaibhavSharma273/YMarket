@@ -131,7 +131,7 @@ function BottomTabNavigator() {
         component={PostNavigator}
         options={({ navigation }: RootTabScreenProps<'PostStack'>) => ({
           title: 'Feed',
-          tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
           headerRight: () => (
             <Pressable
               //onPress={() => navigation.navigate('Modal')}
@@ -154,15 +154,15 @@ function BottomTabNavigator() {
         component={SearchScreen}
         options={{
           title: 'Search',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="search" color={color} />,
         }}
       />
       <BottomTab.Screen
         name="UserProfile"
         component={UserProfileScreen}
         options={{
-          title: 'UserProfile',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Profile',
+          tabBarIcon: ({ color }) => <TabBarIcon name="user-circle" color={color} />,
         }}
       />
     </BottomTab.Navigator>
