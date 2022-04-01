@@ -1,70 +1,38 @@
 import React from 'react';
 import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Dimensions, Platform, PixelRatio } from 'react-native';
+import { text_styles } from '../../components/TextNormalize';
 
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-const {
-  width: SCREEN_WIDTH,
-  height: SCREEN_HEIGHT,
-} = Dimensions.get('window');
-
-// based on iphone 5s's scale
-const scale = SCREEN_WIDTH / 320;
-
-export function normalize(size: number) {
-  const newSize = size * scale 
-  if (Platform.OS === 'ios') {
-    return Math.round(PixelRatio.roundToNearestPixel(newSize))
-  } else {
-    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2
-  }
-}
 
 const Post = (props: { post: any, navigation: any; }) => {
   const { post, navigation } = props;
 
+  // Render image here using the image URLs:
   const renderPostContent = () => {
     return (
       <View style={styles.listItemBody}>
-        <Image style={styles.listItemImage} source={{ uri: post.content[0] }} />
+        <Image style={styles.listItemImage} source={{ uri: post.postimages[0].image_url }} />
       </View>
     );
   }
 
+  // Actual post rendering including the image and test for the feed
   return (
     <View style={styles.listItemShadow}>
-      <TouchableOpacity style={styles.listItem} onPress={() => navigation.push('ViewPost', {
-        postId: post.id
-      })}>
+      <TouchableOpacity style={styles.listItem} onPress={() => navigation.push('ViewPost', 
+        {
+          postId: post.id
+        })}>
         {renderPostContent()}
         <View style={styles.listItemFooter}>
-              <Text style={{ fontWeight: "600", flex: 1, fontSize: normalize(17)}}>{post.title}</Text>
-              <Text style = {{ textAlign: 'right', flex: 1, fontSize: normalize(17)}}> {post.price} </Text>
+              <Text numberOfLines={1} style={[ text_styles.medium, { fontWeight: "600", flex: 1 } ]}>{post.title}</Text>
+              <Text numberOfLines={1} style = {[ text_styles.medium, { textAlign: 'right', flex: 1 } ]}> ${post.price} </Text>
         </View>
       </TouchableOpacity>
     </View>
   );
 };
 
-const text_styles = {
-  mini: {
-    fontSize: normalize(12),
-  },
-  small: {
-    fontSize: normalize(15),
-  },
-  medium: {
-    fontSize: normalize(17),
-  },
-  large: {
-    fontSize: normalize(20),
-  },
-  xlarge: {
-    fontSize: normalize(24),
-  },
-};
-
+// ! Issue: Hard coded margins and padding, can cause conflict with different screen sizes
 const styles = StyleSheet.create({
   listItem: {
     borderRadius: 16,
@@ -86,19 +54,6 @@ const styles = StyleSheet.create({
     shadowRadius: 2.22,
     elevation: 3,
    },
-  listItemHeader: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    padding: 8
-  },
-  listItemDot: {
-    backgroundColor: '#000',
-    borderRadius: 4 / 2,
-    height: 4,
-    marginRight: 12,
-    marginTop: 2,
-    width: 4,
-  },
   listItemBody: {
     flex: 1,
     minHeight: 320

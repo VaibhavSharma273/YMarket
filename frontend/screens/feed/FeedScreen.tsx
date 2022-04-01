@@ -1,18 +1,12 @@
 import { RootTabScreenProps } from '../../types';
 
-   
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Text, View, FlatList, StyleSheet } from 'react-native';
 
-import { useNavigation, NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
 import mock from "./data/mock";
-
 import Post from './Post';
-import { normalize } from './Post';
 
-const PostStack = createNativeStackNavigator();
+import { normalize } from '../../components/TextNormalize';
 
 const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
 

@@ -1,44 +1,49 @@
-
-import { Image, Text, View, StyleSheet, Button, Dimensions, Pressable, Modal } from 'react-native';
+import { Image, Text, View, StyleSheet, Dimensions, Pressable, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { ScrollView, TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import mock from "./data/mock";
-import Clipboard from '@react-native-community/clipboard';
 import React, { useState } from "react";
+import { normalize, text_styles } from '../../components/TextNormalize';
 
 const windowWidth = Dimensions.get('window').width;
 
 export default function ViewPost({ route, navigation }: { route: any; navigation: any }) {
+
+  // Identify post here:
   const { postId } = route.params;
-  const post = mock.find(obj => {
+  const post = mock.find((obj: { id: any; }) => {
     return obj.id === postId
   })
 
+  // Setting up the modal (pop-up)
   const [modalVisible, setModalVisible] = useState(false);
 
+  // Render image for the post:
   const renderPostContent = () => {
     return (
-      <Image style={styles.postItemImage} source={{ uri: post.content[0] }} />
+      <Image style={styles.postItemImage} source={{ uri: post.postimages[0].image_url }} />
     );
   }
 
+  // Actual detailed view being returned
   return (
     <View style = {{flex : 1}}>
     <ScrollView style={styles.container}>
       {renderPostContent()}
       <View style={styles.postItemTitle}>
-        <Text style={{ fontWeight: "600", flex: 1, fontSize: 27 }}>{post.title}</Text>
-        <Text style={{ textAlign: 'right', flex: 1, fontSize: 27 }}> {post.price} </Text>
+        <Text style={{ fontWeight: "600", flex: 1, fontSize: normalize(27) }}>{post.title}</Text>
+        <Text style={{ textAlign: 'right', flex: 1, fontSize: normalize(27) }}> ${post.price} </Text>
       </View>
       <View style={styles.postItemTitle}>
-        <Text style={{ flex: 1, fontSize: 17 }}>{post.caption}</Text>
+        <Text style={[ text_styles.medium, { flex: 1 } ]}>{post.content}</Text>
       </View>
       <View style={{ flex: 1, paddingVertical: 20 }}>
           <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
-            <Text style={{ fontWeight: "600", fontSize: 17, color: "#fff" }}>Contact Seller</Text>
+            <Text style={[ text_styles.medium, { fontWeight: "600", color: "#fff" } ]}>Contact Seller</Text>
           </TouchableOpacity>
       </View>
     </ScrollView>
+
     <Modal
         animationType="slide"
         transparent={true}
@@ -53,7 +58,7 @@ export default function ViewPost({ route, navigation }: { route: any; navigation
             <Text style = {{fontSize: 17 , paddingBottom: 20}}>Click the icon to copy the information to clipboard!</Text>
             <Text style = {{fontSize: 17, fontWeight: 'bold'}}>Email</Text>
             <View style = {{flexDirection: 'row', paddingBottom : 20, alignItems: 'center',}}>
-              <Text style = {{fontSize: 17, flex: 1}} >{post.author}</Text>
+              <Text style = {{fontSize: 17, flex: 1}} >{post.author.email}</Text>
               <TouchableOpacity style = {{alignSelf: 'flex-end', flex: 1,}}>
               <Ionicons name="clipboard" size={17} color="black"/>
               </TouchableOpacity>
@@ -104,7 +109,7 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   modalText: {
-    marginBottom: 15,
+    marginBottom: normalize(15),
     textAlign: "center"
   },
   container: {
@@ -123,7 +128,6 @@ const styles = StyleSheet.create({
     minHeight: windowWidth,
     maxHeight: windowWidth,
     aspectRatio: 1,
-    //flex: 1,
   },
   button: {
     alignSelf: 'center',
