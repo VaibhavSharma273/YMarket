@@ -72,7 +72,7 @@ export default function ViewPost({ route, navigation }: { route: any; navigation
       {renderPostContent()}
       <View style={styles.postItemTitle}>
         <Text style={[ text_styles.xlarge, { fontWeight: "600", flex: 1 }] }>{post.title}</Text>
-        {post.is_buy == false ? <Text style={[ text_styles.xlarge, { textAlign: 'right', flex: 1 }] }> ${post.price} </Text> : null } 
+        <Text style={[ text_styles.xlarge, { textAlign: 'right', flex: 1 }] }> ${post.price} </Text>
       </View>
       <View style={{flexDirection: "row", marginTop: 5, paddingHorizontal: 20}}>
         <View style = {[styles.categoryContainer, {paddingHorizontal: 0, marginHorizontal: 0, backgroundColor: '#fff'}]}>
