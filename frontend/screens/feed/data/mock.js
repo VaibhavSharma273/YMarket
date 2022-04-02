@@ -1,3 +1,5 @@
+import { TabRouter } from "react-navigation";
+
 mock = [
     {
         "id" : 1,
@@ -70,7 +72,7 @@ mock = [
             "last_name": "Sharma",
             "email": "vaibhav.sharma@yale.edu"
         },
-        "price" : "200",
+        "price" : "180",
         "category": "furniture",
         "is_buy": false,
         "postimages": [
@@ -83,6 +85,22 @@ mock = [
                 "image_url": "https://assets.weimgs.com/weimgs/ab/images/wcm/products/202202/0537/modern-streamline-rounded-edge-floor-mirror-72-z.jpg",
             }, 
         ] 
+    },
+    {
+        "id" : 4,
+        "title" : "Rack",
+        "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        "date_posted":"2022-03-12T03:40:22.629994Z",
+        "author": {
+            "id": 1,
+            "first_name": "Vaibhav",
+            "last_name": "Sharma",
+            "email": "vaibhav.sharma@yale.edu"
+        },
+        "price" : "200",
+        "category": "furniture",
+        "is_buy": true,
+        "postimages": [] 
     },
 ];
 

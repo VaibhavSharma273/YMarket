@@ -13,11 +13,16 @@ const linking: LinkingOptions<RootStackParamList> = {
   prefixes: [Linking.makeUrl('/')],
   config: {
     screens: {
-      StartScreen: 'start',
-      RegisterScreen: 'register',
-      ConfirmationScreen: 'confirm',
-      ResetPasswordScreen: 'resetPassword',
-      LoginScreen: 'login',
+      // screens divided into auth and root
+      Auth: {
+        screens: {
+          StartScreen: 'start',
+          RegisterScreen: 'register',
+          ConfirmationScreen: 'confirm',
+          ResetPasswordScreen: 'resetPassword',
+          LoginScreen: 'login',
+        },
+      },
       Root: {
         // add screen here
         screens: {
@@ -33,9 +38,9 @@ const linking: LinkingOptions<RootStackParamList> = {
               CreatePostScreen: 'create'
             },
           },
-          TabTwo: {
+          Search: {
             screens: {
-              TabTwoScreen: 'two',
+              SearchScreen: 'search',
             },
           },
           UserProfile: {
@@ -45,8 +50,6 @@ const linking: LinkingOptions<RootStackParamList> = {
           },
         },
       },
-      Modal: 'modal',
-      NotFound: '*',
     },
   },
 };

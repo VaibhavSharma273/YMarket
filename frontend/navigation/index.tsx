@@ -9,6 +9,7 @@ import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/
 import { createNativeStackNavigator } from '@react-navigation/native-stack'; //error here
 import * as React from 'react';
 import { ColorSchemeName, Pressable } from 'react-native';
+import { useContext } from "react";
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -19,7 +20,7 @@ import AccessPostScreen from '../screens/create_post/AccessPostScreen';
 import CreatePostScreen from '../screens/create_post/CreatePostScreen';
 import EditPostScreen from '../screens/create_post/EditPostScreen';
 
-import TabTwoScreen from '../screens/TabTwoScreen';
+import SearchScreen from '../screens/SearchScreen';
 import UserProfileScreen from '../screens/UserProfileScreen';
 import StartScreen from '../screens/auth/StartScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
@@ -28,8 +29,10 @@ import ResetPasswordScreen from '../screens/auth/ResetPasswordScreen';
 import LoginScreen from '../screens/auth/LoginScreen';
 import FeedScreen from '../screens/feed/FeedScreen';
 import ViewPostScreen from '../screens/feed/ViewPostScreen';
-import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
+import { AuthTabParamList, RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+
+import AppContext from "../screens/AppContext";
 
 const LightTheme = {
   dark: false,
@@ -57,28 +60,41 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
+  const myContext = useContext(AppContext)
+
+  // based on the loginStatus, return the right screen stack
+
+  // there are two screen stacks -- auth (has StartScreen, RegisterScreen, etc)
+  // and root (has the feed, profile, etc). If a user is logged in, return the root.
   return (
-    <Stack.Navigator initialRouteName="StartScreen" screenOptions={{headerShown: false,}}>
-      <Stack.Screen name="StartScreen" component={StartScreen} />
-      <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-      <Stack.Screen name="ConfirmationScreen" component={ConfirmationScreen} />
-      <Stack.Screen name="ResetPasswordScreen" component={ResetPasswordScreen} />
-      <Stack.Screen name="LoginScreen" component={LoginScreen} />
-      <Stack.Screen name="Root" component={BottomTabNavigator} />
-      <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
-      <Stack.Group screenOptions={{ presentation: 'modal' }}>
-        <Stack.Screen name="Modal" component={ModalScreen} />
-      </Stack.Group>
+    <Stack.Navigator  screenOptions={{ headerShown: false }} >
+      {myContext.loginStatus ? (
+        <Stack.Screen name="Root" component={BottomTabNavigator} />
+      ) : (
+        <Stack.Screen name="Auth" component={AuthNavigator} />
+      )}
+
     </Stack.Navigator>
   );
 }
 
-/**
- * A bottom tab navigator displays tab buttons on the bottom of the display to switch screens.
- * https://reactnavigation.org/docs/bottom-tab-navigator
- */
-const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
+// auth screen stack
+const Auth = createNativeStackNavigator<AuthTabParamList>();
+
+function AuthNavigator() {
+  return (
+    <Auth.Navigator initialRouteName='StartScreen' screenOptions={{headerShown: false,}}>
+      <Auth.Screen name="StartScreen" component={StartScreen} />
+      <Auth.Screen name="RegisterScreen" component={RegisterScreen} />
+      <Auth.Screen name="ConfirmationScreen" component={ConfirmationScreen} />
+      <Auth.Screen name="ResetPasswordScreen" component={ResetPasswordScreen} />
+      <Auth.Screen name="LoginScreen" component={LoginScreen} />
+    </Auth.Navigator>
+  )
+}
+
+// posts (feed + detailed view) screen stack
 const PostStack = createNativeStackNavigator();
 
 function PostNavigator() {
@@ -99,6 +115,13 @@ function PostNavigator() {
   );
 }
 
+
+/**
+ * A bottom tab navigator displays tab buttons on the bottom of the display to switch screens.
+ * https://reactnavigation.org/docs/bottom-tab-navigator
+ */
+const BottomTab = createBottomTabNavigator<RootTabParamList>();
+
 function BottomTabNavigator() {
   const colorScheme = useColorScheme();
 
@@ -117,7 +140,7 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
           headerRight: () => (
             <Pressable
-              onPress={() => navigation.navigate('Feed')}
+              //onPress={() => navigation.navigate('Feed')}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
               })}>
@@ -139,10 +162,11 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight: () => (
             <Pressable
-              onPress={() => navigation.navigate('CreateStack')}
+              //onPress={() => navigation.navigate('CreateStack')}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
-              })}>
+              })
+              }>
               <FontAwesome
                 name="info-circle"
                 size={25}
@@ -154,19 +178,19 @@ function BottomTabNavigator() {
         })}
       />
       <BottomTab.Screen
-        name="TabTwo"
-        component={TabTwoScreen}
+        name="Search"
+        component={SearchScreen}
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Search',
+          tabBarIcon: ({ color }) => <TabBarIcon name="search" color={color} />,
         }}
       />
       <BottomTab.Screen
         name="UserProfile"
         component={UserProfileScreen}
         options={{
-          title: 'UserProfile',
-          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+          title: 'Profile',
+          tabBarIcon: ({ color }) => <TabBarIcon name="user-circle" color={color} />,
         }}
       />
     </BottomTab.Navigator>

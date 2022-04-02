@@ -21,7 +21,7 @@ ymarket.interceptors.request.use(async (config) => {
 
 ymarket.interceptors.response.use((response) => {
   if (response.data.access_token && response.data.refresh_token) {
-    setToken('access', response.data.refresh_token);
+    setToken('access', response.data.access_token);
     setToken('refresh', response.data.refresh_token);
   } else if (response.data.access) {
     setToken('access', response.data.access);
