@@ -21,9 +21,10 @@ const linking: LinkingOptions<RootStackParamList> = {
       Root: {
         // add screen here
         screens: {
-          Feed: {
+          PostStack: {
             screens: {
               FeedScreen: 'feed',
+              ViewPostScreen: 'viewPost',
             },
           },
           CreateStack: {

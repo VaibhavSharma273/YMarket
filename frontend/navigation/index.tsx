@@ -27,6 +27,7 @@ import ConfirmationScreen from '../screens/auth/ConfirmationScreen';
 import ResetPasswordScreen from '../screens/auth/ResetPasswordScreen';
 import LoginScreen from '../screens/auth/LoginScreen';
 import FeedScreen from '../screens/feed/FeedScreen';
+import ViewPostScreen from '../screens/feed/ViewPostScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 
@@ -78,22 +79,42 @@ function RootNavigator() {
  */
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
+const PostStack = createNativeStackNavigator();
+
+function PostNavigator() {
+  return (
+    <PostStack.Navigator 
+    initialRouteName="Post"
+    >
+      <PostStack.Screen 
+      name="Feed" component={FeedScreen} options ={{headerShown: false,}}/>
+      <PostStack.Screen 
+      name="ViewPost" 
+      component={ViewPostScreen} 
+      options ={{
+        title: '',
+        headerTintColor: '#0f4d92',
+        }}/>
+    </PostStack.Navigator>
+  );
+}
+
 function BottomTabNavigator() {
   const colorScheme = useColorScheme();
 
   return (
     <BottomTab.Navigator
-      initialRouteName="Feed"
+      initialRouteName="PostStack"
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarActiveTintColor: "#0f4d92",
         headerShown: false,
       }}>
       <BottomTab.Screen
-        name="Feed"
-        component={FeedScreen}
-        options={({ navigation }: RootTabScreenProps<'Feed'>) => ({
+        name="PostStack"
+        component={PostNavigator}
+        options={({ navigation }: RootTabScreenProps<'PostStack'>) => ({
           title: 'Feed',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
           headerRight: () => (
             <Pressable
               onPress={() => navigation.navigate('Feed')}
@@ -145,7 +166,7 @@ function BottomTabNavigator() {
         component={UserProfileScreen}
         options={{
           title: 'UserProfile',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
         }}
       />
     </BottomTab.Navigator>
