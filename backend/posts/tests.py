@@ -55,7 +55,9 @@ class PostApiTestCase(APITestCase):
 
         assert response_data['title'] == title 
         assert response_data['content'] == content 
-        assert response_data['author'] == 'test@yale.edu'
+        assert response_data['author']['email'] == 'test@yale.edu'
+        assert response_data['author']['first_name'] == 'first'
+        assert response_data['author']['last_name'] == 'name'
         assert float(response_data['price']) == price 
         assert response_data['category'] == category
 
@@ -90,7 +92,9 @@ class PostApiTestCase(APITestCase):
 
         assert response_data['title'] == title 
         assert response_data['content'] == content 
-        assert response_data['author'] == 'test@yale.edu'
+        assert response_data['author']['email'] == 'test@yale.edu'
+        assert response_data['author']['first_name'] == 'first'
+        assert response_data['author']['last_name'] == 'name'
         assert float(response_data['price']) == price 
         assert response_data['category'] == category
 
@@ -123,7 +127,9 @@ class PostApiTestCase(APITestCase):
 
         assert response_data['title'] == new_title
         assert response_data['content'] == new_content  
-        assert response_data['author'] == 'test@yale.edu'
+        assert response_data['author']['email'] == 'test@yale.edu'
+        assert response_data['author']['first_name'] == 'first'
+        assert response_data['author']['last_name'] == 'name'
         assert float(response_data['price']) == price 
         assert response_data['category'] == category
 
@@ -151,4 +157,3 @@ class PostApiTestCase(APITestCase):
         post_id = 1
         response = self.client.delete(post_path + str(post_id), {})
         assert response.status_code == status.HTTP_404_NOT_FOUND
-         
