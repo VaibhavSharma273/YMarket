@@ -55,12 +55,14 @@ export default function ViewPost({ route, navigation }: { route: any; navigation
 
   // Setting up the modal (pop-up)
   const [modalVisible, setModalVisible] = useState(false);
-
+  const date_posted = new Date(post.date_posted)
   // Render image for the post:
   const renderPostContent = () => {
-    return (
-      <Image style={styles.postItemImage} source={{ uri: post.postimages[0].image_url }} />
-    );
+    if (('postimages' in post) && post.postimages.length) {
+      return (
+        <Image style={styles.postItemImage} source={{ uri: post.postimages[0].image_url }} />
+      );
+    }
   }
 
   // Actual detailed view being returned
@@ -69,20 +71,35 @@ export default function ViewPost({ route, navigation }: { route: any; navigation
     <ScrollView style={styles.container}>
       {renderPostContent()}
       <View style={styles.postItemTitle}>
-        <Text style={{ fontWeight: "600", flex: 1, fontSize: normalize(27) }}>{post.title}</Text>
-        <Text style={{ textAlign: 'right', flex: 1, fontSize: normalize(27) }}> ${post.price} </Text>
+        <Text style={[ text_styles.xlarge, { fontWeight: "600", flex: 1 }] }>{post.title}</Text>
+        {post.is_buy == false ? <Text style={[ text_styles.xlarge, { textAlign: 'right', flex: 1 }] }> ${post.price} </Text> : null } 
       </View>
-      <View style={styles.postItemTitle}>
-        <Text style={[ text_styles.medium, { flex: 1 } ]}>{post.content}</Text>
+      <View style={{flexDirection: "row", marginTop: 5, paddingHorizontal: 20}}>
+        <View style = {[styles.categoryContainer, {paddingHorizontal: 0, marginHorizontal: 0, backgroundColor: '#fff'}]}>
+          <Text style={[styles.postDate, {fontWeight:"700"}]}>Category: </Text>
+        </View>
+        <View style = {styles.categoryContainer}>
+          <Text style={styles.postCategoryText}>{post.is_buy == false ? "sell" : "buy"}</Text>
+        </View>
+        <View style = {styles.categoryContainer}>
+          <Text style={styles.postCategoryText}>{post.category}</Text>
+        </View>
+      </View>
+      <View style={styles.postItemContent}>
+        <Text style={[ text_styles.medium ]}>{post.content}</Text>
+      </View>
+      <View style={{flexDirection: "row", marginTop: 10, paddingHorizontal: 20}}>
+        <Text style={[styles.postDate, {fontWeight:"700"}]}>Posted On: </Text>
+        <Text style={styles.postDate}>{date_posted.getMonth()}/{date_posted.getDate()}/{date_posted.getFullYear()}</Text>
       </View>
       <View style={{ flex: 1, paddingVertical: 20 }}>
           <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
-            <Text style={[ text_styles.medium, { fontWeight: "600", color: "#fff" } ]}>Contact Seller</Text>
+            <Text style={[ text_styles.medium, { fontWeight: "600", color: "#fff" } ]}> {post.is_buy == false ? "Contact Seller" : "Contact Buyer"} </Text>
           </TouchableOpacity>
       </View>
     </ScrollView>
 
-    <Modal
+    <Modal  
         animationType="slide"
         transparent={true}
         visible={modalVisible}
@@ -115,6 +132,19 @@ export default function ViewPost({ route, navigation }: { route: any; navigation
 }
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#fff',
+    flex: 1,
+  },
+  categoryContainer: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    marginHorizontal: 2,
+    flexDirection: 'column',
+    alignItems:"center",
+    borderRadius: 10,
+    backgroundColor: '#0f4d92'
+  },
   centeredView: {
     flex: 1,
     justifyContent: "center",
@@ -135,6 +165,16 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5
   },
+  button: {
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 32,
+    borderRadius: 16,
+    elevation: 3,
+    backgroundColor: 'black',
+  },
   buttonOpen: {
     backgroundColor: "#F194FF",
   },
@@ -147,35 +187,31 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   modalText: {
-    marginBottom: normalize(15),
+    marginBottom: 15,
     textAlign: "center"
-  },
-  container: {
-    backgroundColor: '#fff',
-    flex: 1,
   },
   postItemTitle: {
     flexDirection: 'row',
     paddingHorizontal: 20,
     paddingTop: 20,
   },
+  postDate: {
+    flexDirection: 'row',
+    fontSize: normalize(17),
+    textAlign: "left",
+  },
   postItemContent: {
     paddingHorizontal: 20,
+    paddingTop: 10,
   },
   postItemImage: {
     minHeight: windowWidth,
     maxHeight: windowWidth,
     aspectRatio: 1,
   },
-  button: {
-    alignSelf: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 32,
-    borderRadius: 4,
-    elevation: 3,
-    backgroundColor: 'black',
+  postCategoryText: {
+    fontSize: normalize(17),
+    color: '#fff'
   },
 });
 
