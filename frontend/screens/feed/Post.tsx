@@ -27,7 +27,8 @@ const Post = (props: { post: any, navigation: any; }) => {
         {renderPostContent()}
         <View style={styles.listItemFooter}>
               <Text numberOfLines={1} style={[ text_styles.medium, { fontWeight: "600", flex: 1 } ]}>{post.is_buy == false ? null : <Text numberOfLines={1} style = {[ text_styles.medium, { color: '#0f4d92', flex: 1 } ]}>Buying: </Text>}{post.title}</Text>
-              <Text numberOfLines={1} style = {[ text_styles.medium, { textAlign: 'right', flex: 1 } ]}>${post.price}</Text>
+              {post.price == null ? null : <Text numberOfLines={1} style = {[ text_styles.medium, { textAlign: 'right', flex: 1 } ]}>${post.price}</Text>}
+              {/* <Text numberOfLines={1} style = {[ text_styles.medium, { textAlign: 'right', flex: 1 } ]}>${post.price}</Text> */}
         </View>
       </TouchableOpacity>
     </View>

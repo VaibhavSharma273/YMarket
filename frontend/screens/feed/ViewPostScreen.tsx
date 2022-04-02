@@ -15,21 +15,24 @@ export default function ViewPost({ route, navigation }: { route: any; navigation
   const { postId } = route.params;
 
   var schema = {
-    'title': 'string',
-    'content': 'string',
-    'price': 'float', 
-    'postimages': [
-                    {
-                      'id': 'string', 
-                      'image_url': 'string'
-                    }
-                  ], 
+    'title': String(),
+    'content': String(),
+    'date_posted': String(),
     'author': {
-                'id': 'string', 
-                'first_name': 'string', 
-                'last_name': 'string', 
-                'email': 'string'
-              }
+                'id': String(), 
+                'first_name': String(), 
+                'last_name': String(), 
+                'email': String()
+              },
+    'price': Number(),
+    'category': String(),
+    'is_buy': Boolean(),
+    'postimages': [
+      {
+        'id': String(),
+        'image_url': 'https://imgur.com/KPRDlAP'
+      }
+    ]
   }
 
   const [post, setPost] = useState(schema);
@@ -72,7 +75,7 @@ export default function ViewPost({ route, navigation }: { route: any; navigation
       {renderPostContent()}
       <View style={styles.postItemTitle}>
         <Text style={[ text_styles.xlarge, { fontWeight: "600", flex: 1 }] }>{post.title}</Text>
-        <Text style={[ text_styles.xlarge, { textAlign: 'right', flex: 1 }] }> ${post.price} </Text>
+        {post.price == null ? null : <Text style={[ text_styles.xlarge, { textAlign: 'right', flex: 1 }] }> ${post.price} </Text>}
       </View>
       <View style={{flexDirection: "row", marginTop: 5, paddingHorizontal: 20}}>
         <View style = {[styles.categoryContainer, {paddingHorizontal: 0, marginHorizontal: 0, backgroundColor: '#fff'}]}>
