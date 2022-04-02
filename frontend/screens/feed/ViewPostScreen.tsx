@@ -2,8 +2,10 @@ import { Image, Text, View, StyleSheet, Dimensions, Pressable, Modal } from 'rea
 import { Ionicons } from '@expo/vector-icons';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import mock from "./data/mock";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { normalize, text_styles } from '../../components/TextNormalize';
+
+import API from '../../api/ymarket_api';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -11,9 +13,45 @@ export default function ViewPost({ route, navigation }: { route: any; navigation
 
   // Identify post here:
   const { postId } = route.params;
-  const post = mock.find((obj: { id: any; }) => {
-    return obj.id === postId
-  })
+
+  var schema = {
+    'title': 'string',
+    'content': 'string',
+    'price': 'float', 
+    'postimages': [
+                    {
+                      'id': 'string', 
+                      'image_url': 'string'
+                    }
+                  ], 
+    'author': {
+                'id': 'string', 
+                'first_name': 'string', 
+                'last_name': 'string', 
+                'email': 'string'
+              }
+  }
+
+  const [post, setPost] = useState(schema);
+
+  useEffect(() => {
+    const getDetailedPost = async () => {
+      const path = 'api/post/' + postId
+      const response = await API.get(path)
+                                .then((response) => {
+                                  setPost(response.data)
+                                })
+                                .catch((error) => {
+                                  console.log(error)
+                                });
+    }
+
+    getDetailedPost()
+  }, []);
+
+  // const post = mock.find((obj: { id: any; }) => {
+  //   return obj.id === postId
+  // })
 
   // Setting up the modal (pop-up)
   const [modalVisible, setModalVisible] = useState(false);
