@@ -20,6 +20,39 @@ export default function CreatePostScreen({ navigation }: any) {
   const postTypes = ["Buy", "Sell"]
 
   const [postType, setPostType] = useState({ value: '', error: '' })
+  const [image1, setImage1] = useState('')
+  const [image2, setImage2] = useState('')
+  const [image3, setImage3] = useState('')
+  const [image4, setImage4] = useState('')
+  const [image5, setImage5] = useState('')
+  const [image6, setImage6] = useState('')
+
+  const post_images_val = []
+  if (image1)
+  {
+    post_images_val.push(image1)
+    Alert.alert('works')
+  }
+  if (image2)
+  {
+    post_images_val.push(image2)
+  }
+  if (image3)
+  {
+    post_images_val.push(image3)
+  }
+  if (image4)
+  {
+    post_images_val.push(image4)
+  }
+  if (image5)
+  {
+    post_images_val.push(image5)
+  }
+  if (image6)
+  {
+    post_images_val.push(image6)
+  }
 
   const confirmPopup = async ()=>{
     Alert.alert(
@@ -74,6 +107,8 @@ export default function CreatePostScreen({ navigation }: any) {
         return
     }
 
+    Alert.alert(image1)
+
     const title_val = title.value;
     const caption_val = caption.value;
     const price_val = price.value;
@@ -101,7 +136,37 @@ export default function CreatePostScreen({ navigation }: any) {
       }
       
     })*/
-}
+  }
+
+  const updateImage1 = (image: string ) =>
+  {
+    setImage1(image)
+  }
+
+  const updateImage2 = (image: string ) =>
+  {
+    setImage2(image)
+  }
+
+  const updateImage3 = (image: string ) =>
+  {
+    setImage3(image)
+  }
+
+  const updateImage4 = (image: string ) =>
+  {
+    setImage4(image)
+  }
+
+  const updateImage5 = (image: string ) =>
+  {
+    setImage5(image)
+  }
+
+  const updateImage6 = (image: string ) =>
+  {
+    setImage6(image)
+  }
 
   return (
     <ScrollView>
@@ -182,18 +247,18 @@ export default function CreatePostScreen({ navigation }: any) {
 
 />
       <View style={styles.row}>
-        <UploadImage/>
+        <UploadImage updateImage={updateImage1}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage/>
+        <UploadImage updateImage={updateImage2}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage/>
+        <UploadImage updateImage={updateImage3}/>
         <View style={{paddingRight:'2.5%'}}></View>
         <View style={{height: '16%'}}></View>
-        <UploadImage/>
+        <UploadImage updateImage={updateImage4}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage/>
+        <UploadImage updateImage={updateImage5}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage/>
+        <UploadImage updateImage={updateImage6}/>
         <View style={{paddingRight:'100%'}}></View>
         <View style={{paddingBottom: '2%'}}></View>
         <TouchableOpacity style={styles.button} onPress={onCreatePostPressed}>

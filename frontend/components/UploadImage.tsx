@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { Image, View, Platform, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import React, { useState, useEffect, Component, } from 'react';
+import { Image, View, Platform, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { transparent } from 'react-native-paper/lib/typescript/styles/colors';
 
-export default function UploadImage() {
+export default function UploadImage({updateImage}: any){
+ 
  const [image, setImage] = useState<any | null>(null);
  const addImage = async () => {
     let _image = await ImagePicker.launchImageLibraryAsync({
     mediaTypes: ImagePicker.MediaTypeOptions.Images,
     });
-    console.log(JSON.stringify(_image));
 
     if (!_image.cancelled) {
       setImage(_image.uri);
+      updateImage(_image.uri)
     }
   };
 
@@ -36,12 +37,7 @@ export default function UploadImage() {
             <Text style={{fontSize: 13, color: '#f6f6f6', paddingTop: 3 }}>{image ? 'Edit' : 'Upload'} Image</Text>
             <AntDesign name="camera" size={15} color="#f6f6f6" />
         </TouchableOpacity>
-
-        
-
-        
     </View>
-
     </View>
 
  );
