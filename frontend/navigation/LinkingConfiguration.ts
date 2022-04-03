@@ -6,6 +6,7 @@
 
 import { LinkingOptions } from '@react-navigation/native';
 import * as Linking from 'expo-linking';
+import EditPostScreen from '../screens/create_post/EditPostScreen';
 
 import { RootStackParamList } from '../types';
 
@@ -35,7 +36,8 @@ const linking: LinkingOptions<RootStackParamList> = {
           CreateStack: {
             screens: {
               AccessPostScreen: 'post',
-              CreatePostScreen: 'create'
+              CreatePostScreen: 'create',
+              EditPostScreen: 'edit',
             },
           },
           Search: {
