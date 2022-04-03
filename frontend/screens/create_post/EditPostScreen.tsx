@@ -29,6 +29,24 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
   const postTypes = ["Buy", "Sell"]
 
   const [postType, setPostType] = useState({ value: '', error: '' })
+  const [image1, setImage1] = useState('')
+  const [image2, setImage2] = useState('')
+  const [image3, setImage3] = useState('')
+  const [image4, setImage4] = useState('')
+  const [image5, setImage5] = useState('')
+  const [image6, setImage6] = useState('')
+
+  var post_images_val = ['','','','','','']
+  post_images_val[0]=image1
+  post_images_val[1]=image2
+  post_images_val[2]=image3
+  post_images_val[3]=image4
+  post_images_val[4]=image5
+  post_images_val[5]=image6
+
+  var final_images_val = post_images_val.filter(function(value, index, arr){ 
+    return value;
+});
 
   const confirmPopup = async ()=>{
     Alert.alert(
@@ -111,6 +129,36 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
       
     })*/
 }
+const updateImage1 = (image: string ) =>
+  {
+    setImage1(image)
+  }
+
+  const updateImage2 = (image: string ) =>
+  {
+    setImage2(image)
+  }
+
+  const updateImage3 = (image: string ) =>
+  {
+    setImage3(image)
+  }
+
+  const updateImage4 = (image: string ) =>
+  {
+    setImage4(image)
+  }
+
+  const updateImage5 = (image: string ) =>
+  {
+    setImage5(image)
+  }
+
+  const updateImage6 = (image: string ) =>
+  {
+    setImage6(image)
+  }
+
 
   return (
     <ScrollView>
@@ -190,23 +238,23 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
 
 
 />
-      <View style={styles.row}>
-        <UploadImage/>
+<View style={styles.row}>
+        <UploadImage updateImage={updateImage1}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage/>
+        <UploadImage updateImage={updateImage2}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage/>
+        <UploadImage updateImage={updateImage3}/>
         <View style={{paddingRight:'2.5%'}}></View>
         <View style={{height: '16%'}}></View>
-        <UploadImage/>
+        <UploadImage updateImage={updateImage4}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage/>
+        <UploadImage updateImage={updateImage5}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage/>
+        <UploadImage updateImage={updateImage6}/>
         <View style={{paddingRight:'100%'}}></View>
         <View style={{paddingBottom: '2%'}}></View>
         <TouchableOpacity style={styles.button} onPress={onEditPostPressed}>
-          <Text style={{color: 'white', fontWeight: 'bold', fontSize: 18, fontFamily: 'Arial'}}>Confirm Changes</Text>
+          <Text style={{color: 'white', fontWeight: 'bold', fontSize: 18, fontFamily: 'Arial'}}>Add Post</Text>
         </TouchableOpacity>
       </View>
       <View style={{paddingTop:'4%'}}></View>
