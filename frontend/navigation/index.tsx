@@ -13,13 +13,10 @@ import { useContext } from "react";
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
-import ModalScreen from '../screens/ModalScreen';
-import NotFoundScreen from '../screens/NotFoundScreen';
 
 import AccessPostScreen from '../screens/create_post/AccessPostScreen';
 import CreatePostScreen from '../screens/create_post/CreatePostScreen';
 import EditPostScreen from '../screens/create_post/EditPostScreen';
-
 import SearchScreen from '../screens/SearchScreen';
 import UserProfileScreen from '../screens/UserProfileScreen';
 import StartScreen from '../screens/auth/StartScreen';
@@ -48,7 +45,7 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
       // theme={colorScheme === 'dark' ? DefaultTheme : DefaultTheme}
       theme={LightTheme}
       >
-      <BottomTabNavigator />
+      <RootNavigator />
     </NavigationContainer>
   );
 }
@@ -137,13 +134,14 @@ function BottomTabNavigator() {
         component={PostNavigator}
         options={({ navigation }: RootTabScreenProps<'PostStack'>) => ({
           title: 'Feed',
-          tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
           headerRight: () => (
             <Pressable
-              //onPress={() => navigation.navigate('Feed')}
+              //onPress={() => navigation.navigate('Modal')}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
-              })}>
+              })
+              }>
               <FontAwesome
                 name="info-circle"
                 size={25}
