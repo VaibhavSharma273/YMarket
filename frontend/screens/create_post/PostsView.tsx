@@ -5,9 +5,11 @@ const PostsView = (props: { post: any, navigation: any; }) => {
   const { post, navigation } = props;
 
   const renderPostContent = () => {
-    return (
-      <Image style={styles.ImageIconStyle} source={{ uri: post.postimages[0].image_url }} resizeMode="cover" />
-    );
+    if (('postimages' in post) && post.postimages.length) {
+      return (
+        <Image style={styles.ImageIconStyle} source={{ uri: post.postimages[0].image_url }} resizeMode="cover" />
+      );
+    }
   }
 
   return (
@@ -19,7 +21,8 @@ const PostsView = (props: { post: any, navigation: any; }) => {
       <View style={{paddingRight: 10}} />
       <Text style={[styles.TextStyle, {fontWeight: 'bold'}]}>{post.title}</Text>
       <View style={{paddingRight: 5}} />
-      <Text style={styles.TextStyle}> {'$'+post.price}</Text>
+      {post.price == null ? null :<Text style={styles.TextStyle}> {'$'+post.price}</Text>}
+      {/* {post.price == null ? null : <Text style={[ text_styles.xlarge, { textAlign: 'right', flex: 1 }] }> ${post.price} </Text>} */}
     </TouchableOpacity>
     </View>
   );

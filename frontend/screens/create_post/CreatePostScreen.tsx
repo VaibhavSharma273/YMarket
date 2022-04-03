@@ -11,6 +11,9 @@ import UploadImage from '../../components/UploadImage'
 import { titleValidator } from '../../helpers/titleValidator';
 import { postValidator } from '../../helpers/postValidator';
 import { priceValidator } from '../../helpers/priceValidator';
+import axios from 'axios';
+
+import { getToken, setToken, deleteToken } from '../../storage/tokenStorage';
 
 export default function CreatePostScreen({ navigation }: any) {
   const [title, setTitle] = useState({ value: '', error: '' })
@@ -32,19 +35,6 @@ export default function CreatePostScreen({ navigation }: any) {
   }
 
   const [postType, setPostType] = useState({ value: '', error: '' })
-
-  const confirmPopup = async ()=>{
-    Alert.alert(
-      'Post Created!',
-      '',
-      [
-        {text: 'Done', onPress: () => navigation.goBack()},
-      ],
-      { 
-        cancelable: true 
-      }
-    );
-  }
 
   const cancelPopup= async ()=>{
     Alert.alert(
@@ -90,10 +80,65 @@ export default function CreatePostScreen({ navigation }: any) {
     const caption_val = caption.value;
     const price_val = price.value;
     const category_val = category.value;
-
     const post_type_val = postType.value;
+
+    const confirmPopup = async ()=>{
+      const createPost = async () => {
+        const path = 'http://localhost:8000/api/post/'
+        
+        var is_buy = 'false'
+
+        if (post_type_val.includes("Buy")) {
+          is_buy = 'true'
+        }
+
+        var form_data = new FormData() 
+        form_data.append("title", title_val)
+        form_data.append("content", caption_val)
+        form_data.append("price", price_val)
+        form_data.append("category", category_val)
+        form_data.append("is_buy", is_buy)
+
+        var img = { 
+          uri: images[0],
+          name: 'image1.jpg',
+          type: 'image/jpg'
+        }
+
+        form_data.append('files', JSON.parse(JSON.stringify(img)))
+
+        const token = await getToken('access');
+        const response = await fetch(path, {
+          method: "POST",
+          headers: {
+            'accept': 'application/json',
+            "Content-Type": 'multipart/form-data; boundary=----WebKitFormBoundaryIn312MOjBWdkffIM',
+            'Authorization': 'Bearer ' + token
+          },
+          body: form_data
+        }).then((response) => {
+          console.log("post create success!")
+        })
+        .catch((error) => {
+          console.log(error.response)
+        });
+      }
+  
+      createPost() 
+  
+      Alert.alert(
+        'Post Created!',
+        '',
+        [
+          {text: 'Done', onPress: () => navigation.goBack()},
+        ],
+        { 
+          cancelable: true 
+        }
+      );
+    }
+
     confirmPopup()
-    
   }
 
   return (
