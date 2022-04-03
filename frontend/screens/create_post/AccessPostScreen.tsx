@@ -2,18 +2,54 @@ import { Text, View } from '../../components/Themed';
 import { RootTabScreenProps } from '../../types';
 
 import React, { useEffect, useState, useContext } from 'react';
-import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { RefreshControl, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import mock from "./data/mock";
 import PostsView from './PostsView';
 import { FontAwesome } from '@expo/vector-icons'; 
+import AppContext from "./../AppContext"
+import API from '../../api/ymarket_api';
+
+import Post from '../feed/Post';
+
 
 export default function AccessPostScreen({ navigation }: any) {
-  const [postlist] = useState(mock[0].posts);
-  console.log(mock[0].posts);
+  // const [postlist] = useState(mock[0].posts);
+  // console.log(mock[0].posts);
 
-  const renderItems = (item: { item: any; }) => {
-    const post = item.item;
-    return <PostsView post={post} navigation = {navigation}/>;
+  const [postlist, setPostList] = useState([]);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const myContext = useContext(AppContext);
+
+  const getUserPosts = async () => {
+    const path = 'api/users/profile/' + myContext.user
+    const response = await API.get(path)
+                              .then((response) => {
+                                setPostList(response.data.posts)
+                              })
+                              .catch((error) => {
+                                console.log(error)
+                              });
+  }
+
+  useEffect(() => {
+    getUserPosts();
+  }, []);
+
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+      getUserPosts()
+      console.log("hello")
+      setRefreshing(false) 
+  }, [refreshing]);
+
+  // const renderItems = (item: { item: any; }) => {
+  //   const post = item.item;
+  //   return <PostsView post={post} navigation = {navigation}/>;
+  // };
+
+  const renderItems = (item: { item: any;}) => {
+    return <Post post={item.item} navigation = {navigation} is_edit = {true} />;
   };
 
   return (
@@ -28,6 +64,9 @@ export default function AccessPostScreen({ navigation }: any) {
         <FlatList
           data={postlist}
           renderItem={renderItems}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
         />
         <TouchableOpacity  style={styles.button}
         onPress={() => navigation.push('CreatePostScreen')}>

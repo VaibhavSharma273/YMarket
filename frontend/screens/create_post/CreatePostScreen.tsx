@@ -11,6 +11,9 @@ import UploadImage from '../../components/UploadImage'
 import { titleValidator } from '../../helpers/titleValidator';
 import { postValidator } from '../../helpers/postValidator';
 import { priceValidator } from '../../helpers/priceValidator';
+import axios from 'axios';
+
+import { getToken, setToken, deleteToken } from '../../storage/tokenStorage';
 
 export default function CreatePostScreen({ navigation }: any) {
   const [title, setTitle] = useState({ value: '', error: '' })
@@ -38,19 +41,6 @@ export default function CreatePostScreen({ navigation }: any) {
   var final_images_val = post_images_val.filter(function(value, index, arr){ 
     return value;
 });
-
-  const confirmPopup = async ()=>{
-    Alert.alert(
-      'Post Created!',
-      '',
-      [
-        {text: 'Done', onPress: () => navigation.goBack()},
-      ],
-      { 
-        cancelable: true 
-      }
-    );
-  }
 
   const cancelPopup= async ()=>{
     Alert.alert(
@@ -96,8 +86,124 @@ export default function CreatePostScreen({ navigation }: any) {
     const caption_val = caption.value;
     const price_val = price.value;
     const category_val = category.value;
-
     const post_type_val = postType.value;
+
+    const confirmPopup = async ()=>{
+      const createPost = async () => {
+        const path = 'http://localhost:8000/api/post/'
+        
+        var is_buy = 'false'
+
+        if (post_type_val.includes("Buy")) {
+          is_buy = 'true'
+        }
+  
+        // const data = {
+        //   title: title_val,
+        //   content: caption_val, 
+        //   price: price_val,
+        //   category: category_val,
+        //   is_buy: is_buy,
+        //   files: final_images_val[0]
+        // }
+
+        let form_data = new FormData() 
+        // const obj = {
+        //   title: title_val,
+        //   content: caption_val,
+        //   price: price_val, 
+        //   category: category_val, 
+        //   is_buy: is_buy, 
+        // };
+        // const json = JSON.stringify(obj);
+        // const blob = new Blob([json], {
+        //   type: 'application/json'
+        // });
+        form_data.append("title", title_val)
+        // console.log(title_val)
+        form_data.append("content", caption_val)
+        form_data.append("price", price_val)
+        form_data.append("category", category_val)
+        form_data.append("is_buy", is_buy)
+        console.log(final_images_val[0])
+        console.log(form_data)
+        // form_data.append("file", final_images_val[0])
+        // form_data.append("document", blob);
+        // console.log("hello11111")
+        // console.log(form_data)
+        // console.log("eh")
+
+
+
+
+
+        const token = await getToken('access');
+
+        // const response = await axios.post(path, {
+        //   data: form_data,
+        //   headers: {
+        //     "Content-Type": "multipart/form-data; boundary=----------------------------4ebf00fbcf09"
+        //   }
+        // }).then((response) => {
+        //   console.log("hello")
+        //   console.log("post create success!")
+        // })
+        // .catch((error) => {
+        //   // console.log('e1' + error)
+        //   // console.log('e2' + error.response.message)
+        //   // console.log('e3' + error.response.data);
+        //   // console.log('e4' + error.response.status);
+        //   // console.log('e5' + error.response.headers);
+        //   console.log(error.response)
+        // });
+
+        const response = await axios({
+          method: 'post', 
+          url: path,
+          data: form_data,
+          headers: {
+            'Access-Control-Allow-Methods': 'POST, GET, PUT, OPTIONS, DELETE',
+            'accept': 'application/json',
+            "Content-Type": "multipart/form-data; boundary=----------------------------4ebf00fbcf09"
+          }
+        }).then((response) => {
+          console.log("hello")
+          console.log("post create success!")
+        })
+        .catch((error) => {
+          // console.log('e1' + error)
+          // console.log('e2' + error.response.message)
+          // console.log('e3' + error.response.data);
+          // console.log('e4' + error.response.status);
+          // console.log('e5' + error.response.headers);
+          console.log(error.response)
+        });
+
+        // const response = await API.post(path, form_data)
+        //                           .then((response) => {
+        //                             console.log("post success!")
+        //                           })
+        //                           .catch((error) => {
+        //                             console.log(error)
+        //                             console.log(error.response.data);
+        //                             console.log(error.response.status);
+        //                             console.log(error.response.headers);
+        //                           });
+      }
+  
+      createPost() 
+  
+      Alert.alert(
+        'Post Created!',
+        '',
+        [
+          {text: 'Done', onPress: () => navigation.goBack()},
+        ],
+        { 
+          cancelable: true 
+        }
+      );
+    }
 
     confirmPopup()
     

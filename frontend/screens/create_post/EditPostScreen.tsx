@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { StyleSheet, TouchableOpacity, Alert, ScrollView} from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown'
 import { MaterialIcons } from '@expo/vector-icons'; 
@@ -18,16 +18,15 @@ import mock from "./data/mock";
 export default function EditPostScreen({ route, navigation }: { route: any; navigation: any }) {
 
   const { postId } = route.params;
-  const post = mock[0].posts.find((obj: { id: any; }) => {
-    return obj.id === postId
-  })
+  // const post = mock[0].posts.find((obj: { id: any; }) => {
+  //   return obj.id === postId
+  // })
 
-  const [title, setTitle] = useState({ value: post.title, error: '' })
-  const [caption, setCaption] = useState({ value: post.content, error: '' })
-  const [price, setPrice] = useState({ value: post.price, error: '' })
-  const [category, setCategory] = useState({ value: post.category, error: '' })
+  const [title, setTitle] = useState({ value: '', error: '' })
+  const [caption, setCaption] = useState({ value: '', error: '' })
+  const [price, setPrice] = useState({ value: '', error: '' })
+  const [category, setCategory] = useState({ value: '', error: '' })
   const postTypes = ["Buy", "Sell"]
-
   const [postType, setPostType] = useState({ value: '', error: '' })
   const [image1, setImage1] = useState('')
   const [image2, setImage2] = useState('')
@@ -48,18 +47,28 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
     return value;
 });
 
-  const confirmPopup = async ()=>{
-    Alert.alert(
-      'Post Edited!',
-      '',
-      [
-        {text: 'Done', onPress: () => navigation.goBack()},
-      ],
-      { 
-        cancelable: true 
-      }
-    );
-  }
+  useEffect(() => {
+    const getPreviousInfo = async () => {
+      const path = 'api/post/' + postId
+      const response = await API.get(path)
+                                .then((response) => {
+                                  setTitle({value: response.data.title, error: ''})
+                                  setCaption({value: response.data.content, error: ''})
+                                  setPrice({value: response.data.price, error: ''})
+                                  setCategory({value: response.data.category, error: ''})
+                                  if (response.data.is_buy === 'false') {
+                                    setPostType({value: 'Sell', error: ''})
+                                  } else {
+                                    setPostType({value: 'Buy', error: ''})
+                                  }
+                                })
+                                .catch((error) => {
+                                  console.log(error)
+                                });
+    }
+
+    getPreviousInfo()
+  }, []);
 
   const cancelPopup= async ()=>{
     Alert.alert(
@@ -105,9 +114,48 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
     const caption_val = caption.value;
     const price_val = price.value;
     const category_val = category.value;
-
     const post_type_val = postType.value;
 
+    const confirmPopup = async ()=>{
+      const editPost = async () => {
+        const path = 'api/post/' + postId
+        
+        var is_buy = false 
+
+        if (post_type_val.includes("Buy")) {
+          is_buy = true
+        }
+  
+        const data = {
+          'title': title_val,
+          'content': caption_val, 
+          'price': price_val,
+          'category': category_val,
+          'is_buy': is_buy
+        }
+
+        const response = await API.put(path, data)
+                                  .then((response) => {
+                                    console.log("post edit success!")
+                                  })
+                                  .catch((error) => {
+                                    console.log(error)
+                                  });
+      }
+  
+      editPost() 
+      Alert.alert(
+        'Post Edited!',
+        '',
+        [
+          {text: 'Done', onPress: () => navigation.goBack()},
+        ],
+        { 
+          cancelable: true 
+        }
+      );
+    }
+    
     confirmPopup()
     
     

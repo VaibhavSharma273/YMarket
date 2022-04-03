@@ -1,7 +1,7 @@
 import { RootTabScreenProps } from '../../types';
 
 import React, { useState, useEffect } from 'react';
-import { Text, View, FlatList, StyleSheet } from 'react-native';
+import { RefreshControl, Text, View, FlatList, StyleSheet } from 'react-native';
 
 import mock from "./data/mock";
 import Post from './Post';
@@ -15,23 +15,32 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
   // const [posts] = useState(mock);
   const [posts, setPosts] = useState([]);
 
-  useEffect(() => {
-    const getPosts = async () => {
-      const path = 'api/post/'
-      const response = await API.get(path)
-                                .then((response) => {
-                                  setPosts(response.data)
-                                })
-                                .catch((error) => {
-                                  console.log(error)
-                                });
-    }
+  const [refreshing, setRefreshing] = React.useState(false);
 
-    getPosts()
+  const getPosts = async () => {
+    const path = 'api/post/'
+    const response = await API.get(path)
+                              .then((response) => {
+                                setPosts(response.data)
+                                // console.log(response.data)
+                              })
+                              .catch((error) => {
+                                console.log(error)
+                              });
+  }
+
+  useEffect(() => {
+    getPosts() 
   }, []);
 
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+      getPosts()
+      setRefreshing(false) 
+  }, [refreshing]);
+
   const renderItems = (item: { item: any;}) => {
-    return <Post post={item.item} navigation = {navigation} />;
+    return <Post post={item.item} navigation = {navigation} is_edit = {false} />;
   };
 
   return (
@@ -46,6 +55,9 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
         <FlatList
           data={posts}
           renderItem={renderItems}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
         />
       </View>
     </View>
