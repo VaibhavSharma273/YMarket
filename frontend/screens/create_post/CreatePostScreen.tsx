@@ -27,32 +27,17 @@ export default function CreatePostScreen({ navigation }: any) {
   const [image5, setImage5] = useState('')
   const [image6, setImage6] = useState('')
 
-  const post_images_val = []
-  if (image1)
-  {
-    post_images_val.push(image1)
-    Alert.alert('works')
-  }
-  if (image2)
-  {
-    post_images_val.push(image2)
-  }
-  if (image3)
-  {
-    post_images_val.push(image3)
-  }
-  if (image4)
-  {
-    post_images_val.push(image4)
-  }
-  if (image5)
-  {
-    post_images_val.push(image5)
-  }
-  if (image6)
-  {
-    post_images_val.push(image6)
-  }
+  var post_images_val = ['','','','','','']
+  post_images_val[0]=image1
+  post_images_val[1]=image2
+  post_images_val[2]=image3
+  post_images_val[3]=image4
+  post_images_val[4]=image5
+  post_images_val[5]=image6
+
+  var final_images_val = post_images_val.filter(function(value, index, arr){ 
+    return value;
+});
 
   const confirmPopup = async ()=>{
     Alert.alert(
@@ -106,8 +91,6 @@ export default function CreatePostScreen({ navigation }: any) {
         }
         return
     }
-
-    Alert.alert(image1)
 
     const title_val = title.value;
     const caption_val = caption.value;

@@ -21,6 +21,7 @@ export default function UploadImage({updateImage}: any){
 
   const removeImage = async () => {
     setImage(null)
+    updateImage('')
   };
 
  return (
