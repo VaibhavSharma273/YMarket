@@ -9,6 +9,8 @@ import API from '../../api/ymarket_api';
 
 const windowWidth = Dimensions.get('window').width;
 
+import moment from "moment";
+
 export default function ViewPost({ route, navigation }: { route: any; navigation: any }) {
 
   // Identify post here:
@@ -58,7 +60,7 @@ export default function ViewPost({ route, navigation }: { route: any; navigation
 
   // Setting up the modal (pop-up)
   const [modalVisible, setModalVisible] = useState(false);
-  const date_posted = new Date(post.date_posted)
+  const date_posted = moment(post.date_posted).utc()
   // Render image for the post:
   const renderPostContent = () => {
     if (('postimages' in post) && post.postimages.length) {
@@ -93,7 +95,7 @@ export default function ViewPost({ route, navigation }: { route: any; navigation
       </View>
       <View style={{flexDirection: "row", marginTop: 10, paddingHorizontal: 20}}>
         <Text style={[styles.postDate, {fontWeight:"700"}]}>Posted On: </Text>
-        <Text style={styles.postDate}>{date_posted.getMonth()}/{date_posted.getDate()}/{date_posted.getFullYear()}</Text>
+        <Text style={styles.postDate}>{date_posted.format("M")}/{date_posted.format('D')}/{date_posted.format('YYYY')}</Text>
       </View>
       <View style={{ flex: 1, paddingVertical: 20 }}>
           <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
