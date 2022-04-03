@@ -53,6 +53,7 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
       </Text>
       <View style={styles.list}>
         <FlatList
+          inverted
           data={posts}
           renderItem={renderItems}
           refreshControl={

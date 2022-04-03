@@ -97,98 +97,37 @@ export default function CreatePostScreen({ navigation }: any) {
         if (post_type_val.includes("Buy")) {
           is_buy = 'true'
         }
-  
-        // const data = {
-        //   title: title_val,
-        //   content: caption_val, 
-        //   price: price_val,
-        //   category: category_val,
-        //   is_buy: is_buy,
-        //   files: final_images_val[0]
-        // }
 
-        let form_data = new FormData() 
-        // const obj = {
-        //   title: title_val,
-        //   content: caption_val,
-        //   price: price_val, 
-        //   category: category_val, 
-        //   is_buy: is_buy, 
-        // };
-        // const json = JSON.stringify(obj);
-        // const blob = new Blob([json], {
-        //   type: 'application/json'
-        // });
+        var form_data = new FormData() 
         form_data.append("title", title_val)
-        // console.log(title_val)
         form_data.append("content", caption_val)
         form_data.append("price", price_val)
         form_data.append("category", category_val)
         form_data.append("is_buy", is_buy)
-        console.log(final_images_val[0])
-        console.log(form_data)
-        // form_data.append("file", final_images_val[0])
-        // form_data.append("document", blob);
-        // console.log("hello11111")
-        // console.log(form_data)
-        // console.log("eh")
 
+        var img = { 
+          uri: final_images_val[0],
+          name: 'image1.jpg',
+          type: 'image/jpg'
+        }
 
-
-
+        form_data.append('files', JSON.parse(JSON.stringify(img)))
 
         const token = await getToken('access');
-
-        // const response = await axios.post(path, {
-        //   data: form_data,
-        //   headers: {
-        //     "Content-Type": "multipart/form-data; boundary=----------------------------4ebf00fbcf09"
-        //   }
-        // }).then((response) => {
-        //   console.log("hello")
-        //   console.log("post create success!")
-        // })
-        // .catch((error) => {
-        //   // console.log('e1' + error)
-        //   // console.log('e2' + error.response.message)
-        //   // console.log('e3' + error.response.data);
-        //   // console.log('e4' + error.response.status);
-        //   // console.log('e5' + error.response.headers);
-        //   console.log(error.response)
-        // });
-
-        const response = await axios({
-          method: 'post', 
-          url: path,
-          data: form_data,
+        const response = await fetch(path, {
+          method: "POST",
           headers: {
-            'Access-Control-Allow-Methods': 'POST, GET, PUT, OPTIONS, DELETE',
             'accept': 'application/json',
-            "Content-Type": "multipart/form-data; boundary=----------------------------4ebf00fbcf09"
-          }
+            "Content-Type": 'multipart/form-data; boundary=----WebKitFormBoundaryIn312MOjBWdkffIM',
+            'Authorization': 'Bearer ' + token
+          },
+          body: form_data
         }).then((response) => {
-          console.log("hello")
           console.log("post create success!")
         })
         .catch((error) => {
-          // console.log('e1' + error)
-          // console.log('e2' + error.response.message)
-          // console.log('e3' + error.response.data);
-          // console.log('e4' + error.response.status);
-          // console.log('e5' + error.response.headers);
           console.log(error.response)
         });
-
-        // const response = await API.post(path, form_data)
-        //                           .then((response) => {
-        //                             console.log("post success!")
-        //                           })
-        //                           .catch((error) => {
-        //                             console.log(error)
-        //                             console.log(error.response.data);
-        //                             console.log(error.response.status);
-        //                             console.log(error.response.headers);
-        //                           });
       }
   
       createPost() 
@@ -206,25 +145,6 @@ export default function CreatePostScreen({ navigation }: any) {
     }
 
     confirmPopup()
-    
-    
-
-    /*
-    const response = await API.post('api/users/register/', {email: email_val, first_name: firstName_val, last_name: lastName_val, password1: password_val, password2: passwordConfirm_val})
-    .then(function(response) {
-      navigation.navigate('ConfirmationScreen')
-    })
-    .catch(function(error) {
-      if (error.response) {
-        console.log(error.response)
-        setPassword({...password, error: error.response.data[Object.keys(error.response.data)[0]]})
-      }
-      else {
-        console.log(error.toJSON());
-        console.log('Error', error.message);
-      }
-      
-    })*/
   }
 
   const updateImage1 = (image: string ) =>

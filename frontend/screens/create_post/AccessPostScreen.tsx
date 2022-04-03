@@ -39,7 +39,6 @@ export default function AccessPostScreen({ navigation }: any) {
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
       getUserPosts()
-      console.log("hello")
       setRefreshing(false) 
   }, [refreshing]);
 
@@ -62,6 +61,7 @@ export default function AccessPostScreen({ navigation }: any) {
       </Text>
       <View style={styles.list}>
         <FlatList
+          inverted
           data={postlist}
           renderItem={renderItems}
           refreshControl={
