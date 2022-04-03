@@ -18,26 +18,20 @@ export default function CreatePostScreen({ navigation }: any) {
   const [price, setPrice] = useState({ value: '', error: '' })
   const [category, setCategory] = useState({ value: '', error: '' })
   const postTypes = ["Buy", "Sell"]
+  const [images, setImages] = useState<any | null>([])
+
+  const updateImages = (newImage: any, add: boolean) => {
+    {add ? 
+      setImages([...images, newImage])
+      :
+      removeImage(newImage)}
+  }
+
+  const removeImage = (newImage: any) => {
+    setImages(images.filter((image: any) => image !== newImage))
+  }
 
   const [postType, setPostType] = useState({ value: '', error: '' })
-  const [image1, setImage1] = useState('')
-  const [image2, setImage2] = useState('')
-  const [image3, setImage3] = useState('')
-  const [image4, setImage4] = useState('')
-  const [image5, setImage5] = useState('')
-  const [image6, setImage6] = useState('')
-
-  var post_images_val = ['','','','','','']
-  post_images_val[0]=image1
-  post_images_val[1]=image2
-  post_images_val[2]=image3
-  post_images_val[3]=image4
-  post_images_val[4]=image5
-  post_images_val[5]=image6
-
-  var final_images_val = post_images_val.filter(function(value, index, arr){ 
-    return value;
-});
 
   const confirmPopup = async ()=>{
     Alert.alert(
@@ -98,57 +92,8 @@ export default function CreatePostScreen({ navigation }: any) {
     const category_val = category.value;
 
     const post_type_val = postType.value;
-
     confirmPopup()
     
-    
-
-    /*
-    const response = await API.post('api/users/register/', {email: email_val, first_name: firstName_val, last_name: lastName_val, password1: password_val, password2: passwordConfirm_val})
-    .then(function(response) {
-      navigation.navigate('ConfirmationScreen')
-    })
-    .catch(function(error) {
-      if (error.response) {
-        console.log(error.response)
-        setPassword({...password, error: error.response.data[Object.keys(error.response.data)[0]]})
-      }
-      else {
-        console.log(error.toJSON());
-        console.log('Error', error.message);
-      }
-      
-    })*/
-  }
-
-  const updateImage1 = (image: string ) =>
-  {
-    setImage1(image)
-  }
-
-  const updateImage2 = (image: string ) =>
-  {
-    setImage2(image)
-  }
-
-  const updateImage3 = (image: string ) =>
-  {
-    setImage3(image)
-  }
-
-  const updateImage4 = (image: string ) =>
-  {
-    setImage4(image)
-  }
-
-  const updateImage5 = (image: string ) =>
-  {
-    setImage5(image)
-  }
-
-  const updateImage6 = (image: string ) =>
-  {
-    setImage6(image)
   }
 
   return (
@@ -230,18 +175,18 @@ export default function CreatePostScreen({ navigation }: any) {
 
 />
       <View style={styles.row}>
-        <UploadImage updateImage={updateImage1}/>
+        <UploadImage updateImages={updateImages}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage updateImage={updateImage2}/>
+        <UploadImage updateImages={updateImages}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage updateImage={updateImage3}/>
+        <UploadImage updateImages={updateImages}/>
         <View style={{paddingRight:'2.5%'}}></View>
         <View style={{height: '16%'}}></View>
-        <UploadImage updateImage={updateImage4}/>
+        <UploadImage updateImages={updateImages}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage updateImage={updateImage5}/>
+        <UploadImage updateImages={updateImages}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage updateImage={updateImage6}/>
+        <UploadImage updateImages={updateImages}/>
         <View style={{paddingRight:'100%'}}></View>
         <View style={{paddingBottom: '2%'}}></View>
         <TouchableOpacity style={styles.button} onPress={onCreatePostPressed}>

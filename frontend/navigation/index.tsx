@@ -157,10 +157,9 @@ function BottomTabNavigator() {
         component={CreateNavigator}
         options={({ navigation }: RootTabScreenProps<'CreateStack'>) => ({
           title: 'Post',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="plus" color={color} />,
           headerRight: () => (
             <Pressable
-              //onPress={() => navigation.navigate('CreateStack')}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
               })
