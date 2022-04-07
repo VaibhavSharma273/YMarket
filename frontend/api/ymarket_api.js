@@ -1,8 +1,9 @@
 import axios from "axios";
 import { getToken, setToken, deleteToken } from '../storage/tokenStorage';
+import { baseURL, hostURL } from "../constants/url";
 
 const ymarket = axios.create({
-  baseURL: 'http://localhost:8000/',
+  baseURL: baseURL,
   headers: {
   "Content-type": "application/json"
   }

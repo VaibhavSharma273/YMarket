@@ -13,7 +13,10 @@ import { useContext } from "react";
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
-import TabOneScreen from '../screens/TabOneScreen';
+
+import AccessPostScreen from '../screens/create_post/AccessPostScreen';
+import CreatePostScreen from '../screens/create_post/CreatePostScreen';
+import EditPostScreen from '../screens/create_post/EditPostScreen';
 import SearchScreen from '../screens/SearchScreen';
 import UserProfileScreen from '../screens/UserProfileScreen';
 import StartScreen from '../screens/auth/StartScreen';
@@ -150,6 +153,28 @@ function BottomTabNavigator() {
         })}
       />
       <BottomTab.Screen
+        name="CreateStack"
+        component={CreateNavigator}
+        options={({ navigation }: RootTabScreenProps<'CreateStack'>) => ({
+          title: 'Post',
+          tabBarIcon: ({ color }) => <TabBarIcon name="plus" color={color} />,
+          headerRight: () => (
+            <Pressable
+              style={({ pressed }) => ({
+                opacity: pressed ? 0.5 : 1,
+              })
+              }>
+              <FontAwesome
+                name="info-circle"
+                size={25}
+                color={Colors[colorScheme].text}
+                style={{ marginRight: 15 }}
+              />
+            </Pressable>
+          ),
+        })}
+      />
+      <BottomTab.Screen
         name="Search"
         component={SearchScreen}
         options={{
@@ -178,3 +203,16 @@ function TabBarIcon(props: {
 }) {
   return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
 }
+
+const CreateStack = createNativeStackNavigator();
+
+function CreateNavigator() {
+  return (
+    <CreateStack.Navigator initialRouteName='AccessPostScreen' screenOptions={{headerShown: false,}}>
+      <CreateStack.Screen name="AccessPostScreen" component={AccessPostScreen} />
+      <CreateStack.Screen name="CreatePostScreen" component={CreatePostScreen} />
+      <CreateStack.Screen name="EditPostScreen" component={EditPostScreen} />
+    </CreateStack.Navigator>
+  );
+}
+

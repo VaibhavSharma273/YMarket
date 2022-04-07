@@ -3,7 +3,7 @@ import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { text_styles } from '../../components/TextNormalize';
 
 
-const Post = (props: { post: any, navigation: any; }) => {
+const Post = (props: { post: any, navigation: any; is_edit: any;}) => {
   const { post, navigation } = props;
 
   // Render image here using the image URLs:
@@ -20,7 +20,7 @@ const Post = (props: { post: any, navigation: any; }) => {
   // Actual post rendering including the image and test for the feed
   return (
     <View style={styles.listItemShadow}>
-      <TouchableOpacity style={styles.listItem} onPress={() => navigation.push('ViewPost', 
+      {props.is_edit === false ? <TouchableOpacity style={styles.listItem} onPress={() => navigation.push('ViewPost', 
         {
           postId: post.id
         })}>
@@ -29,7 +29,16 @@ const Post = (props: { post: any, navigation: any; }) => {
               <Text numberOfLines={1} style={[ text_styles.medium, { fontWeight: "600", flex: 1 } ]}>{post.is_buy == false ? null : <Text numberOfLines={1} style = {[ text_styles.medium, { color: '#0f4d92', flex: 1 } ]}>Buying: </Text>}{post.title}</Text>
               {post.price == null ? null : <Text numberOfLines={1} style = {[ text_styles.medium, { textAlign: 'right', flex: 1 } ]}>${post.price}</Text>}
         </View>
-      </TouchableOpacity>
+      </TouchableOpacity> : <TouchableOpacity style={styles.listItem} onPress={() => navigation.push('EditPostScreen', 
+        {
+          postId: post.id
+        })}>
+        {renderPostContent()}
+        <View style={styles.listItemFooter}>
+              <Text numberOfLines={1} style={[ text_styles.medium, { fontWeight: "600", flex: 1 } ]}>{post.is_buy == false ? null : <Text numberOfLines={1} style = {[ text_styles.medium, { color: '#0f4d92', flex: 1 } ]}>Buying: </Text>}{post.title}</Text>
+              {post.price == null ? null : <Text numberOfLines={1} style = {[ text_styles.medium, { textAlign: 'right', flex: 1 } ]}>${post.price}</Text>}
+        </View>
+      </TouchableOpacity> }
     </View>
   );
 };
