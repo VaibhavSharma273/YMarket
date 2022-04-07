@@ -14,6 +14,7 @@ import { priceValidator } from '../../helpers/priceValidator';
 import axios from 'axios';
 
 import { getToken, setToken, deleteToken } from '../../storage/tokenStorage';
+import { baseURL, hostURL } from '../../constants/url';
 
 export default function CreatePostScreen({ navigation }: any) {
   const [title, setTitle] = useState({ value: '', error: '' })
@@ -84,7 +85,7 @@ export default function CreatePostScreen({ navigation }: any) {
 
     const confirmPopup = async ()=>{
       const createPost = async () => {
-        const path = 'http://localhost:8000/api/post/'
+        const path = baseURL
         
         var is_buy = 'false'
 

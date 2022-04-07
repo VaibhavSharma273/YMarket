@@ -18,9 +18,6 @@ import mock from "./data/mock";
 export default function EditPostScreen({ route, navigation }: { route: any; navigation: any }) {
 
   const { postId } = route.params;
-  // const post = mock[0].posts.find((obj: { id: any; }) => {
-  //   return obj.id === postId
-  // })
 
   const [title, setTitle] = useState({ value: '', error: '' })
   const [caption, setCaption] = useState({ value: '', error: '' })
@@ -29,6 +26,7 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
   const postTypes = ["Buy", "Sell"]
   const [postType, setPostType] = useState({ value: '', error: '' })
   const [images, setImages] = useState<any | null>([])
+  const [mounted, setMounted] = useState(false)
 
   const updateImages = (newImage: any, add: boolean) => {
     {add ? 
@@ -41,27 +39,31 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
     setImages(images.filter((image: any) => image !== newImage))
   }
 
-  useEffect(() => {
-    const getPreviousInfo = async () => {
-      const path = 'api/post/' + postId
-      const response = await API.get(path)
-                                .then((response) => {
-                                  setTitle({value: response.data.title, error: ''})
-                                  setCaption({value: response.data.content, error: ''})
-                                  setPrice({value: response.data.price, error: ''})
-                                  setCategory({value: response.data.category, error: ''})
-                                  if (response.data.is_buy === 'false') {
-                                    setPostType({value: 'Sell', error: ''})
-                                  } else {
-                                    setPostType({value: 'Buy', error: ''})
-                                  }
-                                })
-                                .catch((error) => {
-                                  console.log(error)
-                                });
-    }
+  const getPreviousInfo = async () => {
+    const path = 'api/post/' + postId
+    const response = await API.get(path)
+                              .then((response) => {
+                                setTitle({value: response.data.title, error: ''})
+                                setCaption({value: response.data.content, error: ''})
+                                setPrice({value: response.data.price, error: ''})
+                                setCategory({value: response.data.category, error: ''})
+                                if (response.data.is_buy === 'false') {
+                                  setPostType({value: 'Sell', error: ''})
+                                } else {
+                                  setPostType({value: 'Buy', error: ''})
+                                }
+                              })
+                              .catch((error) => {
+                                console.log(error)
+                              });
+  }
 
+  if (!mounted) {
     getPreviousInfo()
+  }
+
+  useEffect(() => {
+    setMounted(true)
   }, []);
 
   const cancelPopup= async ()=>{
@@ -130,7 +132,6 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
 
         const response = await API.put(path, data)
                                   .then((response) => {
-                                    console.log("post edit success!")
                                   })
                                   .catch((error) => {
                                     console.log(error)
