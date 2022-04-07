@@ -17,7 +17,7 @@ Start two terminals. In one of the terminals, make sure you are in the root back
 python manage.py runserver
 ```
 
-You may also need to run `python manage.py migrate` and `python manage.py makemigrations`, which you will be prompted to do so if needed upon running the server.
+You may also need to run `python manage.py makemigrations` and `python manage.py migrate`, which you will be prompted to do so if needed upon running the server.
 
 In the second terminal, make sure you are in the root frontend directory and have expo installed. You can then start the app:
 ```
