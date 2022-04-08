@@ -61,13 +61,6 @@ export default function App() {
                               });
   }
 
-  // function that loads the splash screen for given ms
-  const load = ({time}: any) => {
-    setTimeout(() => {
-      setLoading(false)
-    }, time);
-  }
-
   // function to check the refresh token and determine if user is logged in
   const checkToken = async () => {
     const refreshToken = await getToken('refresh');
@@ -76,20 +69,24 @@ export default function App() {
       const decoded = jwt_decode<JwtToken>(String(refreshToken))
       // user needs to login if refresh token expires
       if (decoded.exp < Date.now() / 1000) {
-        setLoginStatus(false)
-        load(500)
+        setTimeout(() => {
+          setLoading(false)
+        }, 1500);
       } 
       // otherwise user is logged in already and should refresh access token
       else {
         await refreshAccessToken() 
-        setLoginStatus(true)
-        setUser(decoded.user_id)
-        load(500)
+        setTimeout(() => {
+          setLoginStatus(true)
+          setUser(decoded.user_id)
+          setLoading(false)
+        }, 1000);
       }
     }
     else {
-      setLoginStatus(false)
-      load(500)
+      setTimeout(() => {
+        setLoading(false)
+      }, 1500);
     }      
   }
 
