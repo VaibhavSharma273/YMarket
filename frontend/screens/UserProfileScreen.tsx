@@ -14,27 +14,32 @@ import AppContext from "./AppContext"
 export default function UserProfileScreen({ navigation } : RootTabScreenProps<'UserProfile'>) {
     const [userName, setUserName] = useState('');
     const [userEmail, setUserEmail] = useState('');
+    const [mounted, setMounted] = useState(false)
 
     const myContext = useContext(AppContext);
 
-    useEffect(() => {
-      const getUserProfile = async () => {
-        const path = 'api/users/profile/' + myContext.user
-        const response = await API.get(path)
-                                  .then((response) => {
-                                    const firstName = response.data.first_name
-                                    const lastName = response.data.last_name
-                                    const email = response.data.email
-                                    const fullName = String(firstName) + ' ' + String(lastName)
-                                    setUserName(fullName)
-                                    setUserEmail(email)
-                                  })
-                                  .catch((error) => {
-                                    console.log(error)
-                                  });
-      }
+    const getUserProfile = async () => {
+      const path = 'api/users/profile/' + myContext.user
+      const response = await API.get(path)
+                                .then((response) => {
+                                  const firstName = response.data.first_name
+                                  const lastName = response.data.last_name
+                                  const email = response.data.email
+                                  const fullName = String(firstName) + ' ' + String(lastName)
+                                  setUserName(fullName)
+                                  setUserEmail(email)
+                                })
+                                .catch((error) => {
+                                  console.log(error)
+                                });
+    }
 
+    if(!mounted) {
       getUserProfile();
+    }
+
+    useEffect(() => {
+      setMounted(true)
     }, []);
 
     const onLogoutPressed = async () => {

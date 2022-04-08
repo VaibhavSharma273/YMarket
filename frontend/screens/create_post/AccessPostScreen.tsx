@@ -13,8 +13,7 @@ import Post from '../feed/Post';
 
 
 export default function AccessPostScreen({ navigation }: any) {
-  // const [postlist] = useState(mock[0].posts);
-  // console.log(mock[0].posts);
+  const [mounted, setMounted] = useState(false)
 
   const [postlist, setPostList] = useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
@@ -32,8 +31,12 @@ export default function AccessPostScreen({ navigation }: any) {
                               });
   }
 
-  useEffect(() => {
+  if(!mounted) {
     getUserPosts();
+  }
+
+  useEffect(() => {
+    setMounted(true);
   }, []);
 
   const onRefresh = React.useCallback(async () => {

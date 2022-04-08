@@ -11,8 +11,7 @@ import { normalize } from '../../components/TextNormalize';
 import API from '../../api/ymarket_api';
 
 const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
-
-  // const [posts] = useState(mock);
+  const [mounted, setMounted] = useState(false)
   const [posts, setPosts] = useState([]);
 
   const [refreshing, setRefreshing] = React.useState(false);
@@ -29,8 +28,13 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
                               });
   }
 
+  if (!mounted) {
+    getPosts()
+  }
+
   useEffect(() => {
-    getPosts() 
+    // getPosts() 
+    setMounted(true)
   }, []);
 
   const onRefresh = React.useCallback(async () => {
