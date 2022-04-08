@@ -12,7 +12,6 @@ const windowWidth = Dimensions.get('window').width;
 import moment from "moment";
 
 export default function ViewPost({ route, navigation }: { route: any; navigation: any }) {
-
   // Identify post here:
   const { postId } = route.params;
 
@@ -37,28 +36,28 @@ export default function ViewPost({ route, navigation }: { route: any; navigation
     ]
   }
 
+  const [mounted, setMounted] = useState(false)
   const [post, setPost] = useState(schema);
 
-  useEffect(() => {
-    const getDetailedPost = async () => {
-      const path = 'api/post/' + postId
-      const response = await API.get(path)
-                                .then((response) => {
-                                  setPost(response.data)
-                                })
-                                .catch((error) => {
-                                  console.log(error)
-                                });
-    }
+  const getDetailedPost = async () => {
+    const path = 'api/post/' + postId
+    const response = await API.get(path)
+                              .then((response) => {
+                                setPost(response.data)
+                              })
+                              .catch((error) => {
+                                console.log(error)
+                              });
+  }
 
+  if (!mounted) {
     getDetailedPost()
+  }
+
+  useEffect(() => {
+    setMounted(true)
   }, []);
 
-  // const post = mock.find((obj: { id: any; }) => {
-  //   return obj.id === postId
-  // })
-
-  // Setting up the modal (pop-up)
   const [modalVisible, setModalVisible] = useState(false);
   const date_posted = moment(post.date_posted).utc()
   // Render image for the post:

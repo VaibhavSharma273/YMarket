@@ -34,8 +34,8 @@ export default function UserProfileScreen({ navigation } : RootTabScreenProps<'U
                                 });
     }
 
-    if(!mounted) {
-      getUserProfile();
+    if (!mounted) {
+      getUserProfile()
     }
 
     useEffect(() => {

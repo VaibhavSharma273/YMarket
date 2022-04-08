@@ -33,7 +33,6 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
   }
 
   useEffect(() => {
-    // getPosts() 
     setMounted(true)
   }, []);
 

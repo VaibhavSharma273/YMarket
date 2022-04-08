@@ -13,10 +13,9 @@ import Post from '../feed/Post';
 
 
 export default function AccessPostScreen({ navigation }: any) {
-  const [mounted, setMounted] = useState(false)
-
   const [postlist, setPostList] = useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [mounted, setMounted] = useState(false)
 
   const myContext = useContext(AppContext);
 
@@ -31,12 +30,12 @@ export default function AccessPostScreen({ navigation }: any) {
                               });
   }
 
-  if(!mounted) {
-    getUserPosts();
+  if (!mounted) {
+    getUserPosts()
   }
 
   useEffect(() => {
-    setMounted(true);
+    setMounted(true)
   }, []);
 
   const onRefresh = React.useCallback(async () => {
