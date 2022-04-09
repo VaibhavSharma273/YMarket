@@ -75,10 +75,10 @@ export default function App() {
       } 
       // otherwise user is logged in already and should refresh access token
       else {
+        setUser(decoded.user_id)
         await refreshAccessToken() 
         setTimeout(() => {
           setLoginStatus(true)
-          setUser(decoded.user_id)
           setLoading(false)
         }, 1000);
       }
