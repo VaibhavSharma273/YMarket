@@ -16,17 +16,18 @@ import { RootTabScreenProps } from '../../types';
 import mock from "./data/mock";
 
 export default function EditPostScreen({ route, navigation }: { route: any; navigation: any }) {
-
   const { postId } = route.params;
-
+  
   const [title, setTitle] = useState({ value: '', error: '' })
   const [caption, setCaption] = useState({ value: '', error: '' })
   const [price, setPrice] = useState({ value: '', error: '' })
-  const [category, setCategory] = useState({ value: '', error: '' })
-  const postTypes = ["Buy", "Sell"]
-  const [postType, setPostType] = useState({ value: '', error: '' })
+  const [category, setCategory] = useState({ value: ''})
+  const [postType, setPostType] = useState({ value: ''})
   const [images, setImages] = useState<any | null>([])
   const [mounted, setMounted] = useState(false)
+  
+  const postTypes = ["Buy", "Sell"]
+  const categoryTypes = ["General", "Clothing", "Furniture"]
 
   const updateImages = (newImage: any, add: boolean) => {
     {add ? 
@@ -46,11 +47,12 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
                                 setTitle({value: response.data.title, error: ''})
                                 setCaption({value: response.data.content, error: ''})
                                 setPrice({value: response.data.price, error: ''})
-                                setCategory({value: response.data.category, error: ''})
+                                setCategory({value: response.data.category.charAt(0).toUpperCase() 
+                                  + response.data.category.slice(1)})
                                 if (response.data.is_buy === 'false') {
-                                  setPostType({value: 'Sell', error: ''})
+                                  setPostType({value: 'Sell'})
                                 } else {
-                                  setPostType({value: 'Buy', error: ''})
+                                  setPostType({value: 'Buy'})
                                 }
                               })
                               .catch((error) => {
@@ -84,8 +86,16 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
     const titleError = titleValidator(title.value)
     const captionError = postValidator(caption.value)
     const priceError = priceValidator(price.value)
-    const categoryError = postValidator(category.value)
+    
     var postTypeError = ''
+    var categoryError = 'Please choose a category'
+
+    for (let i = 0; i < categoryTypes.length; i++) {
+      if (category.value.includes(categoryTypes[i]))
+      {
+        categoryError = ''
+      }
+    }
 
     if (!(postType.value.includes("Buy") || postType.value.includes("Sell")))
     {
@@ -96,8 +106,13 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
         setTitle({...title, error: titleError})
         setCaption({...caption, error: captionError})
         setPrice({...price, error: priceError})
-        setCategory({...category, error: categoryError})
-        setPostType({...postType, error: postTypeError})
+        setCategory({...category})
+        setPostType({...postType})
+
+        if (categoryError)
+        {
+          Alert.alert(categoryError)
+        }
 
         if (postTypeError)
         {
@@ -109,7 +124,7 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
     const title_val = title.value;
     const caption_val = caption.value;
     const price_val = price.value;
-    const category_val = category.value;
+    const category_val = category.value.toLowerCase();
     const post_type_val = postType.value;
 
     const confirmPopup = async ()=>{
@@ -152,6 +167,21 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
     }
     
     confirmPopup()
+  }
+
+  const onDeletePostPressed = async () => {
+  Alert.alert(
+    'Are you sure you want to delete this post?',
+    'Deletions are not reversible!',
+    [
+      {text: 'Yes', onPress: () => 
+      {navigation.goBack();}}, // delete post
+      {text: 'No'},
+    ],
+    { 
+      cancelable: true 
+    }
+  );
 }
   return (
     <ScrollView>
@@ -195,22 +225,11 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
         description
       />
 
-  <Text style={styles.title}>Category</Text>
-      <TextInput style={{height:50}}
-        returnKeyType="next"
-        value={category.value}
-        onChangeText={(text: any) => setCategory({ value: text, error: '' })}
-        error={!!category.error}
-        errorText={category.error}
-        description
-      />
-
-
-  <Text style={styles.title}>Post Type</Text>
+<Text style={styles.title}>Category</Text>
   <View style={{paddingTop:'2%'}}></View>
   <SelectDropdown
-	  data={postTypes}
-	  onSelect={(selectedItem) => setPostType({value: selectedItem, error: ''})}
+	  data={categoryTypes}
+	  onSelect={(selectedItem) => setCategory({value: selectedItem})}
 	  buttonTextAfterSelection={(selectedItem, index) => {
 		// text represented after item is selected
 		// if data array is an array of objects then return selectedItem.property to render after item is selected
@@ -221,7 +240,35 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
 		// if data array is an array of objects then return item.property to represent item in dropdown
 		return item
 	}}
-  defaultButtonText={'Select Buy or Sell'}
+  defaultButtonText={category.value}
+
+  buttonStyle={styles.dropdown1BtnStyle}
+  dropdownStyle={styles.dropdown1DropdownStyle}
+  rowStyle={styles.dropdown1RowStyle}
+  rowTextStyle={styles.dropdown1RowTxtStyle}
+  buttonTextStyle={styles.dropdown1BtnTxtStyle}
+
+
+/>
+<View style={{paddingTop:'4%'}}></View>
+
+
+  <Text style={styles.title}>Post Type</Text>
+  <View style={{paddingTop:'2%'}}></View>
+  <SelectDropdown
+	  data={postTypes}
+	  onSelect={(selectedItem) => setPostType({value: selectedItem})}
+	  buttonTextAfterSelection={(selectedItem, index) => {
+		// text represented after item is selected
+		// if data array is an array of objects then return selectedItem.property to render after item is selected
+		return selectedItem
+	}}
+	rowTextForSelection={(item, index) => {
+		// text represented for each item in dropdown
+		// if data array is an array of objects then return item.property to represent item in dropdown
+		return item
+	}}
+  defaultButtonText={postType.value}
 
   buttonStyle={styles.dropdown1BtnStyle}
   dropdownStyle={styles.dropdown1DropdownStyle}
@@ -232,7 +279,7 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
 
 />
 <View style={styles.row}>
-        <UploadImage updateImages={updateImages}/>
+        <UploadImage updateImages={updateImages} defaultValue={''}/>
         <View style={{paddingRight:'2.5%'}}></View>
         <UploadImage updateImages={updateImages}/>
         <View style={{paddingRight:'2.5%'}}></View>
@@ -247,10 +294,15 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
         <View style={{paddingRight:'100%'}}></View>
         <View style={{paddingBottom: '2%'}}></View>
         <TouchableOpacity style={styles.button} onPress={onEditPostPressed}>
-          <Text style={{color: 'white', fontWeight: 'bold', fontSize: 18, fontFamily: 'Arial'}}>Add Post</Text>
+        <Text style={{color: 'white', fontWeight: 'bold', fontSize: 18, fontFamily: 'Arial'}}>Confirm Changes</Text>
+        </TouchableOpacity>
+        <View style={{paddingRight:'100%'}}></View>
+        <View style={{paddingBottom: '2%'}}></View>
+        <TouchableOpacity style={styles.buttonDel} onPress={onDeletePostPressed}>
+          <Text style={{color: 'white', fontWeight: 'bold', fontSize: 18, fontFamily: 'Arial'}}>Delete Post</Text>
         </TouchableOpacity>
       </View>
-      <View style={{paddingTop:'4%'}}></View>
+      <View style={{paddingTop:'12%'}}></View>
   </View>
   </ScrollView>
   );
@@ -343,5 +395,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 22
+  },
+  buttonDel: {
+    backgroundColor: '#cc0000', justifyContent: 'center', width: '80%', alignItems: 'center', paddingTop: '4%',
+    paddingBottom: '4%', borderRadius: 5
   },
 });
