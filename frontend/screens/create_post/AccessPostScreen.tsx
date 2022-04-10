@@ -1,7 +1,7 @@
 import { Text, View } from '../../components/Themed';
 import { RootTabScreenProps } from '../../types';
 
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useMemo } from 'react';
 import { RefreshControl, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import mock from "./data/mock";
 import PostsView from './PostsView';
@@ -53,6 +53,8 @@ export default function AccessPostScreen({ navigation }: any) {
     return <Post post={item.item} navigation = {navigation} is_edit = {true} />;
   };
 
+  const memoizedPosts = useMemo(() => renderItems, [postlist]);
+
   return (
     <View style = {styles.container}>
       <Text style = {styles.headerText}>
@@ -64,7 +66,7 @@ export default function AccessPostScreen({ navigation }: any) {
       <View style={styles.list}>
         <FlatList
           data={postlist.reverse()}
-          renderItem={renderItems}
+          renderItem={memoizedPosts}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
