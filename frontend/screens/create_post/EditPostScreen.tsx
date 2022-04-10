@@ -20,67 +20,39 @@ import { baseURL, hostURL } from '../../constants/url';
 
 export default function EditPostScreen({ route, navigation }: { route: any; navigation: any }) {
 
-  const { postId } = route.params;
+  const { postId, post} = route.params;
 
-  const [title, setTitle] = useState({ value: '', error: '' })
-  const [caption, setCaption] = useState({ value: '', error: '' })
-  const [price, setPrice] = useState({ value: '', error: '' })
-  const [category, setCategory] = useState({ value: ''})
-  const [postType, setPostType] = useState({ value: ''})
-  
-  const [images, setImages] = useState(['loading', 'loading', 'loading', 'loading', 'loading', 'loading'])
+  const [title, setTitle] = useState({ value: post.title, error: '' })
+  const [caption, setCaption] = useState({ value: post.content, error: '' })
+  const [price, setPrice] = useState({ value: post.price, error: '' })
+  const [category, setCategory] = useState({ value: post.category.charAt(0).toUpperCase() 
+    + post.category.slice(1)})
+  var pType = 'Buy'
+  if (post.is_buy === false) {
+    pType = 'Sell'
+  } 
+  const [postType, setPostType] = useState({ value: pType})
+
   const imageURLs = ['', '', '', '', '', '']
+  const postImageIDs = [-1, -1, -1, -1, -1, -1]
+  const postImages = post.postimages
+
+  for (var i = 0; i < postImages.length; i++) {
+    if (i < 6) {
+      imageURLs[i] = postImages[i].image_url
+      postImageIDs[i] = postImages[i].id
+    }
+  }
+
   const isModified = [false, false, false, false, false, false]
-  const [postIDs, setPostIDs] = useState([-1, -1, -1, -1, -1, -1])
-  const imageIDs = [-1, -1, -1, -1, -1, -1]
-  const [mounted, setMounted] = useState(false)
 
   const postTypes = ["Buy", "Sell"]
   const categoryTypes = ["General", "Clothing", "Furniture"]
 
   const updateImages = (newImage: any, index: number) => {
-    images[index] = newImage
+    imageURLs[index] = newImage
     isModified[index] = true
   }
-
-  const getPreviousInfo = async () => {
-    const path = 'api/post/' + postId
-    const response = await API.get(path)
-                              .then((response) => {
-                                setTitle({value: response.data.title, error: ''})
-                                setCaption({value: response.data.content, error: ''})
-                                setPrice({value: response.data.price, error: ''})
-                                setCategory({value: response.data.category.charAt(0).toUpperCase() 
-                                  + response.data.category.slice(1)})
-                                if (response.data.is_buy === false) {
-                                  setPostType({value: 'Sell'})
-                                } else {
-                                  setPostType({value: 'Buy'})
-                                }
-                                const postImages = response.data.postimages
-
-                                for (var i = 0; i < postImages.length; i++) {
-                                  if (i < 6) {
-                                    imageURLs[i] = postImages[i].image_url
-                                    imageIDs[i] = postImages[i].id
-                                  }
-                                }
-                                setImages(imageURLs)
-                                setPostIDs(imageIDs)
-
-                              })
-                              .catch((error) => {
-                                console.log(error)
-                              });
-  }
-
-  if (!mounted) {
-    getPreviousInfo()
-  }
-
-  useEffect(() => {
-    setMounted(true)
-  }, []);
 
   const cancelPopup= async ()=>{
     Alert.alert(
@@ -184,9 +156,9 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
       form_data.append("is_buy", is_buy)
 
       for (var i = 0; i < 6; i++) {
-        if (isModified[i] && postIDs[i] != -1) 
+        if (isModified[i] && postImageIDs[i] != -1) 
         {
-          const deletePath = 'api/post-images/' + postIDs[i]
+          const deletePath = 'api/post-images/' + postImageIDs[i]
           const deleteResponse = await API.delete(deletePath)
                                           .then((deleteResponse) => {
                                             console.log("delete image success!")
@@ -198,9 +170,9 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
       }
 
       for (var i = 0; i < 6; i++) {
-        if (isModified[i] && images[i] !== '') {
+        if (isModified[i] && imageURLs[i] !== '') {
           var img = { 
-            uri: images[i],
+            uri: imageURLs[i],
             name: 'image.jpg',
             type: 'image/jpg'
           }
@@ -336,18 +308,18 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
 
 />
 <View style={styles.row}>
-        <UploadImage updateImages={updateImages} defaultValue={images[0]} number={0}/>
+        <UploadImage updateImages={updateImages} defaultValue={imageURLs[0]} number={0}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage updateImages={updateImages} defaultValue={images[1]} number={1}/>
+        <UploadImage updateImages={updateImages} defaultValue={imageURLs[1]} number={1}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage updateImages={updateImages} defaultValue={images[2]} number={2}/>
+        <UploadImage updateImages={updateImages} defaultValue={imageURLs[2]} number={2}/>
         <View style={{paddingRight:'2.5%'}}></View>
         <View style={{height: '16%'}}></View>
-        <UploadImage updateImages={updateImages} defaultValue={images[3]} number={3}/>
+        <UploadImage updateImages={updateImages} defaultValue={imageURLs[3]} number={3}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage updateImages={updateImages} defaultValue={images[4]} number={4}/>
+        <UploadImage updateImages={updateImages} defaultValue={imageURLs[4]} number={4}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage updateImages={updateImages} defaultValue={images[5]} number={5}/>
+        <UploadImage updateImages={updateImages} defaultValue={imageURLs[5]} number={5}/>
         <View style={{paddingRight:'100%'}}></View>
         <View style={{paddingBottom: '2%'}}></View>
         <TouchableOpacity style={styles.button} onPress={onEditPostPressed}>

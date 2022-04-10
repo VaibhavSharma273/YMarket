@@ -6,10 +6,6 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { transparent } from 'react-native-paper/lib/typescript/styles/colors';
 
 export default function UploadImage({updateImages, defaultValue, number}: any) {
-    if (defaultValue === 'loading') {
-        return null
-    }
-    
     const [image, setImage] = useState(defaultValue);
     const addImage = async () => {
         let _image = await ImagePicker.launchImageLibraryAsync({
