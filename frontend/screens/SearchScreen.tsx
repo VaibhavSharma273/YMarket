@@ -13,23 +13,14 @@ import SearchBar from "../components/SearchBar";
 const SearchScreen = () => {
   const [searchPhrase, setSearchPhrase] = useState("");
   const [clicked, setClicked] = useState(false);
+  const [searched, setSearched] = useState(false);
   const [data, setData] = useState();
 
-  useEffect(() => {
-    const getPosts = async () => {
-      const path = 'api/post/search='
-      console.log(path + {searchPhrase})
-      const response = await API.get(path + {searchPhrase})
-                                .then((response) => {
-                                  setData(response.data)
-                                  console.log(response.data)
-                                })
-                                .catch((error) => {
-                                  console.log(error)
-                                });
-    }
-    getPosts();
-  }, []);
+  // useEffect(() => {
+  //   getPosts();
+  // }, []);
+
+  // set search back to false here
 
   return (
     <SafeAreaView style={styles.root}>
@@ -39,12 +30,20 @@ const SearchScreen = () => {
         setSearchPhrase={setSearchPhrase}
         clicked={clicked}
         setClicked={setClicked}
+        setSearched={setSearched}
+        setData={setData}
       />
-      <PostList
-        searchPhrase={searchPhrase}
-        data={data}
-        setClicked={setClicked}
-      />
+      {searched ? 
+        <PostList
+          searched={searched}
+          setSearched={setSearched}
+          searchPhrase={searchPhrase}
+          data={data}
+          setData={setData}
+        />
+        :
+        null
+    }
     </SafeAreaView>
   );
 };
