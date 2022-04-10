@@ -241,9 +241,8 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
     }
     
     confirmPopup()
-
-
 }
+
   return (
     <ScrollView>
     <View style ={styles.container}>
