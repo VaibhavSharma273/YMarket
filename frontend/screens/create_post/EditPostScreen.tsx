@@ -25,21 +25,14 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
   const [category, setCategory] = useState({ value: ''})
   const [postType, setPostType] = useState({ value: ''})
   
-  const [images, setImages] = useState<any | null>([])
+  const [images] = useState(['','','','','',''])
   const [mounted, setMounted] = useState(false)
 
   const postTypes = ["Buy", "Sell"]
   const categoryTypes = ["General", "Clothing", "Furniture"]
 
-  const updateImages = (newImage: any, add: boolean) => {
-    {add ? 
-      setImages([...images, newImage])
-      :
-      removeImage(newImage)}
-  }
-
-  const removeImage = (newImage: any) => {
-    setImages(images.filter((image: any) => image !== newImage))
+  const updateImages = (newImage: any, index: number) => {
+    images[index] = newImage
   }
 
   const getPreviousInfo = async () => {
@@ -279,18 +272,18 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
 
 />
 <View style={styles.row}>
-        <UploadImage updateImages={updateImages} defaultValue={''}/>
+        <UploadImage updateImages={updateImages} defaultValue={''} number={0}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage updateImages={updateImages}/>
+        <UploadImage updateImages={updateImages} number={1}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage updateImages={updateImages}/>
+        <UploadImage updateImages={updateImages} number={2}/>
         <View style={{paddingRight:'2.5%'}}></View>
         <View style={{height: '16%'}}></View>
-        <UploadImage updateImages={updateImages}/>
+        <UploadImage updateImages={updateImages} number={3}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage updateImages={updateImages}/>
+        <UploadImage updateImages={updateImages} number={4}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage updateImages={updateImages}/>
+        <UploadImage updateImages={updateImages} number={5}/>
         <View style={{paddingRight:'100%'}}></View>
         <View style={{paddingBottom: '2%'}}></View>
         <TouchableOpacity style={styles.button} onPress={onEditPostPressed}>

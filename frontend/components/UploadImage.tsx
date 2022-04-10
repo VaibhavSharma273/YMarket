@@ -5,7 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { transparent } from 'react-native-paper/lib/typescript/styles/colors';
 
-export default function UploadImage({updateImages, defaultValue}: any) {
+export default function UploadImage({updateImages, defaultValue, number}: any) {
  const [image, setImage] = useState(defaultValue);
  const addImage = async () => {
     let _image = await ImagePicker.launchImageLibraryAsync({
@@ -14,13 +14,13 @@ export default function UploadImage({updateImages, defaultValue}: any) {
 
     if (!_image.cancelled) {
         setImage(_image.uri);
-        updateImages(_image.uri, true)
+        updateImages(_image.uri, number)
     }
   };
 
   const removeImage = async () => {
-    setImage(null)
-    updateImages(image, false)
+    setImage('')
+    updateImages('', number)
   };
 
  return (
