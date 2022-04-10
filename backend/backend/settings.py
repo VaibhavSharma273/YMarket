@@ -114,7 +114,7 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 # simplejwt
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
 }
 
 # dj-rest-auth

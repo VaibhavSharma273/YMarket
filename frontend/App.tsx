@@ -27,6 +27,7 @@ export default function App() {
   // setting up context to use login status as a global variable
   const [loginStatus, setLoginStatus] = useState(false);
   const [user, setUser] = useState('')
+  const [loading, setLoading] = useState(true)
 
   // function to setup logout to change loginStatus
   const logout = useCallback(() => {
@@ -60,39 +61,47 @@ export default function App() {
                               });
   }
 
+  // function to check the refresh token and determine if user is logged in
+  const checkToken = async () => {
+    const refreshToken = await getToken('refresh');
+    // check if refresh token exists 
+    if (refreshToken !== null && refreshToken !== undefined) {
+      const decoded = jwt_decode<JwtToken>(String(refreshToken))
+      // user needs to login if refresh token expires
+      if (decoded.exp < Date.now() / 1000) {
+        setTimeout(() => {
+          setLoading(false)
+        }, 1500);
+      } 
+      // otherwise user is logged in already and should refresh access token
+      else {
+        setUser(decoded.user_id)
+        await refreshAccessToken() 
+        setTimeout(() => {
+          setLoginStatus(true)
+          setLoading(false)
+        }, 1000);
+      }
+    }
+    else {
+      setTimeout(() => {
+        setLoading(false)
+      }, 1500);
+    }      
+  }
+
   // function that will run each time App is called -- checks the token value
   useEffect(() => {
-    const checkToken = async () => {
-      const refreshToken = await getToken('refresh');
-      // check if refresh token exists 
-      if (refreshToken !== null && refreshToken !== undefined) {
-        const decoded = jwt_decode<JwtToken>(String(refreshToken))
-        // user needs to login if refresh token expires
-        if (decoded.exp < Date.now() / 1000) {
-          setLoginStatus(false)
-        } 
-        // otherwise user is logged in already and should refresh access token
-        else {
-          refreshAccessToken() 
-          setLoginStatus(true)
-          setUser(decoded.user_id)
-        }
-      }
-      else {
-        setLoginStatus(false)
-      }      
-    }
-
     checkToken();    
-    
   }, []);
 
   const contextValue = useMemo(() => ({
     user,
     loginStatus,
+    loading,
     logout,
     login,
-  }), [user, loginStatus, logout, login]);
+  }), [user, loginStatus, loading, logout, login]);
 
   if (!isLoadingComplete) {
     return null;
