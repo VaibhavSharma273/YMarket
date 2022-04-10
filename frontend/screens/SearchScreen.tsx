@@ -14,36 +14,38 @@ const SearchScreen = () => {
   const [searchPhrase, setSearchPhrase] = useState("");
   const [clicked, setClicked] = useState(false);
   const [searched, setSearched] = useState(false);
-  const [data, setData] = useState();
+  const [data, setData] = useState<any[]>([]);
 
-  // useEffect(() => {
-  //   getPosts();
-  // }, []);
+  const getPosts = async () => {
+    const path = 'api/post/?search='
+    console.log(path + searchPhrase)
+    const response = await API.get(path + searchPhrase)
+                              .then((response) => {
+                                setData(response.data.reverse())
+                                console.log(response.data)
+                              })
+                              .catch((error) => {
+                                console.log(error.response)
+                              });
+  }
+
+  useEffect(() => {
+    getPosts();
+  }, [searchPhrase]);
 
   // set search back to false here
 
   return (
     <SafeAreaView style={styles.root}>
-      {/* {!clicked && <Text style={styles.title}>Search YMarket</Text>} */}
       <SearchBar
         searchPhrase={searchPhrase}
         setSearchPhrase={setSearchPhrase}
         clicked={clicked}
         setClicked={setClicked}
-        setSearched={setSearched}
-        setData={setData}
       />
-      {searched ? 
-        <PostList
-          searched={searched}
-          setSearched={setSearched}
-          searchPhrase={searchPhrase}
-          data={data}
-          setData={setData}
-        />
-        :
-        null
-    }
+      <PostList
+        data={data}
+      />
     </SafeAreaView>
   );
 };
