@@ -1,10 +1,9 @@
-import React, { useEffect } from "react";
-import { StyleSheet, Text, View, FlatList, SafeAreaView } from "react-native";
-import { RootTabScreenProps } from '../types';
+import React from "react";
+import { StyleSheet, FlatList, SafeAreaView } from "react-native";
 
 import Post from '../screens/feed/Post';
 
-const PostList = ({ data }:any, {navigation}: RootTabScreenProps<'PostStack'>) => {
+const PostList = ({ data, navigation }: any) => {
     const renderItems = (item: { item: any;}) => {
         return <Post post={item.item} navigation = {navigation} is_edit = {false} />;
     };
@@ -14,7 +13,6 @@ const PostList = ({ data }:any, {navigation}: RootTabScreenProps<'PostStack'>) =
         <FlatList
           data={data}
           renderItem={renderItems}
-          keyExtractor={(item) => item.id}
         />
       </SafeAreaView>
     );

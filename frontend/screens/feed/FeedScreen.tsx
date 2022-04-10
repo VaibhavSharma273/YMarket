@@ -3,7 +3,6 @@ import { RootTabScreenProps } from '../../types';
 import React, { useState, useEffect } from 'react';
 import { RefreshControl, Text, View, FlatList, StyleSheet } from 'react-native';
 
-import mock from "./data/mock";
 import Post from './Post';
 
 import { normalize } from '../../components/TextNormalize';
@@ -43,6 +42,7 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
   }, [refreshing]);
 
   const renderItems = (item: { item: any;}) => {
+    // console.log(navigation)
     return <Post post={item.item} navigation = {navigation} is_edit = {false} />;
   };
 

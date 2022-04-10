@@ -10,30 +10,28 @@ import { RootTabScreenProps } from '../types';
 import PostList from "../components/PostList";
 import SearchBar from "../components/SearchBar";
 
-const SearchScreen = () => {
+const SearchScreen = ({navigation}: RootTabScreenProps<'SearchStack'>) => {
   const [searchPhrase, setSearchPhrase] = useState("");
   const [clicked, setClicked] = useState(false);
+  // use to show categories vs list of posts
   const [searched, setSearched] = useState(false);
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState([]);
 
   const getPosts = async () => {
     const path = 'api/post/?search='
-    console.log(path + searchPhrase)
     const response = await API.get(path + searchPhrase)
                               .then((response) => {
                                 setData(response.data.reverse())
-                                console.log(response.data)
                               })
                               .catch((error) => {
                                 console.log(error.response)
                               });
   }
 
+  // get posts if the search query changes
   useEffect(() => {
     getPosts();
   }, [searchPhrase]);
-
-  // set search back to false here
 
   return (
     <SafeAreaView style={styles.root}>
@@ -45,6 +43,7 @@ const SearchScreen = () => {
       />
       <PostList
         data={data}
+        navigation={navigation}
       />
     </SafeAreaView>
   );
@@ -65,84 +64,3 @@ const styles = StyleSheet.create({
 });
 
 export default SearchScreen;
-
-
-// const List = ({searchQuery}: any, { navigation }: RootTabScreenProps<'PostStack'>) => {
-//   const [posts, setPosts] = useState([]);
-//   const [refreshing, setRefreshing] = useState(false);
-
-//   const getPosts = async () => {
-//     const path = 'api/post/search='
-//     const response = await API.get(path + {searchQuery})
-//                               .then((response) => {
-//                                 setPosts(response.data)
-//                                 // console.log(response.data)
-//                               })
-//                               .catch((error) => {
-//                                 console.log(error)
-//                               });
-//   }
-
-//   const onRefresh = useCallback(async () => {
-//     setRefreshing(true);
-//       getPosts()
-//       setRefreshing(false) 
-//   }, [refreshing]);
-
-//   const renderItems = (item: { item: any;}) => {
-//     return <Post post={item.item} navigation = {navigation} is_edit = {false} />;
-//   };
-
-//   return (
-//     <View style={styles.list}>
-//         <FlatList
-//           data={posts.reverse()}
-//           renderItem={renderItems}
-//           refreshControl={
-//             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-//           }
-//         />
-//     </View>
-//   )
-// }
-
-// export default function SearchScreen() {
-//   const [searchQuery, setSearchQuery] = useState('');
-
-//   const onChangeSearch = (text: any) => setSearchQuery(text);
-
-//   return (
-//     <View style={styles.container}>
-//       <SearchBar
-//         placeholder="Search YMarket"
-//         value={searchQuery}
-//         onChangeText={(text) => onChangeSearch(text)}
-//         lightTheme={true}
-//         round={true}
-//         containerStyle={{backgroundColor: 'white'}}
-//         inputContainerStyle={{backgroundColor: '#D3D3D3'}}
-//       />
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     // flex: 1,
-//     // alignItems: 'center',
-//     marginTop: 50,
-//     // justifyContent: 'center',
-//   },
-//   title: {
-//     fontSize: 20,
-//     fontWeight: "bold",
-//     marginBottom: 5,
-//     fontStyle: "italic",
-//   },
-//   list: {
-//     marginTop: 10,
-//     backgroundColor: '#fff',
-//     flex: 1,
-//     paddingTop: 4,
-//   },
-// });
