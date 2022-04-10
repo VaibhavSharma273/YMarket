@@ -15,6 +15,9 @@ import { priceValidator } from '../../helpers/priceValidator';
 import { RootTabScreenProps } from '../../types';
 import mock from "./data/mock";
 
+import { getToken, setToken, deleteToken } from '../../storage/tokenStorage';
+import { baseURL, hostURL } from '../../constants/url';
+
 export default function EditPostScreen({ route, navigation }: { route: any; navigation: any }) {
 
   const { postId } = route.params;
@@ -25,7 +28,11 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
   const [category, setCategory] = useState({ value: ''})
   const [postType, setPostType] = useState({ value: ''})
   
-  const [images] = useState(['','','','','',''])
+  const [images, setImages] = useState(['loading', 'loading', 'loading', 'loading', 'loading', 'loading'])
+  const imageURLs = ['', '', '', '', '', '']
+  const isModified = [false, false, false, false, false, false]
+  const [postIDs, setPostIDs] = useState([-1, -1, -1, -1, -1, -1])
+  const imageIDs = [-1, -1, -1, -1, -1, -1]
   const [mounted, setMounted] = useState(false)
 
   const postTypes = ["Buy", "Sell"]
@@ -33,6 +40,7 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
 
   const updateImages = (newImage: any, index: number) => {
     images[index] = newImage
+    isModified[index] = true
   }
 
   const getPreviousInfo = async () => {
@@ -44,11 +52,22 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
                                 setPrice({value: response.data.price, error: ''})
                                 setCategory({value: response.data.category.charAt(0).toUpperCase() 
                                   + response.data.category.slice(1)})
-                                if (response.data.is_buy === 'false') {
+                                if (response.data.is_buy === false) {
                                   setPostType({value: 'Sell'})
                                 } else {
                                   setPostType({value: 'Buy'})
                                 }
+                                const postImages = response.data.postimages
+
+                                for (var i = 0; i < postImages.length; i++) {
+                                  if (i < 6) {
+                                    imageURLs[i] = postImages[i].image_url
+                                    imageIDs[i] = postImages[i].id
+                                  }
+                                }
+                                setImages(imageURLs)
+                                setPostIDs(imageIDs)
+
                               })
                               .catch((error) => {
                                 console.log(error)
@@ -78,12 +97,24 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
   }
 
   const onDeletePostPressed = async () => {
+    const deletePost = async () => {
+      const path = 'api/post/' + postId
+      
+      const response = await API.delete(path)
+                                .then((response) => {
+                                  console.log("post delete success!")
+                                })
+                                .catch((error) => {
+                                  console.log(error)
+                                });
+    }
+
     Alert.alert(
       'Are you sure you want to delete this post?',
       'Deletions are not reversible!',
       [
         {text: 'Yes', onPress: () => 
-        {navigation.goBack();}}, // delete post
+        {deletePost(), navigation.goBack();}}, // delete post
         {text: 'No'},
       ],
       { 
@@ -136,32 +167,66 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
     const category_val = category.value.toLowerCase();;
     const post_type_val = postType.value;
 
-    const confirmPopup = async ()=>{
-      const editPost = async () => {
-        const path = 'api/post/' + postId
-        
-        var is_buy = false 
+    const editPost = async () => {
+      const path = baseURL + 'api/post/' + postId
+      
+      var is_buy = 'false'
 
-        if (post_type_val.includes("Buy")) {
-          is_buy = true
-        }
-  
-        const data = {
-          'title': title_val,
-          'content': caption_val, 
-          'price': price_val,
-          'category': category_val,
-          'is_buy': is_buy
-        }
-
-        const response = await API.put(path, data)
-                                  .then((response) => {
-                                  })
-                                  .catch((error) => {
-                                    console.log(error)
-                                  });
+      if (post_type_val.includes("Buy")) {
+        is_buy = 'true'
       }
-  
+
+      var form_data = new FormData() 
+      form_data.append("title", title_val)
+      form_data.append("content", caption_val)
+      form_data.append("price", price_val)
+      form_data.append("category", category_val)
+      form_data.append("is_buy", is_buy)
+
+      for (var i = 0; i < 6; i++) {
+        if (isModified[i] && postIDs[i] != -1) 
+        {
+          const deletePath = 'api/post-images/' + postIDs[i]
+          const deleteResponse = await API.delete(deletePath)
+                                          .then((deleteResponse) => {
+                                            console.log("delete image success!")
+                                          })
+                                          .catch((error) => {
+                                            console.log(error)
+                                          });
+        }
+      }
+
+      for (var i = 0; i < 6; i++) {
+        if (isModified[i] && images[i] !== '') {
+          var img = { 
+            uri: images[i],
+            name: 'image.jpg',
+            type: 'image/jpg'
+          }
+
+          form_data.append('files', JSON.parse(JSON.stringify(img)))
+        }
+      }
+
+      const token = await getToken('access');
+      const response = await fetch(path, {
+        method: "PUT",
+        headers: {
+          'accept': 'application/json',
+          "Content-Type": 'multipart/form-data; boundary=----WebKitFormBoundaryIn312MOjBWdkffIM',
+          'Authorization': 'Bearer ' + token
+        },
+        body: form_data
+      }).then((response) => {
+        console.log("post edit success!")
+      })
+      .catch((error) => {
+        console.log(error.response)
+      });
+    }
+
+    const confirmPopup = async ()=>{
       editPost() 
       Alert.alert(
         'Post Edited!',
@@ -272,18 +337,18 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
 
 />
 <View style={styles.row}>
-        <UploadImage updateImages={updateImages} defaultValue={''} number={0}/>
+        <UploadImage updateImages={updateImages} defaultValue={images[0]} number={0}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage updateImages={updateImages} number={1}/>
+        <UploadImage updateImages={updateImages} defaultValue={images[1]} number={1}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage updateImages={updateImages} number={2}/>
+        <UploadImage updateImages={updateImages} defaultValue={images[2]} number={2}/>
         <View style={{paddingRight:'2.5%'}}></View>
         <View style={{height: '16%'}}></View>
-        <UploadImage updateImages={updateImages} number={3}/>
+        <UploadImage updateImages={updateImages} defaultValue={images[3]} number={3}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage updateImages={updateImages} number={4}/>
+        <UploadImage updateImages={updateImages} defaultValue={images[4]} number={4}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage updateImages={updateImages} number={5}/>
+        <UploadImage updateImages={updateImages} defaultValue={images[5]} number={5}/>
         <View style={{paddingRight:'100%'}}></View>
         <View style={{paddingBottom: '2%'}}></View>
         <TouchableOpacity style={styles.button} onPress={onEditPostPressed}>

@@ -106,13 +106,17 @@ export default function CreatePostScreen({ navigation }: any) {
         form_data.append("category", category_val)
         form_data.append("is_buy", is_buy)
 
-        var img = { 
-          uri: images[0],
-          name: 'image1.jpg',
-          type: 'image/jpg'
-        }
+        for (var i = 0; i < 6; i++) {
+          if (images[i] !== '') {
+            var img = { 
+              uri: images[i],
+              name: 'image.jpg',
+              type: 'image/jpg'
+            }
 
-        form_data.append('files', JSON.parse(JSON.stringify(img)))
+            form_data.append('files', JSON.parse(JSON.stringify(img)))
+          }
+        }
 
         const token = await getToken('access');
         const response = await fetch(path, {
