@@ -5,8 +5,8 @@ import * as ImagePicker from 'expo-image-picker';
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { transparent } from 'react-native-paper/lib/typescript/styles/colors';
 
-export default function UploadImage({updateImages}: any) {
- const [image, setImage] = useState<any | null>(null);
+export default function UploadImage({updateImages, defaultValue}: any) {
+ const [image, setImage] = useState(defaultValue);
  const addImage = async () => {
     let _image = await ImagePicker.launchImageLibraryAsync({
     mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -26,11 +26,12 @@ export default function UploadImage({updateImages}: any) {
  return (
 
     <View style={imageUploaderStyles.container}>
-        {image && <TouchableOpacity onPress={removeImage} style={{backgroundColor: '#0f4d92'}}>
+        {image ? <TouchableOpacity onPress={removeImage} style={{backgroundColor: '#0f4d92'}}>
             <MaterialIcons name="cancel" size={15} color="white" style={{paddingLeft: '1%', alignSelf: 'flex-end',}} />
-        </TouchableOpacity>}
+        </TouchableOpacity> : null}
         {
-            image  &&<Image source={{ uri: image }} style={{ width: '100%', height: '100%' }} />
+            image  ? <Image source={{ uri: image }} style={{ width: '100%', height: '100%' }} />
+            : null
         }
     <View style={imageUploaderStyles.uploadBtnContainer}>
         <TouchableOpacity onPress={addImage} style={imageUploaderStyles.uploadBtn} >

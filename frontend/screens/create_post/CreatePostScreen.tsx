@@ -20,9 +20,12 @@ export default function CreatePostScreen({ navigation }: any) {
   const [title, setTitle] = useState({ value: '', error: '' })
   const [caption, setCaption] = useState({ value: '', error: '' })
   const [price, setPrice] = useState({ value: '', error: '' })
-  const [category, setCategory] = useState({ value: '', error: '' })
-  const postTypes = ["Buy", "Sell"]
+  const [category, setCategory] = useState({ value: ''})
+  const [postType, setPostType] = useState({ value: ''})
   const [images, setImages] = useState<any | null>([])
+
+  const postTypes = ["Buy", "Sell"]
+  const categoryTypes = ["General", "Clothing", "Furniture"]
 
   const updateImages = (newImage: any, add: boolean) => {
     {add ? 
@@ -34,8 +37,6 @@ export default function CreatePostScreen({ navigation }: any) {
   const removeImage = (newImage: any) => {
     setImages(images.filter((image: any) => image !== newImage))
   }
-
-  const [postType, setPostType] = useState({ value: '', error: '' })
 
   const cancelPopup= async ()=>{
     Alert.alert(
@@ -55,8 +56,15 @@ export default function CreatePostScreen({ navigation }: any) {
     const titleError = titleValidator(title.value)
     const captionError = postValidator(caption.value)
     const priceError = priceValidator(price.value)
-    const categoryError = postValidator(category.value)
     var postTypeError = ''
+    var categoryError = 'Please choose a category'
+
+    for (let i = 0; i < categoryTypes.length; i++) {
+      if (category.value.includes(categoryTypes[i]))
+      {
+        categoryError = ''
+      }
+    }
 
     if (!(postType.value.includes("Buy") || postType.value.includes("Sell")))
     {
@@ -67,8 +75,13 @@ export default function CreatePostScreen({ navigation }: any) {
         setTitle({...title, error: titleError})
         setCaption({...caption, error: captionError})
         setPrice({...price, error: priceError})
-        setCategory({...category, error: categoryError})
-        setPostType({...postType, error: postTypeError})
+        setCategory({...category})
+        setPostType({...postType})
+
+        if (categoryError)
+        {
+          Alert.alert(categoryError)
+        }
 
         if (postTypeError)
         {
@@ -80,7 +93,7 @@ export default function CreatePostScreen({ navigation }: any) {
     const title_val = title.value;
     const caption_val = caption.value;
     const price_val = price.value;
-    const category_val = category.value;
+    const category_val = category.value.toLowerCase();
     const post_type_val = postType.value;
 
     const confirmPopup = async ()=>{
@@ -185,21 +198,35 @@ export default function CreatePostScreen({ navigation }: any) {
       />
 
   <Text style={styles.title}>Category</Text>
-      <TextInput style={{height:50}}
-        returnKeyType="next"
-        value={category.value}
-        onChangeText={(text: any) => setCategory({ value: text, error: '' })}
-        error={!!category.error}
-        errorText={category.error}
-        description
-      />
+  <View style={{paddingTop:'2%'}}></View>
+  <SelectDropdown
+	  data={categoryTypes}
+	  onSelect={(selectedItem) => setCategory({value: selectedItem})}
+	  buttonTextAfterSelection={(selectedItem, index) => {
+		// text represented after item is selected
+		// if data array is an array of objects then return selectedItem.property to render after item is selected
+		return selectedItem
+	  }}
+	  rowTextForSelection={(item, index) => {
+		// text represented for each item in dropdown
+		// if data array is an array of objects then return item.property to represent item in dropdown
+		return item
+	  }}
+    defaultButtonText={'Select a Category'}
 
+    buttonStyle={styles.dropdown1BtnStyle}
+    dropdownStyle={styles.dropdown1DropdownStyle}
+    rowStyle={styles.dropdown1RowStyle}
+    rowTextStyle={styles.dropdown1RowTxtStyle}
+    buttonTextStyle={styles.dropdown1BtnTxtStyle}
+  />
+  <View style={{paddingTop:'4%'}}></View>
 
   <Text style={styles.title}>Post Type</Text>
   <View style={{paddingTop:'2%'}}></View>
   <SelectDropdown
 	  data={postTypes}
-	  onSelect={(selectedItem) => setPostType({value: selectedItem, error: ''})}
+	  onSelect={(selectedItem) => setPostType({value: selectedItem})}
 	  buttonTextAfterSelection={(selectedItem, index) => {
 		// text represented after item is selected
 		// if data array is an array of objects then return selectedItem.property to render after item is selected
@@ -239,7 +266,7 @@ export default function CreatePostScreen({ navigation }: any) {
           <Text style={{color: 'white', fontWeight: 'bold', fontSize: 18, fontFamily: 'Arial'}}>Add Post</Text>
         </TouchableOpacity>
       </View>
-      <View style={{paddingTop:'4%'}}></View>
+      <View style={{paddingTop:'12%'}}></View>
   </View>
   </ScrollView>
   );
