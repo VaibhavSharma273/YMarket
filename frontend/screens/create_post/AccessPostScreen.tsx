@@ -3,8 +3,7 @@ import { RootTabScreenProps } from '../../types';
 
 import React, { useEffect, useState, useContext, useMemo } from 'react';
 import { RefreshControl, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
-import mock from "./data/mock";
-import PostsView from './PostsView';
+import { normalize } from '../../components/TextNormalize';
 import { FontAwesome } from '@expo/vector-icons'; 
 import AppContext from "./../AppContext"
 import API from '../../api/ymarket_api';
@@ -76,7 +75,7 @@ export default function AccessPostScreen({ navigation }: any) {
           <View style={{ flexDirection: 'row', justifyContent: 'center', backgroundColor: "#0f4d92", alignItems: 'center' }}>
           <Text style={styles.buttonText}>Create Post</Text>
           <View style={{ padding: 5, backgroundColor: "#0f4d92" }}></View>
-          <FontAwesome name="plus-square-o" size={24} color="white" />
+          <FontAwesome name="plus-square-o" size={normalize(20)} color="white" />
           </View>
         </TouchableOpacity>
       </View>
@@ -101,7 +100,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     fontWeight: "bold",
     color: "#0f4d92",
-    fontSize: 24
+    fontSize: normalize(24)
   },
   subHeaderText: {
     marginTop: 10,
@@ -109,11 +108,11 @@ const styles = StyleSheet.create({
     marginRight: 20,
     color: "#000",
     fontWeight: "300",
-    fontSize: 15
+    fontSize: normalize(15)
   },
   buttonText: {
     color: "white",
-    fontSize: 25,
+    fontSize: normalize(20),
 
   },
   button: {

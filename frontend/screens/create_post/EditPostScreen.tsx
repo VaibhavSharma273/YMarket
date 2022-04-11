@@ -12,8 +12,7 @@ import { titleValidator } from '../../helpers/titleValidator';
 import { postValidator } from '../../helpers/postValidator';
 import { priceValidator } from '../../helpers/priceValidator';
 
-import { RootTabScreenProps } from '../../types';
-import mock from "./data/mock";
+import { normalize } from '../../components/TextNormalize';
 
 import { getToken, setToken, deleteToken } from '../../storage/tokenStorage';
 import { baseURL, hostURL } from '../../constants/url';
@@ -223,7 +222,7 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
         {"Edit a Post"}
       </Text>
       <TouchableOpacity  onPress={() => cancelPopup()}>
-      <MaterialIcons name="cancel" size={30} color="#0F4D92" style={{paddingLeft: '21%', alignSelf: 'flex-start'}} />
+      <MaterialIcons name="cancel" size={normalize(27)} color="#0F4D92" style={{paddingLeft: '23%', alignSelf: 'flex-start'}} />
       </TouchableOpacity>
       </View>
       <View style={{paddingTop:'4%'}}></View>
@@ -323,12 +322,12 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
         <View style={{paddingRight:'100%'}}></View>
         <View style={{paddingBottom: '2%'}}></View>
         <TouchableOpacity style={styles.button} onPress={onEditPostPressed}>
-        <Text style={{color: 'white', fontWeight: 'bold', fontSize: 18, fontFamily: 'Arial'}}>Confirm Changes</Text>
+        <Text style={{color: 'white', fontWeight: 'bold', fontSize: normalize(16), fontFamily: 'Arial'}}>Confirm Changes</Text>
         </TouchableOpacity>
         <View style={{paddingRight:'100%'}}></View>
         <View style={{paddingBottom: '2%'}}></View>
         <TouchableOpacity style={styles.buttonDel} onPress={onDeletePostPressed}>
-          <Text style={{color: 'white', fontWeight: 'bold', fontSize: 18, fontFamily: 'Arial'}}>Delete Post</Text>
+          <Text style={{color: 'white', fontWeight: 'bold', fontSize: normalize(16), fontFamily: 'Arial'}}>Delete Post</Text>
         </TouchableOpacity>
       </View>
       <View style={{paddingTop:'12%'}}></View>
@@ -350,6 +349,7 @@ const styles = StyleSheet.create({
     paddingLeft: '6%',
     paddingTop: '13%',
     paddingBottom: '8%',
+    //backgroundColor: 'white',
   },
   images: {
     flex: 1,
@@ -359,7 +359,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     paddingLeft: '1%',
     alignSelf: 'flex-start',
-    fontSize: 23,
+    fontSize: normalize(19),
     fontWeight: 'bold',
     color: '#0F4D92',
   },
@@ -381,20 +381,12 @@ const styles = StyleSheet.create({
     marginRight: '20%',
     fontWeight: "bold",
     color: "#0f4d92",
-    fontSize: 30,
+    fontSize: normalize(23),
     textAlign: 'center'
-  },
-  subHeaderText: {
-    marginTop: 10,
-    marginLeft: 20,
-    marginRight: 20,
-    color: "#000",
-    fontWeight: "300",
-    fontSize: 15
   },
   dropdown1DropdownStyle: {backgroundColor: '#f6f6f6', borderColor: 'gray'},
   dropdown1RowStyle: {backgroundColor: '#f6f6f6', borderBottomColor: 'gray', borderRadius: 10},
-  dropdown1RowTxtStyle: {color: 'black', textAlign: 'left', fontFamily: 'Arial', fontSize: 16},
+  dropdown1RowTxtStyle: {color: 'black', textAlign: 'left', fontFamily: 'Arial', fontSize: normalize(13)},
   dropdown1BtnStyle: {
     backgroundColor: '#f6f6f6',
     borderRadius: 5,
@@ -403,7 +395,7 @@ const styles = StyleSheet.create({
     width: '80%',
     height: '5%',
   },
-  dropdown1BtnTxtStyle: {color: 'black', textAlign: 'left', fontFamily: 'Arial', fontSize: 16},
+  dropdown1BtnTxtStyle: {color: 'black', textAlign: 'left', fontFamily: 'Arial', fontSize: normalize(13)},
   modalView: {
     margin: 20,
     backgroundColor: "white",
@@ -418,14 +410,14 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5
   },
-  buttonDel: {
-    backgroundColor: '#cc0000', justifyContent: 'center', width: '80%', alignItems: 'center', paddingTop: '4%',
-    paddingBottom: '4%', borderRadius: 5
-  },
   centeredView: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 22
+  },
+  buttonDel: {
+    backgroundColor: '#cc0000', justifyContent: 'center', width: '80%', alignItems: 'center', paddingTop: '4%',
+    paddingBottom: '4%', borderRadius: 5
   },
 });

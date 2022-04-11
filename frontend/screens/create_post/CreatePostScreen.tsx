@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { StyleSheet, TouchableOpacity, Alert, ScrollView, Pressable, Modal } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown'
 import { MaterialIcons } from '@expo/vector-icons'; 
+import { normalize } from '../../components/TextNormalize';
 
 import API from '../../api/ymarket_api';
 import { Text, View } from '../../components/Themed';
@@ -160,7 +161,7 @@ export default function CreatePostScreen({ navigation }: any) {
         {"Create a Post"}
       </Text>
       <TouchableOpacity  onPress={() => cancelPopup()}>
-      <MaterialIcons name="cancel" size={30} color="#0F4D92" style={{paddingLeft: '12%', alignSelf: 'flex-start'}} />
+      <MaterialIcons name="cancel" size={normalize(27)} color="#0F4D92" style={{paddingLeft: '15%', alignSelf: 'flex-start'}} />
       </TouchableOpacity>
       </View>
       <View style={{paddingTop:'4%'}}></View>
@@ -260,7 +261,7 @@ export default function CreatePostScreen({ navigation }: any) {
         <View style={{paddingRight:'100%'}}></View>
         <View style={{paddingBottom: '2%'}}></View>
         <TouchableOpacity style={styles.button} onPress={onCreatePostPressed}>
-          <Text style={{color: 'white', fontWeight: 'bold', fontSize: 18, fontFamily: 'Arial'}}>Add Post</Text>
+          <Text style={{color: 'white', fontWeight: 'bold', fontSize: normalize(16), fontFamily: 'Arial'}}>Add Post</Text>
         </TouchableOpacity>
       </View>
       <View style={{paddingTop:'12%'}}></View>
@@ -292,7 +293,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     paddingLeft: '1%',
     alignSelf: 'flex-start',
-    fontSize: 23,
+    fontSize: normalize(19),
     fontWeight: 'bold',
     color: '#0F4D92',
   },
@@ -314,20 +315,12 @@ const styles = StyleSheet.create({
     marginRight: '20%',
     fontWeight: "bold",
     color: "#0f4d92",
-    fontSize: 30,
+    fontSize: normalize(23),
     textAlign: 'center'
-  },
-  subHeaderText: {
-    marginTop: 10,
-    marginLeft: 20,
-    marginRight: 20,
-    color: "#000",
-    fontWeight: "300",
-    fontSize: 15
   },
   dropdown1DropdownStyle: {backgroundColor: '#f6f6f6', borderColor: 'gray'},
   dropdown1RowStyle: {backgroundColor: '#f6f6f6', borderBottomColor: 'gray', borderRadius: 10},
-  dropdown1RowTxtStyle: {color: 'black', textAlign: 'left', fontFamily: 'Arial', fontSize: 16},
+  dropdown1RowTxtStyle: {color: 'black', textAlign: 'left', fontFamily: 'Arial', fontSize: normalize(13)},
   dropdown1BtnStyle: {
     backgroundColor: '#f6f6f6',
     borderRadius: 5,
@@ -336,7 +329,7 @@ const styles = StyleSheet.create({
     width: '80%',
     height: '5%',
   },
-  dropdown1BtnTxtStyle: {color: 'black', textAlign: 'left', fontFamily: 'Arial', fontSize: 16},
+  dropdown1BtnTxtStyle: {color: 'black', textAlign: 'left', fontFamily: 'Arial', fontSize: normalize(13)},
   modalView: {
     margin: 20,
     backgroundColor: "white",
