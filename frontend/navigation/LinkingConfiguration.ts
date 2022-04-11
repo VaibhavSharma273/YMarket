@@ -45,6 +45,7 @@ const linking: LinkingOptions<RootStackParamList> = {
             screens: {
               SearchScreen: 'search',
               ViewPostScreen: 'viewPost',
+              SearchCategoryScreen: 'searchCategory',
             },
           },
           UserProfile: {

@@ -22,7 +22,7 @@ const PostList = ({ data, navigation }: any) => {
   
   const styles = StyleSheet.create({
     list__container: {
-      margin: 10,
+      margin: 0,
       height: "90%",
       width: "100%",
     },

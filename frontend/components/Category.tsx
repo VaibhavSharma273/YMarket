@@ -4,12 +4,15 @@ import { text_styles } from './TextNormalize';
 
 
 const Category = ({ category, navigation }: any) => {
-    // onPress={() => navigation.push('SearchCategory', { category: category.id})}
+    // onPress={() => navigation.push('SearchCategory', { category: category.title})}
     return (
         <View style={styles.listItemShadow}>
             <TouchableOpacity style={styles.listItem}>
                 <View style={styles.listItemFooter}>
-                    <Text style={[ text_styles.large, { fontWeight: "600" } ]}>{category.title}</Text>
+                    <Text style={[ text_styles.large, { fontWeight: "600" } ]} 
+                          onPress={() => navigation.push('SearchCategory', { category: category.title})}>
+                        {category.title}
+                    </Text>
                 </View>
             </TouchableOpacity>
         </View>

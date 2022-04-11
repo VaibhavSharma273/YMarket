@@ -43,7 +43,7 @@ const SearchScreen = ({navigation}: RootTabScreenProps<'SearchStack'>) => {
         setClicked={setClicked}
       />
       {searchPhrase === "" ?
-        <CategoryList />
+        <CategoryList navigation={navigation}/>
         :
         <PostList
         data={data}

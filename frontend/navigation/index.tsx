@@ -18,6 +18,7 @@ import AccessPostScreen from '../screens/create_post/AccessPostScreen';
 import CreatePostScreen from '../screens/create_post/CreatePostScreen';
 import EditPostScreen from '../screens/create_post/EditPostScreen';
 import SearchScreen from '../screens/SearchScreen';
+import SearchCategoryScreen from '../screens/SearchCategoryScreen';
 import UserProfileScreen from '../screens/UserProfileScreen';
 import StartScreen from '../screens/auth/StartScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
@@ -132,6 +133,12 @@ function SearchNavigator() {
         title: '',
         headerTintColor: '#0f4d92',
         }}/>
+      <SearchStack.Screen
+        name="SearchCategory"
+        component={SearchCategoryScreen}
+        options ={{headerTitle: "",
+                   headerTransparent: true}}
+      />
     </SearchStack.Navigator>
   );
 }

@@ -49,6 +49,7 @@ const CategoryList = ({ navigation }: any) => {
         <SafeAreaView style={styles.container}>
             <FlatList
                 data={CATEGORIES}
+                scrollEnabled={false}
                 renderItem={renderItems}
                 keyExtractor={item => item.id}
             />
