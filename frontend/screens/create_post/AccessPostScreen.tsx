@@ -19,7 +19,7 @@ export default function AccessPostScreen({ navigation }: any) {
   const myContext = useContext(AppContext);
 
   const getUserPosts = async () => {
-    const path = 'api/users/profile/' + myContext.user
+    const path = 'api/users/profile/' + myContext.user + '/?fields=posts'
     const response = await API.get(path)
                               .then((response) => {
                                 setPostList(response.data.posts)

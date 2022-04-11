@@ -19,7 +19,7 @@ export default function UserProfileScreen({ navigation } : RootTabScreenProps<'U
     const myContext = useContext(AppContext);
 
     const getUserProfile = async () => {
-      const path = 'api/users/profile/' + myContext.user
+      const path = 'api/users/profile/' + myContext.user + '/?fields!=posts'
       const response = await API.get(path)
                                 .then((response) => {
                                   const firstName = response.data.first_name
