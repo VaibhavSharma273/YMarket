@@ -75,7 +75,7 @@ const SearchBar = ({clicked, searchPhrase, setSearchPhrase, setClicked}: any) =>
     searchBar__clicked: {
       padding: 10,
       flexDirection: "row",
-      width: "80%",
+      width: "90%",
       backgroundColor: "#fff",
       borderRadius: 15,
       alignItems: "center",
@@ -84,7 +84,7 @@ const SearchBar = ({clicked, searchPhrase, setSearchPhrase, setClicked}: any) =>
     input: {
       fontSize: 20,
       marginLeft: 10,
-      width: "90%",
+      width: "83%",
     },
   });
   

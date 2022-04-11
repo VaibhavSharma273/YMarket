@@ -9,11 +9,12 @@ import { RootTabScreenProps } from '../types';
 
 import PostList from "../components/PostList";
 import SearchBar from "../components/SearchBar";
+import CategoryList from '../components/CategoryList';
 
 const SearchScreen = ({navigation}: RootTabScreenProps<'SearchStack'>) => {
   const [searchPhrase, setSearchPhrase] = useState("");
   const [clicked, setClicked] = useState(false);
-  // use to show categories vs list of posts
+  // use to show categories vs list of posts, or just check if query is empty
   const [searched, setSearched] = useState(false);
   const [data, setData] = useState([]);
 
@@ -34,25 +35,29 @@ const SearchScreen = ({navigation}: RootTabScreenProps<'SearchStack'>) => {
   }, [searchPhrase]);
 
   return (
-    <SafeAreaView style={styles.root}>
+    <SafeAreaView style={styles.container}>
       <SearchBar
         searchPhrase={searchPhrase}
         setSearchPhrase={setSearchPhrase}
         clicked={clicked}
         setClicked={setClicked}
       />
-      <PostList
+      {searchPhrase === "" ?
+        <CategoryList />
+        :
+        <PostList
         data={data}
         navigation={navigation}
-      />
+        />
+      }
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  root: {
-    justifyContent: "center",
-    alignItems: "center",
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
   },
   title: {
     width: "100%",
