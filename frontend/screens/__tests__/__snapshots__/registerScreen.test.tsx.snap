@@ -299,7 +299,7 @@ exports[`Register Screen component matches the snapshot 1`] = `
       style={
         Object {
           "color": "gray",
-          "fontSize": 13,
+          "fontSize": 28,
           "paddingTop": 0,
         }
       }
@@ -543,7 +543,7 @@ exports[`Register Screen component matches the snapshot 1`] = `
       style={
         Object {
           "color": "gray",
-          "fontSize": 13,
+          "fontSize": 28,
           "paddingTop": 0,
         }
       }
@@ -791,7 +791,7 @@ exports[`Register Screen component matches the snapshot 1`] = `
       style={
         Object {
           "color": "gray",
-          "fontSize": 13,
+          "fontSize": 28,
           "paddingTop": 0,
         }
       }
