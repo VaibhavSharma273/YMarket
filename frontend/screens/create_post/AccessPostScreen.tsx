@@ -1,7 +1,7 @@
 import { Text, View } from '../../components/Themed';
 import { RootTabScreenProps } from '../../types';
 
-import React, { useEffect, useState, useContext, useMemo } from 'react';
+import React, { useEffect, useState, useContext, useMemo, useRef } from 'react';
 import { RefreshControl, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { normalize } from '../../components/TextNormalize';
 import { FontAwesome } from '@expo/vector-icons'; 
@@ -14,7 +14,7 @@ import Post from '../feed/Post';
 export default function AccessPostScreen({ navigation }: any) {
   const [postlist, setPostList] = useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
-  const [mounted, setMounted] = useState(false)
+  const mounted = useRef(false)
 
   const myContext = useContext(AppContext);
 
@@ -29,12 +29,12 @@ export default function AccessPostScreen({ navigation }: any) {
                               });
   }
 
-  if (!mounted) {
+  if (!mounted.current) {
     getUserPosts()
   }
 
   useEffect(() => {
-    setMounted(true)
+    mounted.current = true
   }, []);
 
   const onRefresh = React.useCallback(async () => {
