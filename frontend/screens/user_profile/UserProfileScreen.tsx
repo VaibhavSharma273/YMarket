@@ -1,20 +1,20 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { StyleSheet, SafeAreaView, StatusBar } from 'react-native';
+import { StyleSheet, SafeAreaView, StatusBar, Button } from 'react-native';
 
-import API from '../api/ymarket_api';
+import API from '../../api/ymarket_api';
 
-import { Text, View } from '../components/Themed';
-import { RootTabScreenProps } from '../types';
-import ProfilePhoto from '../components/ProfilePhoto';
+import { Text, View } from '../../components/Themed';
+import { RootTabScreenProps } from '../../types';
+import ProfilePhoto from '../../components/ProfilePhoto';
 
-import { getToken, setToken, deleteToken } from '../storage/tokenStorage';
+import { getToken, setToken, deleteToken } from '../../storage/tokenStorage';
 import { TouchableOpacity } from 'react-native'
-import AppContext from "./AppContext"
+import AppContext from "../AppContext"
+import UploadImage from '../../components/UploadImage';
 
-export default function UserProfileScreen({ navigation } : RootTabScreenProps<'UserProfile'>) {
-    const [userName, setUserName] = useState('');
-    const [userEmail, setUserEmail] = useState('');
-    const [mounted, setMounted] = useState(false)
+
+export default function UserProfileScreen({ navigation } : any) {
+  const [user, setUser] = useState({ firstName: '', lastName: '', email: '', avatar: '', bio: '' });
 
     const myContext = useContext(AppContext);
 
@@ -25,22 +25,18 @@ export default function UserProfileScreen({ navigation } : RootTabScreenProps<'U
                                   const firstName = response.data.first_name
                                   const lastName = response.data.last_name
                                   const email = response.data.email
-                                  const fullName = String(firstName) + ' ' + String(lastName)
-                                  setUserName(fullName)
-                                  setUserEmail(email)
+                                  const avatar = response.data.avatar_url
+                                  const bio = response.data.biography
+                                  setUser({ firstName, lastName, email, avatar, bio })
                                 })
                                 .catch((error) => {
                                   console.log(error)
                                 });
     }
 
-    if (!mounted) {
-      getUserProfile()
+    const updateUserProfile = (firstName: string, lastName: string, avatar: string, bio: string) => {
+      setUser({ ...user, firstName, lastName, avatar, bio });
     }
-
-    useEffect(() => {
-      setMounted(true)
-    }, []);
 
     const onLogoutPressed = async () => {
       await API.post('/api/users/logout/')
@@ -50,16 +46,33 @@ export default function UserProfileScreen({ navigation } : RootTabScreenProps<'U
       await deleteToken('refresh')
       myContext.logout()
     }
+      
+    useEffect(() => {
+      getUserProfile();
+    }, []);
     
+    if (!user.email)
+    {
+      return null;
+    }
+
     return (
         <View style={styles.container}>
-            <View style={{marginVertical: 20, height: 1, width: '80%'}}/> 
-            <ProfilePhoto/>
-            <Text style={styles.title}>{userName}</Text>
+            <View style={{marginVertical: 20, height: 1, width: '80%'}}/>
+            <ProfilePhoto src={user.avatar}/>
+            <Text style={styles.title}>{String(user.firstName) + ' ' + String(user.lastName)}</Text>
             <View style={{marginVertical: 5, height: 1, width: '80%'}}/> 
-            <Text style={styles.contact}>{userEmail}</Text> 
+            <Text style={styles.contact}>{user.email}</Text>
             <View style={styles.separator}/>
-            <TouchableOpacity 
+            {user.bio ? <Text>{user.bio}</Text> : null}
+            <View style={styles.separator}/>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate("EditUserProfile", { initialValues: user, updateCallback: updateUserProfile })}>
+              <Text style={styles.logout}>Edit Profile</Text>
+            </TouchableOpacity>
+            <View style={{marginVertical: 4}}/>
+            <TouchableOpacity
               style={styles.button}
               onPress={onLogoutPressed}>
               <Text style={styles.logout}>Logout</Text>

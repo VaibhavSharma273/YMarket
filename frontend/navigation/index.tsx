@@ -18,7 +18,7 @@ import AccessPostScreen from '../screens/create_post/AccessPostScreen';
 import CreatePostScreen from '../screens/create_post/CreatePostScreen';
 import EditPostScreen from '../screens/create_post/EditPostScreen';
 import SearchScreen from '../screens/SearchScreen';
-import UserProfileScreen from '../screens/UserProfileScreen';
+import UserProfileScreen from '../screens/user_profile/UserProfileScreen';
 import StartScreen from '../screens/auth/StartScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
 import ConfirmationScreen from '../screens/auth/ConfirmationScreen';
@@ -30,6 +30,7 @@ import { AuthTabParamList, RootStackParamList, RootTabParamList, RootTabScreenPr
 import LinkingConfiguration from './LinkingConfiguration';
 
 import AppContext from "../screens/AppContext";
+import EditUserProfileScreen from '../screens/user_profile/EditUserProfileScreen';
 
 const LightTheme = {
   dark: false,
@@ -112,6 +113,18 @@ function PostNavigator() {
   );
 }
 
+// Profile stack
+const Profile = createNativeStackNavigator();
+
+function ProfileNavigator() {
+  return (
+    <Profile.Navigator>
+      <Profile.Screen name="UserProfile" component={UserProfileScreen} />
+      <Profile.Screen name="EditUserProfile" component={EditUserProfileScreen} />
+    </Profile.Navigator>
+  );
+}
+
 
 /**
  * A bottom tab navigator displays tab buttons on the bottom of the display to switch screens.
@@ -183,12 +196,12 @@ function BottomTabNavigator() {
         }}
       />
       <BottomTab.Screen
-        name="UserProfile"
-        component={UserProfileScreen}
-        options={{
-          title: 'Profile',
+        name="Profile"
+        component={ProfileNavigator}
+        options={({ navigation }: RootTabScreenProps<'Profile'>) => ({
+          title: 'UserProfile',
           tabBarIcon: ({ color }) => <TabBarIcon name="user-circle" color={color} />,
-        }}
+        })}
       />
     </BottomTab.Navigator>
   );

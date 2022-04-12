@@ -24,7 +24,6 @@ export default function UploadImage({updateImages}: any) {
   };
 
  return (
-
     <View style={imageUploaderStyles.container}>
         {image && <TouchableOpacity onPress={removeImage} style={{backgroundColor: '#0f4d92'}}>
             <MaterialIcons name="cancel" size={15} color="white" style={{paddingLeft: '1%', alignSelf: 'flex-end',}} />

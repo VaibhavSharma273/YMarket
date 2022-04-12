@@ -1,8 +1,19 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
 import { Image, StyleSheet } from 'react-native'
 
-export default function ProfilePhoto() {
-  return <Image source={require('../assets/images/blank-profile-picture.png')} style={styles.image} />
+export default function ProfilePhoto({ src } : { src: string }): JSX.Element {
+  const defaultAvatar = require('../assets/images/blank-profile-picture.png');
+  const [image, setImage] = useState(src ? { uri: src} : defaultAvatar);
+  console.log(src, image);
+  useEffect(() => {
+    if (src && src != image.uri) {
+      setImage(src ? { uri: src} : defaultAvatar);
+    }
+  }, [src]);
+
+  return <Image source={image} style={styles.image} onError={({ nativeEvent: { error }}) => {
+    setImage(defaultAvatar); }}
+    />
 }
 
 const styles = StyleSheet.create({

@@ -28,7 +28,7 @@ export type RootTabParamList = {
   PostStack: undefined;
   CreateStack: undefined;
   Search: undefined;
-  UserProfile: undefined;
+  Profile: undefined;
 };
 
 export type AuthTabParamList = {
