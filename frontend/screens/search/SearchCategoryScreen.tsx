@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, SafeAreaView, StyleSheet } from 'react-native';
-import { normalize, text_styles } from '../components/TextNormalize';
-import API from '../api/ymarket_api'
-import { RootTabScreenProps } from "../types";
-import PostList from "../components/PostList";
+import { normalize, text_styles } from '../../components/TextNormalize';
+import API from '../../api/ymarket_api'
+import { RootTabScreenProps } from "../../types";
+import PostList from "../../components/PostList";
 
 export default function SearchCategory({ route, navigation }: { route: any, navigation: RootTabScreenProps<'SearchStack'>}) {
     const { category } = route.params
