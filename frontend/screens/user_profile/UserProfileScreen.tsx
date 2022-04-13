@@ -13,13 +13,16 @@ import AppContext from "../AppContext"
 import UploadImage from '../../components/UploadImage';
 
 
-export default function UserProfileScreen({ navigation } : any) {
+export default function UserProfileScreen({ route, navigation } : any) {
+  const params = route.params;
+  const myContext = useContext(AppContext);
+  const userId = params === undefined || params['id'] === undefined ? myContext.user : params['id'];
   const [user, setUser] = useState({ firstName: '', lastName: '', email: '', avatar: '', bio: '' });
 
-    const myContext = useContext(AppContext);
+    
 
     const getUserProfile = async () => {
-      const path = 'api/users/profile/' + myContext.user
+      const path = 'api/users/profile/' + userId;
       const response = await API.get(path)
                                 .then((response) => {
                                   const firstName = response.data.first_name
@@ -64,19 +67,22 @@ export default function UserProfileScreen({ navigation } : any) {
             <View style={{marginVertical: 5, height: 1, width: '80%'}}/> 
             <Text style={styles.contact}>{user.email}</Text>
             <View style={styles.separator}/>
-            {user.bio ? <Text>{user.bio}</Text> : null}
+            <Text>{user.bio ? user.bio : ""}</Text>
             <View style={styles.separator}/>
-            <TouchableOpacity
+            { userId === myContext.user ? <View>
+              <TouchableOpacity
               style={styles.button}
               onPress={() => navigation.navigate("EditUserProfile", { initialValues: user, updateCallback: updateUserProfile })}>
               <Text style={styles.logout}>Edit Profile</Text>
-            </TouchableOpacity>
-            <View style={{marginVertical: 4}}/>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={onLogoutPressed}>
-              <Text style={styles.logout}>Logout</Text>
-            </TouchableOpacity>
+              </TouchableOpacity>
+              <View style={{marginVertical: 4}}/>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={onLogoutPressed}>
+                <Text style={styles.logout}>Logout</Text>
+              </TouchableOpacity>
+            </View>
+            : null}
             <View style={styles.separator}/>
         </View>
 

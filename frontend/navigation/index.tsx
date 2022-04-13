@@ -109,6 +109,10 @@ function PostNavigator() {
         title: '',
         headerTintColor: '#0f4d92',
         }}/>
+      <PostStack.Screen
+      name="UserProfile"
+      component={UserProfileScreen}
+      />
     </PostStack.Navigator>
   );
 }

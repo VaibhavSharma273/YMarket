@@ -4,9 +4,9 @@ import { Image, StyleSheet } from 'react-native'
 export default function ProfilePhoto({ src } : { src: string }): JSX.Element {
   const defaultAvatar = require('../assets/images/blank-profile-picture.png');
   const [image, setImage] = useState(src ? { uri: src} : defaultAvatar);
-  console.log(src, image);
+  
   useEffect(() => {
-    if (src && src != image.uri) {
+    if (src != image.uri) {
       setImage(src ? { uri: src} : defaultAvatar);
     }
   }, [src]);

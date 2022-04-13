@@ -1,6 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React, { useContext, useState } from 'react';
-import { TouchableOpacity, StyleSheet, ScrollView, Button } from 'react-native';
+import { TouchableOpacity, StyleSheet, ScrollView, Button, Alert } from 'react-native';
 import TextInput from '../../components/TextInput';
 import { Text, View } from '../../components/Themed';
 import UploadImage from '../../components/UploadImage';
@@ -13,9 +13,9 @@ import { hostURL } from '../../constants/url';
 
 export default function EditUserProfileScreen({ route, navigation }: { route: any, navigation: any}): JSX.Element {
     const { initialValues, updateCallback } = route.params;
-    const [firstName, setFirstName] = useState(initialValues.firstName);
-    const [lastName, setLastName] = useState(initialValues.lastName);
-    const [image, setImage] = useState(null);
+    const [firstName, setFirstName] = useState({ value: initialValues.firstName, error: '' });
+    const [lastName, setLastName] = useState({ value: initialValues.lastName, error: '' });
+    const [image, setImage] = useState(initialValues.avatar);
     const [bio, setBio] = useState(initialValues.bio);
     const myContext = useContext(AppContext);
     
@@ -23,26 +23,30 @@ export default function EditUserProfileScreen({ route, navigation }: { route: an
         if (add) {
             setImage(newImage);
         } else {
-            setImage(null);
+            setImage("");
         }
     }
 
     const onEditConfirmPressed = async () => {
-        const firstNameError = nameValidator(firstName);
-        const lastNameError = nameValidator(lastName);
+        const firstNameError = nameValidator(firstName.value, 'First name');
+        const lastNameError = nameValidator(lastName.value, 'Last name');
 
         if (firstNameError || lastNameError)
         {
-            return;
+          Alert.alert("Please fix any errors");
+          setFirstName({ ...firstName, error: firstNameError });
+          setLastName({ ...lastName, error: lastNameError });
+          return;
         }
 
         const formData = new FormData();
-        formData.append('first_name', firstName);
-        formData.append('last_name', lastName);
+        formData.append('first_name', firstName.value);
+        formData.append('last_name', lastName.value);
         formData.append('biography', bio);
-        
-        if (image) {
-            formData.append('files', JSON.parse(JSON.stringify({
+        if (image === "") {
+            formData.append('avatar_url', image);
+        } else if (image) {
+          formData.append('files', JSON.parse(JSON.stringify({
                 uri: image,
                 name: 'image1.jpg',
                 type: 'image/jpg'
@@ -61,7 +65,7 @@ export default function EditUserProfileScreen({ route, navigation }: { route: an
         .then(response => response.json())
         .then(result => {
           const avatar = result.avatar_url;
-          updateCallback(firstName, lastName, avatar, bio);
+          updateCallback(firstName.value, lastName.value, avatar, bio);
           navigation.navigate('UserProfile');
         })
         .catch(error => console.log("error: ", error));
@@ -79,14 +83,18 @@ export default function EditUserProfileScreen({ route, navigation }: { route: an
             <Text style={styles.title}>First Name</Text>
             <TextInput style={{height: 50}}
             returnKeyType="next"
-            value={firstName}
-            onChangeText={(text: string) => setFirstName(text)}
+            value={firstName.value}
+            onChangeText={(text: string) => setFirstName({ ...firstName, value: text })}
+            error={!!firstName.error}
+            errorText={firstName.error}
             />
             <Text style={styles.title}>Last Name</Text>
             <TextInput style={{height: 50}}
             returnKeyType="next"
-            value={lastName}
-            onChangeText={(text: string) => setLastName(text)}
+            value={lastName.value}
+            onChangeText={(text: string) => setLastName({ ...lastName, value: text })}
+            error={!!lastName.error}
+            errorText={lastName.error}
             />
             <Text style={styles.title}>Biography</Text>
             <TextInput style={{height:150}}
@@ -96,7 +104,7 @@ export default function EditUserProfileScreen({ route, navigation }: { route: an
                 onChangeText={(text: string) => setBio(text)}
             />
             <Text style={styles.title}>Avatar</Text>
-            <UploadImage updateImages={updateImage}/>
+            <UploadImage updateImages={updateImage} initialValue={image}/>
         </View>
 
         <Button title="Update profile" onPress={onEditConfirmPressed} />

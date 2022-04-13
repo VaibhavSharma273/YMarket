@@ -85,7 +85,7 @@ export default function CreatePostScreen({ navigation }: any) {
 
     const confirmPopup = async ()=>{
       const createPost = async () => {
-        const path = baseURL + 'api/post/'
+        const path = hostURL + 'api/post/'
         
         var is_buy = 'false'
 
