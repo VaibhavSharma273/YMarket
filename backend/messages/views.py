@@ -7,7 +7,7 @@ from rest_framework import generics
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from messages.permissions import IsInThreadOrReadOnly
+from messages.permissions import IsInThread
 
 User = get_user_model()
 
@@ -51,7 +51,7 @@ class MessageThreadDetail(mixins.RetrieveModelMixin,
     
     queryset = MessageThread.objects.all()
     serializer_class = MessageThreadSerializer
-    permission_classes = [IsAuthenticated, IsInThreadOrReadOnly]
+    permission_classes = [IsAuthenticated, IsInThread]
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
