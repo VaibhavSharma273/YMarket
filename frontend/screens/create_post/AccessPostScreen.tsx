@@ -14,8 +14,6 @@ import Post from '../feed/Post';
 export default function AccessPostScreen({ navigation }: any) {
   const [postlist, setPostList] = useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
-  const mounted = useRef(false)
-
   const myContext = useContext(AppContext);
 
   const getUserPosts = async () => {
@@ -29,30 +27,25 @@ export default function AccessPostScreen({ navigation }: any) {
                               });
   }
 
-  if (!mounted.current) {
-    getUserPosts()
-  }
-
-  useEffect(() => {
-    mounted.current = true
-  }, []);
-
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
       getUserPosts()
       setRefreshing(false) 
   }, [refreshing]);
 
-  // const renderItems = (item: { item: any; }) => {
-  //   const post = item.item;
-  //   return <PostsView post={post} navigation = {navigation}/>;
-  // };
-
   const renderItems = (item: { item: any;}) => {
     return <Post post={item.item} navigation = {navigation} is_edit = {true} />;
   };
 
+  useEffect(() => {
+    getUserPosts()
+  }, []);
+
   const memoizedPosts = useMemo(() => renderItems, [postlist]);
+
+  if (postlist === []) {
+    return null;
+  }
 
   return (
     <View style = {styles.container}>

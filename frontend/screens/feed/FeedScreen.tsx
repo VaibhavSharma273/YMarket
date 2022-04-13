@@ -11,9 +11,7 @@ import { normalize } from '../../components/TextNormalize';
 import API from '../../api/ymarket_api';
 
 const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
-  const mounted = useRef(false)
   const [posts, setPosts] = useState([]);
-
   const [refreshing, setRefreshing] = React.useState(false);
 
   const getPosts = async () => {
@@ -21,20 +19,11 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
     const response = await API.get(path)
                               .then((response) => {
                                 setPosts(response.data)
-                                // console.log(response.data)
                               })
                               .catch((error) => {
                                 console.log(error)
                               });
   }
-
-  if (!mounted.current) {
-    getPosts()
-  }
-
-  useEffect(() => {
-    mounted.current = true
-  }, []);
 
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
@@ -46,7 +35,15 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
     return <Post post={item.item} navigation = {navigation} is_edit = {false} />;
   };
 
+  useEffect(() => {
+    getPosts()
+  }, []);
+
   const memoizedPosts = useMemo(() => renderItems, [posts]);
+
+  if (posts === []) {
+    return null;
+  }
 
   return (
     <View style = {styles.container}>
