@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from posts.models import Post, PostImage
+from drf_queryfields import QueryFieldsMixin
 
 UserModel = get_user_model()
 
@@ -16,7 +17,7 @@ class ImageURLSerializer(serializers.ModelSerializer):
         model = PostImage
         fields = ['id', 'image_url']
 
-class PostSerializer(serializers.ModelSerializer):
+class PostSerializer(QueryFieldsMixin, serializers.ModelSerializer):
     postimages = ImageURLSerializer(many=True, read_only=True)
     author = AuthorSerializer(read_only=True)
     

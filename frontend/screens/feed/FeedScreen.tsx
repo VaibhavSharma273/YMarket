@@ -1,6 +1,6 @@
 import { RootTabScreenProps } from '../../types';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { RefreshControl, Text, View, FlatList, StyleSheet } from 'react-native';
 
 import mock from "./data/mock";
@@ -11,7 +11,7 @@ import { normalize } from '../../components/TextNormalize';
 import API from '../../api/ymarket_api';
 
 const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
-  const [mounted, setMounted] = useState(false)
+  const mounted = useRef(false)
   const [posts, setPosts] = useState([]);
 
   const [refreshing, setRefreshing] = React.useState(false);
@@ -28,12 +28,12 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
                               });
   }
 
-  if (!mounted) {
+  if (!mounted.current) {
     getPosts()
   }
 
   useEffect(() => {
-    setMounted(true)
+    mounted.current = true
   }, []);
 
   const onRefresh = React.useCallback(async () => {
@@ -46,6 +46,8 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
     return <Post post={item.item} navigation = {navigation} is_edit = {false} />;
   };
 
+  const memoizedPosts = useMemo(() => renderItems, [posts]);
+
   return (
     <View style = {styles.container}>
       <Text style = {styles.headerText}>
@@ -57,7 +59,7 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
       <View style={styles.list}>
         <FlatList
           data={posts.reverse()}
-          renderItem={renderItems}
+          renderItem={memoizedPosts}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
