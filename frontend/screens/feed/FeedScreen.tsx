@@ -34,14 +34,14 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
   const renderItems = (item: { item: any;}) => {
     return <Post post={item.item} navigation = {navigation} is_edit = {false} />;
   };
-
+  
   useEffect(() => {
     getPosts()
   }, []);
 
   const memoizedPosts = useMemo(() => renderItems, [posts]);
 
-  if (posts === []) {
+  if (!posts.length) {
     return null;
   }
 

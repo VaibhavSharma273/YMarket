@@ -43,7 +43,7 @@ export default function AccessPostScreen({ navigation }: any) {
 
   const memoizedPosts = useMemo(() => renderItems, [postlist]);
 
-  if (postlist === []) {
+  if (!postlist.length) {
     return null;
   }
 
