@@ -11,8 +11,8 @@ class MessageThread(models.Model):
     """
     A message thread between two users. 
     """
-    sender = models.ForeignKey(AUTH_USER_MODEL, related_name='started_convo', on_delete=models.CASCADE)
-    receiver = models.ForeignKey(AUTH_USER_MODEL, related_name='received_convo', on_delete=models.CASCADE)
+    sender = models.ForeignKey(AUTH_USER_MODEL, related_name='sent_convos', on_delete=models.CASCADE)
+    receiver = models.ForeignKey(AUTH_USER_MODEL, related_name='received_convos', on_delete=models.CASCADE)
 
     class Meta:
         unique_together = (('sender', 'receiver'),)
