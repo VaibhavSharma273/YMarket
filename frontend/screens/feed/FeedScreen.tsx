@@ -1,31 +1,30 @@
 import { RootTabScreenProps } from '../../types';
 
-import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { RefreshControl, Text, View, FlatList, StyleSheet } from 'react-native';
-
-import mock from "./data/mock";
-import Post from './Post';
-
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { ActivityIndicator, RefreshControl, Text, View, FlatList, StyleSheet } from 'react-native';
 import { normalize } from '../../components/TextNormalize';
 
+import Post from './Post';
 import API from '../../api/ymarket_api';
 
 const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
-  const [posts, setPosts] = useState([]);
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [posts, setPosts] = useState<Array<any>>();
+  const [refreshing, setRefreshing] = useState(false);
 
   const getPosts = async () => {
     const path = 'api/post/'
     const response = await API.get(path)
                               .then((response) => {
-                                setPosts(response.data)
+                                setTimeout(() => {
+                                  setPosts(response.data.reverse())
+                                }, 100);
                               })
                               .catch((error) => {
                                 console.log(error)
                               });
   }
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
       getPosts()
       setRefreshing(false) 
@@ -41,8 +40,13 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
 
   const memoizedPosts = useMemo(() => renderItems, [posts]);
 
-  if (!posts.length) {
-    return null;
+  // return a loading indicator if posts have not been fetched yet
+  if (!posts) {
+    return (
+      <View style = {styles.centerContainer}>
+        <ActivityIndicator size="large" color="#0f4d92"/>
+      </View>
+    );
   }
 
   return (
@@ -91,7 +95,12 @@ const styles = StyleSheet.create({
     color: "#000",
     fontWeight: "300",
     fontSize: normalize(15)
-  }
+  },
+  centerContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center', 
+  },
 });
 
 export default Feed;
