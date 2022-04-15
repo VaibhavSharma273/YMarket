@@ -56,7 +56,7 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
       </Text>
       <View style={styles.list}>
         <FlatList
-          data={posts.reverse()}
+          data={posts}
           renderItem={memoizedPosts}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
