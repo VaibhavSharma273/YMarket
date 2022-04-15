@@ -2,8 +2,9 @@ import { Text, View } from '../../components/Themed';
 import { RootTabScreenProps } from '../../types';
 
 import React, { useEffect, useState, useContext, useMemo, useCallback } from 'react';
-import { ActivityIndicator, RefreshControl, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { RefreshControl, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { normalize } from '../../components/TextNormalize';
+import LoadingIndicator from '../../components/LoadingIndicator';
 import { FontAwesome } from '@expo/vector-icons'; 
 import AppContext from "./../AppContext"
 
@@ -46,11 +47,7 @@ export default function AccessPostScreen({ navigation }: any) {
 
   // return a loading indicator if posts have not been fetched yet
   if (!userPosts) {
-    return (
-      <View style = {styles.centerContainer}>
-        <ActivityIndicator size="large" color="#0f4d92"/>
-      </View>
-    );
+    return <LoadingIndicator></LoadingIndicator>
   }
 
   return (
@@ -119,10 +116,5 @@ const styles = StyleSheet.create({
     backgroundColor: "#0f4d92",
     padding: '5%',
     borderRadius: 5
-  },
-  centerContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center', 
   }
 });

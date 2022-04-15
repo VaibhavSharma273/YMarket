@@ -1,8 +1,9 @@
 import { RootTabScreenProps } from '../../types';
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { ActivityIndicator, RefreshControl, Text, View, FlatList, StyleSheet } from 'react-native';
+import { RefreshControl, Text, View, FlatList, StyleSheet } from 'react-native';
 import { normalize } from '../../components/TextNormalize';
+import LoadingIndicator from '../../components/LoadingIndicator';
 
 import Post from './Post';
 import API from '../../api/ymarket_api';
@@ -42,11 +43,7 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
 
   // return a loading indicator if posts have not been fetched yet
   if (!posts) {
-    return (
-      <View style = {styles.centerContainer}>
-        <ActivityIndicator size="large" color="#0f4d92"/>
-      </View>
-    );
+    return <LoadingIndicator></LoadingIndicator>
   }
 
   return (
@@ -95,12 +92,7 @@ const styles = StyleSheet.create({
     color: "#000",
     fontWeight: "300",
     fontSize: normalize(15)
-  },
-  centerContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center', 
-  },
+  }
 });
 
 export default Feed;
