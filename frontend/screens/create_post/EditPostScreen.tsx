@@ -139,7 +139,7 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
     const post_type_val = postType.value;
 
     const editPost = async () => {
-      const path = baseURL + 'api/post/' + postId
+      const path = hostURL + 'api/post/' + postId
       
       var is_buy = 'false'
 

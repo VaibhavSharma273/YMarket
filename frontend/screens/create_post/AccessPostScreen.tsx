@@ -1,58 +1,54 @@
 import { Text, View } from '../../components/Themed';
 import { RootTabScreenProps } from '../../types';
 
-import React, { useEffect, useState, useContext, useMemo, useRef } from 'react';
+import React, { useEffect, useState, useContext, useMemo, useCallback } from 'react';
 import { RefreshControl, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { normalize } from '../../components/TextNormalize';
+import LoadingIndicator from '../../components/LoadingIndicator';
 import { FontAwesome } from '@expo/vector-icons'; 
 import AppContext from "./../AppContext"
-import API from '../../api/ymarket_api';
 
 import Post from '../feed/Post';
-
+import API from '../../api/ymarket_api';
 
 export default function AccessPostScreen({ navigation }: any) {
-  const [postlist, setPostList] = useState([]);
-  const [refreshing, setRefreshing] = React.useState(false);
-  const mounted = useRef(false)
-
+  const [userPosts, setUserPosts] = useState<Array<any>>();
+  const [refreshing, setRefreshing] = useState(false);
   const myContext = useContext(AppContext);
 
   const getUserPosts = async () => {
     const path = 'api/users/profile/' + myContext.user + '/?fields=posts'
     const response = await API.get(path)
                               .then((response) => {
-                                setPostList(response.data.posts)
+                                setTimeout(() => {
+                                  setUserPosts(response.data.posts.reverse())
+                                }, 100);
                               })
                               .catch((error) => {
                                 console.log(error)
                               });
   }
 
-  if (!mounted.current) {
-    getUserPosts()
-  }
-
-  useEffect(() => {
-    mounted.current = true
-  }, []);
-
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
       getUserPosts()
       setRefreshing(false) 
   }, [refreshing]);
 
-  // const renderItems = (item: { item: any; }) => {
-  //   const post = item.item;
-  //   return <PostsView post={post} navigation = {navigation}/>;
-  // };
-
   const renderItems = (item: { item: any;}) => {
     return <Post post={item.item} navigation = {navigation} is_edit = {true} />;
   };
 
-  const memoizedPosts = useMemo(() => renderItems, [postlist]);
+  useEffect(() => {
+    getUserPosts()
+  }, []);
+
+  const memoizedPosts = useMemo(() => renderItems, [userPosts]);
+
+  // return a loading indicator if posts have not been fetched yet
+  if (!userPosts) {
+    return <LoadingIndicator></LoadingIndicator>
+  }
 
   return (
     <View style = {styles.container}>
@@ -64,7 +60,7 @@ export default function AccessPostScreen({ navigation }: any) {
       </Text>
       <View style={styles.list}>
         <FlatList
-          data={postlist.reverse()}
+          data={userPosts}
           renderItem={memoizedPosts}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
