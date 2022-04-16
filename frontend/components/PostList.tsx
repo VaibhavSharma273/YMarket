@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { StyleSheet, FlatList, SafeAreaView } from "react-native";
 
 import Post from '../screens/feed/Post';
@@ -8,11 +8,13 @@ const PostList = ({ data, navigation }: any) => {
         return <Post post={item.item} navigation = {navigation} is_edit = {false} />;
     };
 
+    const memoizedData = useMemo(() => renderItems, [data]);
+
     return (
       <SafeAreaView style={styles.list__container}>
         <FlatList
           data={data}
-          renderItem={renderItems}
+          renderItem={memoizedData}
         />
       </SafeAreaView>
     );

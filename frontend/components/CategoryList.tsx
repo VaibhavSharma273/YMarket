@@ -1,9 +1,6 @@
 import React from 'react';
-import { StyleSheet, SectionList, View, Text, FlatList } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Button } from 'react-native-paper';
+import { StyleSheet, View, Text, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { RootTabScreenProps } from '../types';
 
 import Category from './Category'
 

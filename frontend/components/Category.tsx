@@ -1,10 +1,9 @@
 import React from 'react';
-import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { text_styles } from './TextNormalize';
 
 
 const Category = ({ category, navigation }: any) => {
-    // onPress={() => navigation.push('SearchCategory', { category: category.title})}
     return (
         <View style={styles.listItemShadow}>
             <TouchableOpacity style={styles.listItem}>
