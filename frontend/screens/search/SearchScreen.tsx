@@ -14,8 +14,6 @@ import CategoryList from '../../components/CategoryList';
 const SearchScreen = ({navigation}: RootTabScreenProps<'SearchStack'>) => {
   const [searchPhrase, setSearchPhrase] = useState("");
   const [clicked, setClicked] = useState(false);
-  // use to show categories vs list of posts, or just check if query is empty
-  const [searched, setSearched] = useState(false);
   const [data, setData] = useState([]);
 
   const getPosts = async () => {
@@ -31,7 +29,9 @@ const SearchScreen = ({navigation}: RootTabScreenProps<'SearchStack'>) => {
 
   // get posts if the search query changes
   useEffect(() => {
-    getPosts();
+    if (searchPhrase !== "") {
+      getPosts();
+    }
   }, [searchPhrase]);
 
   return (

@@ -24,7 +24,7 @@ const SearchBar = ({clicked, searchPhrase, setSearchPhrase, setClicked}: any) =>
             <TextInput
               style={styles.input}
               placeholder="Search YMarket"
-              placeholderTextColor="#D3D3D3"
+              placeholderTextColor="#adadad"
               value={searchPhrase}
               onChangeText={setSearchPhrase}
               onFocus={() => {
@@ -60,6 +60,7 @@ const SearchBar = ({clicked, searchPhrase, setSearchPhrase, setClicked}: any) =>
   const styles = StyleSheet.create({
     container: {
       margin: 0,
+      paddingLeft: 10,
       justifyContent: "flex-start",
       alignItems: "center",
       flexDirection: "row",
@@ -69,7 +70,7 @@ const SearchBar = ({clicked, searchPhrase, setSearchPhrase, setClicked}: any) =>
       padding: 10,
       flexDirection: "row",
       width: "95%",
-      backgroundColor: "#fff",
+      backgroundColor: "#ededed",
       borderRadius: 15,
       alignItems: "center",
     },
@@ -77,7 +78,7 @@ const SearchBar = ({clicked, searchPhrase, setSearchPhrase, setClicked}: any) =>
       padding: 10,
       flexDirection: "row",
       width: "90%",
-      backgroundColor: "#fff",
+      backgroundColor: "#ededed",
       borderRadius: 15,
       alignItems: "center",
       justifyContent: "space-evenly",
