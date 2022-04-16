@@ -3,6 +3,7 @@ from rest_framework import serializers
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from posts.models import Post
 from posts.serializers import ImageURLSerializer
+from drf_queryfields import QueryFieldsMixin
 
 UserModel = get_user_model()
 
@@ -14,7 +15,7 @@ class ProfilePostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ['id', 'title', 'content', 'date_posted','price', 'category', 'is_buy', 'postimages']
 
-class UserProfileSerializer(serializers.ModelSerializer):
+class UserProfileSerializer(QueryFieldsMixin, serializers.ModelSerializer):
     posts = ProfilePostSerializer(many=True, read_only=True)
     # first name and last name are required on login but not for PUT requests
     first_name = serializers.CharField(max_length=150, required=False)

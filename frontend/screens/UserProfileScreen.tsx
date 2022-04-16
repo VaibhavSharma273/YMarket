@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect, useRef } from 'react'
 import { StyleSheet, SafeAreaView, StatusBar } from 'react-native';
 
 import API from '../api/ymarket_api';
@@ -14,12 +14,12 @@ import AppContext from "./AppContext"
 export default function UserProfileScreen({ navigation } : RootTabScreenProps<'UserProfile'>) {
     const [userName, setUserName] = useState('');
     const [userEmail, setUserEmail] = useState('');
-    const [mounted, setMounted] = useState(false)
+    const mounted = useRef(false)
 
     const myContext = useContext(AppContext);
 
     const getUserProfile = async () => {
-      const path = 'api/users/profile/' + myContext.user
+      const path = 'api/users/profile/' + myContext.user + '/?fields!=posts'
       const response = await API.get(path)
                                 .then((response) => {
                                   const firstName = response.data.first_name
@@ -34,12 +34,12 @@ export default function UserProfileScreen({ navigation } : RootTabScreenProps<'U
                                 });
     }
 
-    if (!mounted) {
+    if (!mounted.current) {
       getUserProfile()
     }
 
     useEffect(() => {
-      setMounted(true)
+      mounted.current = true
     }, []);
 
     const onLogoutPressed = async () => {

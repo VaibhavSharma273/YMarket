@@ -1,57 +1,54 @@
 import { Text, View } from '../../components/Themed';
 import { RootTabScreenProps } from '../../types';
 
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useMemo, useCallback } from 'react';
 import { RefreshControl, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
-import mock from "./data/mock";
-import PostsView from './PostsView';
+import { normalize } from '../../components/TextNormalize';
+import LoadingIndicator from '../../components/LoadingIndicator';
 import { FontAwesome } from '@expo/vector-icons'; 
 import AppContext from "./../AppContext"
-import API from '../../api/ymarket_api';
 
 import Post from '../feed/Post';
-
+import API from '../../api/ymarket_api';
 
 export default function AccessPostScreen({ navigation }: any) {
-  const [postlist, setPostList] = useState([]);
-  const [refreshing, setRefreshing] = React.useState(false);
-  const [mounted, setMounted] = useState(false)
-
+  const [userPosts, setUserPosts] = useState<Array<any>>();
+  const [refreshing, setRefreshing] = useState(false);
   const myContext = useContext(AppContext);
 
   const getUserPosts = async () => {
-    const path = 'api/users/profile/' + myContext.user
+    const path = 'api/users/profile/' + myContext.user + '/?fields=posts'
     const response = await API.get(path)
                               .then((response) => {
-                                setPostList(response.data.posts)
+                                setTimeout(() => {
+                                  setUserPosts(response.data.posts.reverse())
+                                }, 100);
                               })
                               .catch((error) => {
                                 console.log(error)
                               });
   }
 
-  if (!mounted) {
-    getUserPosts()
-  }
-
-  useEffect(() => {
-    setMounted(true)
-  }, []);
-
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
       getUserPosts()
       setRefreshing(false) 
   }, [refreshing]);
 
-  // const renderItems = (item: { item: any; }) => {
-  //   const post = item.item;
-  //   return <PostsView post={post} navigation = {navigation}/>;
-  // };
-
   const renderItems = (item: { item: any;}) => {
     return <Post post={item.item} navigation = {navigation} is_edit = {true} />;
   };
+
+  useEffect(() => {
+    getUserPosts()
+  }, []);
+
+  const memoizedPosts = useMemo(() => renderItems, [userPosts]);
+
+  // return a loading indicator if posts have not been fetched yet
+  if (!userPosts) {
+    return <LoadingIndicator></LoadingIndicator>
+  }
 
   return (
     <View style = {styles.container}>
@@ -63,8 +60,8 @@ export default function AccessPostScreen({ navigation }: any) {
       </Text>
       <View style={styles.list}>
         <FlatList
-          data={postlist.reverse()}
-          renderItem={renderItems}
+          data={userPosts}
+          renderItem={memoizedPosts}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
@@ -74,7 +71,7 @@ export default function AccessPostScreen({ navigation }: any) {
           <View style={{ flexDirection: 'row', justifyContent: 'center', backgroundColor: "#0f4d92", alignItems: 'center' }}>
           <Text style={styles.buttonText}>Create Post</Text>
           <View style={{ padding: 5, backgroundColor: "#0f4d92" }}></View>
-          <FontAwesome name="plus-square-o" size={24} color="white" />
+          <FontAwesome name="plus-square-o" size={normalize(20)} color="white" />
           </View>
         </TouchableOpacity>
       </View>
@@ -99,7 +96,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     fontWeight: "bold",
     color: "#0f4d92",
-    fontSize: 24
+    fontSize: normalize(24)
   },
   subHeaderText: {
     marginTop: 10,
@@ -107,11 +104,11 @@ const styles = StyleSheet.create({
     marginRight: 20,
     color: "#000",
     fontWeight: "300",
-    fontSize: 15
+    fontSize: normalize(15)
   },
   buttonText: {
     color: "white",
-    fontSize: 25,
+    fontSize: normalize(20),
 
   },
   button: {

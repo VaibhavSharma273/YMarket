@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { StyleSheet, TouchableOpacity, Alert, ScrollView, Pressable, Modal } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown'
 import { MaterialIcons } from '@expo/vector-icons'; 
+import { normalize } from '../../components/TextNormalize';
 
 import API from '../../api/ymarket_api';
 import { Text, View } from '../../components/Themed';
@@ -20,22 +21,16 @@ export default function CreatePostScreen({ navigation }: any) {
   const [title, setTitle] = useState({ value: '', error: '' })
   const [caption, setCaption] = useState({ value: '', error: '' })
   const [price, setPrice] = useState({ value: '', error: '' })
-  const [category, setCategory] = useState({ value: '', error: '' })
+  const [category, setCategory] = useState({ value: ''})
+  const [postType, setPostType] = useState({ value: ''})
+  const [images] = useState(['','','','','',''])
+
   const postTypes = ["Buy", "Sell"]
-  const [images, setImages] = useState<any | null>([])
+  const categoryTypes = ["General", "Clothing", "Furniture", "Books/Textbooks", "Electronics"]
 
-  const updateImages = (newImage: any, add: boolean) => {
-    {add ? 
-      setImages([...images, newImage])
-      :
-      removeImage(newImage)}
+  const updateImages = (newImage: any, index: number) => {
+    images[index] = newImage
   }
-
-  const removeImage = (newImage: any) => {
-    setImages(images.filter((image: any) => image !== newImage))
-  }
-
-  const [postType, setPostType] = useState({ value: '', error: '' })
 
   const cancelPopup= async ()=>{
     Alert.alert(
@@ -55,8 +50,15 @@ export default function CreatePostScreen({ navigation }: any) {
     const titleError = titleValidator(title.value)
     const captionError = postValidator(caption.value)
     const priceError = priceValidator(price.value)
-    const categoryError = postValidator(category.value)
     var postTypeError = ''
+    var categoryError = 'Please choose a category'
+
+    for (let i = 0; i < categoryTypes.length; i++) {
+      if (category.value.includes(categoryTypes[i]))
+      {
+        categoryError = ''
+      }
+    }
 
     if (!(postType.value.includes("Buy") || postType.value.includes("Sell")))
     {
@@ -67,8 +69,13 @@ export default function CreatePostScreen({ navigation }: any) {
         setTitle({...title, error: titleError})
         setCaption({...caption, error: captionError})
         setPrice({...price, error: priceError})
-        setCategory({...category, error: categoryError})
-        setPostType({...postType, error: postTypeError})
+        setCategory({...category})
+        setPostType({...postType})
+
+        if (categoryError)
+        {
+          Alert.alert(categoryError)
+        }
 
         if (postTypeError)
         {
@@ -80,12 +87,12 @@ export default function CreatePostScreen({ navigation }: any) {
     const title_val = title.value;
     const caption_val = caption.value;
     const price_val = price.value;
-    const category_val = category.value;
+    const category_val = category.value.toLowerCase();
     const post_type_val = postType.value;
 
     const confirmPopup = async ()=>{
       const createPost = async () => {
-        const path = baseURL + 'api/post/'
+        const path = hostURL + 'api/post/'
         
         var is_buy = 'false'
 
@@ -100,13 +107,17 @@ export default function CreatePostScreen({ navigation }: any) {
         form_data.append("category", category_val)
         form_data.append("is_buy", is_buy)
 
-        var img = { 
-          uri: images[0],
-          name: 'image1.jpg',
-          type: 'image/jpg'
-        }
+        for (var i = 0; i < 6; i++) {
+          if (images[i] !== '') {
+            var img = { 
+              uri: images[i],
+              name: 'image.jpg',
+              type: 'image/jpg'
+            }
 
-        form_data.append('files', JSON.parse(JSON.stringify(img)))
+            form_data.append('files', JSON.parse(JSON.stringify(img)))
+          }
+        }
 
         const token = await getToken('access');
         const response = await fetch(path, {
@@ -150,7 +161,7 @@ export default function CreatePostScreen({ navigation }: any) {
         {"Create a Post"}
       </Text>
       <TouchableOpacity  onPress={() => cancelPopup()}>
-      <MaterialIcons name="cancel" size={30} color="#0F4D92" style={{paddingLeft: '12%', alignSelf: 'flex-start'}} />
+      <MaterialIcons name="cancel" size={normalize(27)} color="#0F4D92" style={{paddingLeft: '15%', alignSelf: 'flex-start'}} />
       </TouchableOpacity>
       </View>
       <View style={{paddingTop:'4%'}}></View>
@@ -185,21 +196,35 @@ export default function CreatePostScreen({ navigation }: any) {
       />
 
   <Text style={styles.title}>Category</Text>
-      <TextInput style={{height:50}}
-        returnKeyType="next"
-        value={category.value}
-        onChangeText={(text: any) => setCategory({ value: text, error: '' })}
-        error={!!category.error}
-        errorText={category.error}
-        description
-      />
+  <View style={{paddingTop:'2%'}}></View>
+  <SelectDropdown
+	  data={categoryTypes}
+	  onSelect={(selectedItem) => setCategory({value: selectedItem})}
+	  buttonTextAfterSelection={(selectedItem, index) => {
+		// text represented after item is selected
+		// if data array is an array of objects then return selectedItem.property to render after item is selected
+		return selectedItem
+	  }}
+	  rowTextForSelection={(item, index) => {
+		// text represented for each item in dropdown
+		// if data array is an array of objects then return item.property to represent item in dropdown
+		return item
+	  }}
+    defaultButtonText={'Select a Category'}
 
+    buttonStyle={styles.dropdown1BtnStyle}
+    dropdownStyle={styles.dropdown1DropdownStyle}
+    rowStyle={styles.dropdown1RowStyle}
+    rowTextStyle={styles.dropdown1RowTxtStyle}
+    buttonTextStyle={styles.dropdown1BtnTxtStyle}
+  />
+  <View style={{paddingTop:'4%'}}></View>
 
   <Text style={styles.title}>Post Type</Text>
   <View style={{paddingTop:'2%'}}></View>
   <SelectDropdown
 	  data={postTypes}
-	  onSelect={(selectedItem) => setPostType({value: selectedItem, error: ''})}
+	  onSelect={(selectedItem) => setPostType({value: selectedItem})}
 	  buttonTextAfterSelection={(selectedItem, index) => {
 		// text represented after item is selected
 		// if data array is an array of objects then return selectedItem.property to render after item is selected
@@ -221,25 +246,25 @@ export default function CreatePostScreen({ navigation }: any) {
 
 />
       <View style={styles.row}>
-        <UploadImage updateImages={updateImages}/>
+        <UploadImage updateImages={updateImages} number = {0} />
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage updateImages={updateImages}/>
+        <UploadImage updateImages={updateImages} number = {1} />
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage updateImages={updateImages}/>
+        <UploadImage updateImages={updateImages} number = {2} />
         <View style={{paddingRight:'2.5%'}}></View>
         <View style={{height: '16%'}}></View>
-        <UploadImage updateImages={updateImages}/>
+        <UploadImage updateImages={updateImages} number = {3} />
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage updateImages={updateImages}/>
+        <UploadImage updateImages={updateImages} number = {4}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage updateImages={updateImages}/>
+        <UploadImage updateImages={updateImages} number = {5}/>
         <View style={{paddingRight:'100%'}}></View>
         <View style={{paddingBottom: '2%'}}></View>
         <TouchableOpacity style={styles.button} onPress={onCreatePostPressed}>
-          <Text style={{color: 'white', fontWeight: 'bold', fontSize: 18, fontFamily: 'Arial'}}>Add Post</Text>
+          <Text style={{color: 'white', fontWeight: 'bold', fontSize: normalize(16), fontFamily: 'Arial'}}>Add Post</Text>
         </TouchableOpacity>
       </View>
-      <View style={{paddingTop:'4%'}}></View>
+      <View style={{paddingTop:'12%'}}></View>
   </View>
   </ScrollView>
   );
@@ -268,7 +293,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     paddingLeft: '1%',
     alignSelf: 'flex-start',
-    fontSize: 23,
+    fontSize: normalize(19),
     fontWeight: 'bold',
     color: '#0F4D92',
   },
@@ -290,20 +315,12 @@ const styles = StyleSheet.create({
     marginRight: '20%',
     fontWeight: "bold",
     color: "#0f4d92",
-    fontSize: 30,
+    fontSize: normalize(23),
     textAlign: 'center'
-  },
-  subHeaderText: {
-    marginTop: 10,
-    marginLeft: 20,
-    marginRight: 20,
-    color: "#000",
-    fontWeight: "300",
-    fontSize: 15
   },
   dropdown1DropdownStyle: {backgroundColor: '#f6f6f6', borderColor: 'gray'},
   dropdown1RowStyle: {backgroundColor: '#f6f6f6', borderBottomColor: 'gray', borderRadius: 10},
-  dropdown1RowTxtStyle: {color: 'black', textAlign: 'left', fontFamily: 'Arial', fontSize: 16},
+  dropdown1RowTxtStyle: {color: 'black', textAlign: 'left', fontFamily: 'Arial', fontSize: normalize(13)},
   dropdown1BtnStyle: {
     backgroundColor: '#f6f6f6',
     borderRadius: 5,
@@ -312,7 +329,7 @@ const styles = StyleSheet.create({
     width: '80%',
     height: '5%',
   },
-  dropdown1BtnTxtStyle: {color: 'black', textAlign: 'left', fontFamily: 'Arial', fontSize: 16},
+  dropdown1BtnTxtStyle: {color: 'black', textAlign: 'left', fontFamily: 'Arial', fontSize: normalize(13)},
   modalView: {
     margin: 20,
     backgroundColor: "white",

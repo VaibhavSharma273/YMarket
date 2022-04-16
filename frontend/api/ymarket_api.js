@@ -3,7 +3,7 @@ import { getToken, setToken, deleteToken } from '../storage/tokenStorage';
 import { baseURL, hostURL } from "../constants/url";
 
 const ymarket = axios.create({
-  baseURL: baseURL,
+  baseURL: hostURL,
   headers: {
   "Content-type": "application/json"
   }
