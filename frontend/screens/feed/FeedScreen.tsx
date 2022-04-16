@@ -30,6 +30,7 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
   }, [refreshing]);
 
   const renderItems = (item: { item: any;}) => {
+    // console.log(navigation)
     return <Post post={item.item} navigation = {navigation} is_edit = {false} />;
   };
   

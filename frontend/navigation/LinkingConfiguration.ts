@@ -41,9 +41,11 @@ const linking: LinkingOptions<RootStackParamList> = {
               EditPostScreen: 'edit',
             },
           },
-          Search: {
+          SearchStack: {
             screens: {
               SearchScreen: 'search',
+              ViewPostScreen: 'viewPost',
+              SearchCategoryScreen: 'searchCategory',
             },
           },
           Profile: {

@@ -26,7 +26,7 @@ export default function CreatePostScreen({ navigation }: any) {
   const [images] = useState(['','','','','',''])
 
   const postTypes = ["Buy", "Sell"]
-  const categoryTypes = ["General", "Clothing", "Furniture", "Books/Textbooks", "Electronics"]
+  const categoryTypes = ["General", "Clothing", "Furniture", "Books/Textbooks", "Electronics", "Other"]
 
   const updateImages = (newImage: any, index: number) => {
     images[index] = newImage
