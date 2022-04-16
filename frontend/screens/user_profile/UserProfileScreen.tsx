@@ -13,6 +13,7 @@ import AppContext from "../AppContext"
 import UploadImage from '../../components/UploadImage';
 import LoadingIndicator from '../../components/LoadingIndicator';
 
+import { normalize } from '../../components/TextNormalize';
 
 export default function UserProfileScreen({ route, navigation } : any) {
   const params = route.params;
@@ -60,15 +61,21 @@ export default function UserProfileScreen({ route, navigation } : any) {
 
   return (
       <View style={styles.container}>
+        <View style={styles.info_container}>
           <View style={{marginVertical: 20, height: 1, width: '80%'}}/>
-          <ProfilePhoto src={user.avatar}/>
-          <Text style={styles.title}>{String(user.firstName) + ' ' + String(user.lastName)}</Text>
-          <View style={{marginVertical: 5, height: 1, width: '80%'}}/> 
-          <Text style={styles.contact}>{user.email}</Text>
+            <View style={{flexDirection: 'row'}}>
+              <ProfilePhoto src={user.avatar}/>
+              <View style={{flexDirection: 'column', width: '60%', paddingHorizontal: '4%'}}>
+                <Text style={styles.title}>{String(user.firstName) + ' ' + String(user.lastName)}</Text>
+                <View style={{marginVertical: 3, height: 1, width: '80%'}}/> 
+                <Text style={styles.contact}>{user.email}</Text>
+                <View style={{marginVertical: 3, height: 1, width: '80%'}}/> 
+                <Text style={styles.bio}>{user.bio ? user.bio : ""}</Text>
+              </View>
+            </View>
+          </View>
           <View style={styles.separator}/>
-          <Text>{user.bio ? user.bio : ""}</Text>
-          <View style={styles.separator}/>
-          { userId === myContext.user ? <View>
+          { userId === myContext.user ? <View style={styles.bottom_container}>
             <TouchableOpacity
             style={styles.button}
             onPress={() => navigation.navigate("EditUserProfile", { initialValues: user, updateCallback: updateUserProfile })}>
@@ -90,23 +97,32 @@ export default function UserProfileScreen({ route, navigation } : any) {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
+      // justifyContent: 'center',
+    },
+    info_container: {
+      paddingLeft: '10%',
     },
     title: {
-      fontSize: 20,
+      fontSize: normalize(20),
+      // paddingLeft: '5%',
       fontWeight: 'bold',
       color: '#00356b',
     },
     logout: {
-      fontSize: 15,
+      fontSize: normalize(15),
       fontWeight: 'bold',
       color: 'white',
     },
     contact: {
-        fontSize: 17,
-        color: "#4a4a4a",
+        fontSize: normalize(15),
+        // paddingLeft: '5%',
+        color: "#5f712d",
       },
+    bio: {
+      fontSize: normalize(15),
+      // paddingLeft: '5%',
+      color: "#4a4a4a",
+    },
     separator: {
       marginVertical: 8,
       height: 1,
@@ -114,8 +130,19 @@ const styles = StyleSheet.create({
     },
     button: {
       alignItems: "center",
+      justifyContent: 'center',
       backgroundColor: "#0f4d92",
       padding: 10,
       width: 170,
+    },
+    bottom_container: {
+      width: '100%',
+      position: 'absolute',
+      bottom: 20,
+      alignItems: 'center',
+    },
+    middle_container: {
+      display: 'flex', 
+      alignItems: 'center',
     }
   });
