@@ -46,7 +46,7 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
   const isModified = [false, false, false, false, false, false]
 
   const postTypes = ["Buy", "Sell"]
-  const categoryTypes = ["General", "Clothing", "Furniture", "Books/Textbooks", "Electronics"]
+  const categoryTypes = ["General", "Clothing", "Furniture", "Books/Textbooks", "Electronics", "Other"]
 
   const updateImages = (newImage: any, index: number) => {
     imageURLs[index] = newImage
