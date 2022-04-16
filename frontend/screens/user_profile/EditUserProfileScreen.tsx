@@ -1,6 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React, { useContext, useState } from 'react';
-import { TouchableOpacity, StyleSheet, ScrollView, Button, Alert } from 'react-native';
+import { TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
 import TextInput from '../../components/TextInput';
 import { Text, View } from '../../components/Themed';
 import UploadImage from '../../components/UploadImage';
@@ -109,9 +109,11 @@ export default function EditUserProfileScreen({ route, navigation }: { route: an
             />
             <Text style={styles.title}>Avatar</Text>
             <UploadImage updateImages={updateImage} defaultValue={image}/>
-        </View>
 
-        <Button title="Update profile" onPress={onEditConfirmPressed} />
+            <TouchableOpacity style={styles.button} onPress={onEditConfirmPressed}>
+              <Text style={{color: 'white', fontWeight: 'bold', fontSize: 15, fontFamily: 'Arial'}}>Update Profile</Text>
+            </TouchableOpacity>
+        </View>
     </ScrollView>);
 }
 

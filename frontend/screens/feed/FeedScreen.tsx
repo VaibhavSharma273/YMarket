@@ -16,9 +16,7 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
     const path = 'api/post/'
     const response = await API.get(path)
                               .then((response) => {
-                                setTimeout(() => {
-                                  setPosts(response.data.reverse())
-                                }, 100);
+                                setPosts(response.data.reverse())
                               })
                               .catch((error) => {
                                 console.log(error)
