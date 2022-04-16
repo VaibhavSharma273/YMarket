@@ -14,50 +14,7 @@ import ProfilePhoto from '../../components/ProfilePhoto';
 
 export default function ViewPost({ route, navigation }: { route: any; navigation: any }) {
   // Identify post here:
-  const { postId } = route.params;
-
-  var schema = {
-    'title': String(),
-    'content': String(),
-    'date_posted': String(),
-    'author': {
-                'id': String(), 
-                'first_name': String(), 
-                'last_name': String(), 
-                'email': String()
-              },
-    'price': Number(),
-    'category': String(),
-    'is_buy': Boolean(),
-    'postimages': [
-      {
-        'id': String(),
-        'image_url': 'https://imgur.com/KPRDlAP'
-      }
-    ]
-  }
-
-  const [mounted, setMounted] = useState(false)
-  const [post, setPost] = useState(schema);
-
-  const getDetailedPost = async () => {
-    const path = 'api/post/' + postId
-    const response = await API.get(path)
-                              .then((response) => {
-                                setPost(response.data)
-                              })
-                              .catch((error) => {
-                                console.log(error)
-                              });
-  }
-
-  if (!mounted) {
-    getDetailedPost()
-  }
-
-  useEffect(() => {
-    setMounted(true)
-  }, []);
+  const { post } = route.params;
 
   const [modalVisible, setModalVisible] = useState(false);
   const date_posted = moment(post.date_posted).utc()
@@ -223,4 +180,3 @@ const styles = StyleSheet.create({
     color: '#fff'
   },
 });
-

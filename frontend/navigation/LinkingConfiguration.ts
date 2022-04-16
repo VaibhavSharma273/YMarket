@@ -22,6 +22,7 @@ const linking: LinkingOptions<RootStackParamList> = {
           ConfirmationScreen: 'confirm',
           ResetPasswordScreen: 'resetPassword',
           LoginScreen: 'login',
+          SplashScreen: 'splash',
         },
       },
       Root: {

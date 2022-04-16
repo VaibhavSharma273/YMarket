@@ -24,6 +24,7 @@ import RegisterScreen from '../screens/auth/RegisterScreen';
 import ConfirmationScreen from '../screens/auth/ConfirmationScreen';
 import ResetPasswordScreen from '../screens/auth/ResetPasswordScreen';
 import LoginScreen from '../screens/auth/LoginScreen';
+import SplashScreen from '../screens/auth/SplashScreen';
 import FeedScreen from '../screens/feed/FeedScreen';
 import ViewPostScreen from '../screens/feed/ViewPostScreen';
 import { AuthTabParamList, RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
@@ -64,6 +65,9 @@ function RootNavigator() {
 
   // there are two screen stacks -- auth (has StartScreen, RegisterScreen, etc)
   // and root (has the feed, profile, etc). If a user is logged in, return the root.
+  if (myContext.loading) {
+    return <SplashScreen />
+  }
   return (
     <Stack.Navigator  screenOptions={{ headerShown: false }} >
       {myContext.loginStatus ? (

@@ -12,59 +12,46 @@ import { titleValidator } from '../../helpers/titleValidator';
 import { postValidator } from '../../helpers/postValidator';
 import { priceValidator } from '../../helpers/priceValidator';
 
-import { RootTabScreenProps } from '../../types';
-import mock from "./data/mock";
+import { normalize } from '../../components/TextNormalize';
+
+import { getToken, setToken, deleteToken } from '../../storage/tokenStorage';
+import { baseURL, hostURL } from '../../constants/url';
 
 export default function EditPostScreen({ route, navigation }: { route: any; navigation: any }) {
 
-  const { postId } = route.params;
+  const { postId, post} = route.params;
 
-  const [title, setTitle] = useState({ value: '', error: '' })
-  const [caption, setCaption] = useState({ value: '', error: '' })
-  const [price, setPrice] = useState({ value: '', error: '' })
-  const [category, setCategory] = useState({ value: '', error: '' })
+  const [title, setTitle] = useState({ value: post.title, error: '' })
+  const [caption, setCaption] = useState({ value: post.content, error: '' })
+  const [price, setPrice] = useState({ value: post.price, error: '' })
+  const [category, setCategory] = useState({ value: post.category.charAt(0).toUpperCase() 
+    + post.category.slice(1)})
+  var pType = 'Buy'
+  if (post.is_buy === false) {
+    pType = 'Sell'
+  } 
+  const [postType, setPostType] = useState({ value: pType})
+
+  const imageURLs = ['', '', '', '', '', '']
+  const postImageIDs = [-1, -1, -1, -1, -1, -1]
+  const postImages = post.postimages
+
+  for (var i = 0; i < postImages.length; i++) {
+    if (i < 6) {
+      imageURLs[i] = postImages[i].image_url
+      postImageIDs[i] = postImages[i].id
+    }
+  }
+
+  const isModified = [false, false, false, false, false, false]
+
   const postTypes = ["Buy", "Sell"]
-  const [postType, setPostType] = useState({ value: '', error: '' })
-  const [images, setImages] = useState<any | null>([])
-  const [mounted, setMounted] = useState(false)
+  const categoryTypes = ["General", "Clothing", "Furniture", "Books/Textbooks", "Electronics"]
 
-  const updateImages = (newImage: any, add: boolean) => {
-    {add ? 
-      setImages([...images, newImage])
-      :
-      removeImage(newImage)}
+  const updateImages = (newImage: any, index: number) => {
+    imageURLs[index] = newImage
+    isModified[index] = true
   }
-
-  const removeImage = (newImage: any) => {
-    setImages(images.filter((image: any) => image !== newImage))
-  }
-
-  const getPreviousInfo = async () => {
-    const path = 'api/post/' + postId
-    const response = await API.get(path)
-                              .then((response) => {
-                                setTitle({value: response.data.title, error: ''})
-                                setCaption({value: response.data.content, error: ''})
-                                setPrice({value: response.data.price, error: ''})
-                                setCategory({value: response.data.category, error: ''})
-                                if (response.data.is_buy === 'false') {
-                                  setPostType({value: 'Sell', error: ''})
-                                } else {
-                                  setPostType({value: 'Buy', error: ''})
-                                }
-                              })
-                              .catch((error) => {
-                                console.log(error)
-                              });
-  }
-
-  if (!mounted) {
-    getPreviousInfo()
-  }
-
-  useEffect(() => {
-    setMounted(true)
-  }, []);
 
   const cancelPopup= async ()=>{
     Alert.alert(
@@ -80,12 +67,46 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
     );
   }
 
+  const onDeletePostPressed = async () => {
+    const deletePost = async () => {
+      const path = 'api/post/' + postId
+      
+      const response = await API.delete(path)
+                                .then((response) => {
+                                  console.log("post delete success!")
+                                })
+                                .catch((error) => {
+                                  console.log(error)
+                                });
+    }
+
+    Alert.alert(
+      'Are you sure you want to delete this post?',
+      'Deletions are not reversible!',
+      [
+        {text: 'Yes', onPress: () => 
+        {deletePost(), navigation.goBack();}}, // delete post
+        {text: 'No'},
+      ],
+      { 
+        cancelable: true 
+      }
+    );
+  }
+
   const onEditPostPressed = async () => {
     const titleError = titleValidator(title.value)
     const captionError = postValidator(caption.value)
     const priceError = priceValidator(price.value)
-    const categoryError = postValidator(category.value)
     var postTypeError = ''
+    var categoryError = 'Please choose a category'
+
+    for (let i = 0; i < categoryTypes.length; i++) {
+      if (category.value.includes(categoryTypes[i]))
+      {
+        categoryError = ''
+      }
+    }
 
     if (!(postType.value.includes("Buy") || postType.value.includes("Sell")))
     {
@@ -96,8 +117,13 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
         setTitle({...title, error: titleError})
         setCaption({...caption, error: captionError})
         setPrice({...price, error: priceError})
-        setCategory({...category, error: categoryError})
-        setPostType({...postType, error: postTypeError})
+        setCategory({...category})
+        setPostType({...postType})
+
+        if (categoryError)
+        {
+          Alert.alert(categoryError)
+        }
 
         if (postTypeError)
         {
@@ -109,35 +135,69 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
     const title_val = title.value;
     const caption_val = caption.value;
     const price_val = price.value;
-    const category_val = category.value;
+    const category_val = category.value.toLowerCase();;
     const post_type_val = postType.value;
 
-    const confirmPopup = async ()=>{
-      const editPost = async () => {
-        const path = 'api/post/' + postId
-        
-        var is_buy = false 
+    const editPost = async () => {
+      const path = hostURL + 'api/post/' + postId
+      
+      var is_buy = 'false'
 
-        if (post_type_val.includes("Buy")) {
-          is_buy = true
-        }
-  
-        const data = {
-          'title': title_val,
-          'content': caption_val, 
-          'price': price_val,
-          'category': category_val,
-          'is_buy': is_buy
-        }
-
-        const response = await API.put(path, data)
-                                  .then((response) => {
-                                  })
-                                  .catch((error) => {
-                                    console.log(error)
-                                  });
+      if (post_type_val.includes("Buy")) {
+        is_buy = 'true'
       }
-  
+
+      var form_data = new FormData() 
+      form_data.append("title", title_val)
+      form_data.append("content", caption_val)
+      form_data.append("price", price_val)
+      form_data.append("category", category_val)
+      form_data.append("is_buy", is_buy)
+
+      for (var i = 0; i < 6; i++) {
+        if (isModified[i] && postImageIDs[i] != -1) 
+        {
+          const deletePath = 'api/post-images/' + postImageIDs[i]
+          const deleteResponse = await API.delete(deletePath)
+                                          .then((deleteResponse) => {
+                                            console.log("delete image success!")
+                                          })
+                                          .catch((error) => {
+                                            console.log(error)
+                                          });
+        }
+      }
+
+      for (var i = 0; i < 6; i++) {
+        if (isModified[i] && imageURLs[i] !== '') {
+          var img = { 
+            uri: imageURLs[i],
+            name: 'image.jpg',
+            type: 'image/jpg'
+          }
+
+          form_data.append('files', JSON.parse(JSON.stringify(img)))
+        }
+      }
+
+      const token = await getToken('access');
+      const response = await fetch(path, {
+        method: "PUT",
+        headers: {
+          'accept': 'application/json',
+          "Content-Type": 'multipart/form-data; boundary=----WebKitFormBoundaryIn312MOjBWdkffIM',
+          'Authorization': 'Bearer ' + token
+        },
+        body: form_data
+      }).then((response) => {
+        console.log("post edit success!")
+      })
+      .catch((error) => {
+        console.log(error.response)
+      });
+    }
+
+    const confirmPopup = async ()=>{
       editPost() 
       Alert.alert(
         'Post Edited!',
@@ -153,6 +213,7 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
     
     confirmPopup()
 }
+
   return (
     <ScrollView>
     <View style ={styles.container}>
@@ -161,7 +222,7 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
         {"Edit a Post"}
       </Text>
       <TouchableOpacity  onPress={() => cancelPopup()}>
-      <MaterialIcons name="cancel" size={30} color="#0F4D92" style={{paddingLeft: '21%', alignSelf: 'flex-start'}} />
+      <MaterialIcons name="cancel" size={normalize(27)} color="#0F4D92" style={{paddingLeft: '23%', alignSelf: 'flex-start'}} />
       </TouchableOpacity>
       </View>
       <View style={{paddingTop:'4%'}}></View>
@@ -196,21 +257,10 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
       />
 
   <Text style={styles.title}>Category</Text>
-      <TextInput style={{height:50}}
-        returnKeyType="next"
-        value={category.value}
-        onChangeText={(text: any) => setCategory({ value: text, error: '' })}
-        error={!!category.error}
-        errorText={category.error}
-        description
-      />
-
-
-  <Text style={styles.title}>Post Type</Text>
   <View style={{paddingTop:'2%'}}></View>
   <SelectDropdown
-	  data={postTypes}
-	  onSelect={(selectedItem) => setPostType({value: selectedItem, error: ''})}
+	  data={categoryTypes}
+	  onSelect={(selectedItem) => setCategory({value: selectedItem})}
 	  buttonTextAfterSelection={(selectedItem, index) => {
 		// text represented after item is selected
 		// if data array is an array of objects then return selectedItem.property to render after item is selected
@@ -221,7 +271,32 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
 		// if data array is an array of objects then return item.property to represent item in dropdown
 		return item
 	}}
-  defaultButtonText={'Select Buy or Sell'}
+  defaultButtonText={category.value}
+  buttonStyle={styles.dropdown1BtnStyle}
+  dropdownStyle={styles.dropdown1DropdownStyle}
+  rowStyle={styles.dropdown1RowStyle}
+  rowTextStyle={styles.dropdown1RowTxtStyle}
+  buttonTextStyle={styles.dropdown1BtnTxtStyle}
+
+
+/>
+<View style={{paddingTop:'4%'}}></View>
+  <Text style={styles.title}>Post Type</Text>
+  <View style={{paddingTop:'2%'}}></View>
+  <SelectDropdown
+	  data={postTypes}
+	  onSelect={(selectedItem) => setPostType({value: selectedItem})}
+	  buttonTextAfterSelection={(selectedItem, index) => {
+		// text represented after item is selected
+		// if data array is an array of objects then return selectedItem.property to render after item is selected
+		return selectedItem
+	}}
+	rowTextForSelection={(item, index) => {
+		// text represented for each item in dropdown
+		// if data array is an array of objects then return item.property to represent item in dropdown
+		return item
+	}}
+  defaultButtonText={postType.value}
 
   buttonStyle={styles.dropdown1BtnStyle}
   dropdownStyle={styles.dropdown1DropdownStyle}
@@ -232,25 +307,30 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
 
 />
 <View style={styles.row}>
-        <UploadImage updateImages={updateImages}/>
+        <UploadImage updateImages={updateImages} defaultValue={imageURLs[0]} number={0}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage updateImages={updateImages}/>
+        <UploadImage updateImages={updateImages} defaultValue={imageURLs[1]} number={1}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage updateImages={updateImages}/>
+        <UploadImage updateImages={updateImages} defaultValue={imageURLs[2]} number={2}/>
         <View style={{paddingRight:'2.5%'}}></View>
         <View style={{height: '16%'}}></View>
-        <UploadImage updateImages={updateImages}/>
+        <UploadImage updateImages={updateImages} defaultValue={imageURLs[3]} number={3}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage updateImages={updateImages}/>
+        <UploadImage updateImages={updateImages} defaultValue={imageURLs[4]} number={4}/>
         <View style={{paddingRight:'2.5%'}}></View>
-        <UploadImage updateImages={updateImages}/>
+        <UploadImage updateImages={updateImages} defaultValue={imageURLs[5]} number={5}/>
         <View style={{paddingRight:'100%'}}></View>
         <View style={{paddingBottom: '2%'}}></View>
         <TouchableOpacity style={styles.button} onPress={onEditPostPressed}>
-          <Text style={{color: 'white', fontWeight: 'bold', fontSize: 18, fontFamily: 'Arial'}}>Add Post</Text>
+        <Text style={{color: 'white', fontWeight: 'bold', fontSize: normalize(16), fontFamily: 'Arial'}}>Confirm Changes</Text>
+        </TouchableOpacity>
+        <View style={{paddingRight:'100%'}}></View>
+        <View style={{paddingBottom: '2%'}}></View>
+        <TouchableOpacity style={styles.buttonDel} onPress={onDeletePostPressed}>
+          <Text style={{color: 'white', fontWeight: 'bold', fontSize: normalize(16), fontFamily: 'Arial'}}>Delete Post</Text>
         </TouchableOpacity>
       </View>
-      <View style={{paddingTop:'4%'}}></View>
+      <View style={{paddingTop:'12%'}}></View>
   </View>
   </ScrollView>
   );
@@ -279,7 +359,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     paddingLeft: '1%',
     alignSelf: 'flex-start',
-    fontSize: 23,
+    fontSize: normalize(19),
     fontWeight: 'bold',
     color: '#0F4D92',
   },
@@ -301,20 +381,12 @@ const styles = StyleSheet.create({
     marginRight: '20%',
     fontWeight: "bold",
     color: "#0f4d92",
-    fontSize: 30,
+    fontSize: normalize(23),
     textAlign: 'center'
-  },
-  subHeaderText: {
-    marginTop: 10,
-    marginLeft: 20,
-    marginRight: 20,
-    color: "#000",
-    fontWeight: "300",
-    fontSize: 15
   },
   dropdown1DropdownStyle: {backgroundColor: '#f6f6f6', borderColor: 'gray'},
   dropdown1RowStyle: {backgroundColor: '#f6f6f6', borderBottomColor: 'gray', borderRadius: 10},
-  dropdown1RowTxtStyle: {color: 'black', textAlign: 'left', fontFamily: 'Arial', fontSize: 16},
+  dropdown1RowTxtStyle: {color: 'black', textAlign: 'left', fontFamily: 'Arial', fontSize: normalize(13)},
   dropdown1BtnStyle: {
     backgroundColor: '#f6f6f6',
     borderRadius: 5,
@@ -323,7 +395,7 @@ const styles = StyleSheet.create({
     width: '80%',
     height: '5%',
   },
-  dropdown1BtnTxtStyle: {color: 'black', textAlign: 'left', fontFamily: 'Arial', fontSize: 16},
+  dropdown1BtnTxtStyle: {color: 'black', textAlign: 'left', fontFamily: 'Arial', fontSize: normalize(13)},
   modalView: {
     margin: 20,
     backgroundColor: "white",
@@ -343,5 +415,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 22
+  },
+  buttonDel: {
+    backgroundColor: '#cc0000', justifyContent: 'center', width: '80%', alignItems: 'center', paddingTop: '4%',
+    paddingBottom: '4%', borderRadius: 5
   },
 });

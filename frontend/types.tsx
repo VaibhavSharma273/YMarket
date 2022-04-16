@@ -37,6 +37,7 @@ export type AuthTabParamList = {
   ConfirmationScreen: undefined;
   ResetPasswordScreen:undefined;
   LoginScreen: undefined;
+  SplashScreen: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<

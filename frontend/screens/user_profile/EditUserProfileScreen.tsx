@@ -20,6 +20,7 @@ export default function EditUserProfileScreen({ route, navigation }: { route: an
     const myContext = useContext(AppContext);
     
     const updateImage = (newImage: any, add: boolean) => {
+      console.log(newImage);
         if (add) {
             setImage(newImage);
         } else {
@@ -43,7 +44,9 @@ export default function EditUserProfileScreen({ route, navigation }: { route: an
         formData.append('first_name', firstName.value);
         formData.append('last_name', lastName.value);
         formData.append('biography', bio);
+        console.log(image, typeof(image));
         if (image === "") {
+          console.log("A");
             formData.append('avatar_url', image);
         } else if (image) {
           formData.append('files', JSON.parse(JSON.stringify({
@@ -51,6 +54,7 @@ export default function EditUserProfileScreen({ route, navigation }: { route: an
                 name: 'image1.jpg',
                 type: 'image/jpg'
             })));
+            console.log("B");
         }
 
         const response = await fetch(`${hostURL}api/users/profile/${myContext.user}/`, 
@@ -104,7 +108,7 @@ export default function EditUserProfileScreen({ route, navigation }: { route: an
                 onChangeText={(text: string) => setBio(text)}
             />
             <Text style={styles.title}>Avatar</Text>
-            <UploadImage updateImages={updateImage} initialValue={image}/>
+            <UploadImage updateImages={updateImage} defaultValue={image}/>
         </View>
 
         <Button title="Update profile" onPress={onEditConfirmPressed} />

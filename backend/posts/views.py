@@ -20,9 +20,20 @@ class PostList(mixins.ListModelMixin,
 
     def get_queryset(self): 
         queryset = Post.objects.all() 
+
+        # check if the request wants to filter on title, content, and category for a particular word
         query = self.request.GET.get("search") 
         if query is not None: 
-            queryset = queryset.filter(Q(title__icontains=query) | Q(content__icontains=query)).distinct() 
+            queryset = queryset.filter(Q(title__icontains=query) | Q(content__icontains=query) | Q(category__icontains=query)).distinct()
+
+        # check if the request wants to filter on buy or sell
+        query = self.request.GET.get("buy")
+        if query is not None: 
+            if query == 'false':
+                queryset = queryset.filter(is_buy=False).distinct()
+            else: 
+                queryset = queryset.filter(is_buy=True).distinct()
+
         return queryset 
 
     def perform_create(self, serializer):
