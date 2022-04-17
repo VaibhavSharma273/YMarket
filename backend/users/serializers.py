@@ -3,6 +3,7 @@ from rest_framework import serializers
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from posts.models import Post
 from posts.serializers import ImageURLSerializer
+from drf_queryfields import QueryFieldsMixin
 from messages.models import MessageThread
 from messages.serializers import MessageThreadSerializer
 
@@ -23,7 +24,7 @@ class ProfileMessageThreadSerializer(serializers.ModelSerializer):
         model = MessageThread
         fields = ['id', 'sender', 'receiver', 'threads']
 
-class UserProfileSerializer(serializers.ModelSerializer):
+class UserProfileSerializer(QueryFieldsMixin, serializers.ModelSerializer):
     posts = ProfilePostSerializer(many=True, read_only=True)
     sent_convos = ProfileMessageThreadSerializer(many=True, read_only=True)
     received_convos = ProfileMessageThreadSerializer(many=True, read_only=True)

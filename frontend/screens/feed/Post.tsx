@@ -22,7 +22,7 @@ const Post = (props: { post: any, navigation: any; is_edit: any;}) => {
     <View style={styles.listItemShadow}>
       {props.is_edit === false ? <TouchableOpacity style={styles.listItem} onPress={() => navigation.push('ViewPost', 
         {
-          postId: post.id
+          post: post
         })}>
         {renderPostContent()}
         <View style={styles.listItemFooter}>
@@ -31,7 +31,8 @@ const Post = (props: { post: any, navigation: any; is_edit: any;}) => {
         </View>
       </TouchableOpacity> : <TouchableOpacity style={styles.listItem} onPress={() => navigation.push('EditPostScreen', 
         {
-          postId: post.id
+          postId: post.id,
+          post: post
         })}>
         {renderPostContent()}
         <View style={styles.listItemFooter}>

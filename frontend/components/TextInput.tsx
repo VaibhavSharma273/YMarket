@@ -2,6 +2,7 @@ import React from 'react'
 import { View, StyleSheet, Text } from 'react-native'
 import { TextInput as Input } from 'react-native-paper'
 import { theme } from '../assets/theme'
+import { normalize } from '../components/TextNormalize';
 
 export default function TextInput({ errorText, description, ...props }: any) {
   return (
@@ -31,12 +32,12 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.surface,
   },
   description: {
-    fontSize: 13,
+    fontSize: normalize(13),
     color: 'gray',
     paddingTop: 0,
   },
   error: {
-    fontSize: 13,
+    fontSize: normalize(13),
     color: theme.colors.error,
     paddingTop: 8,
   },
