@@ -211,7 +211,7 @@ function BottomTabNavigator() {
         name="Profile"
         component={ProfileNavigator}
         options={({ navigation }: RootTabScreenProps<'Profile'>) => ({
-          title: 'UserProfile',
+          title: 'Profile',
           tabBarIcon: ({ color }) => <TabBarIcon name="user-circle" color={color} />,
         })}
       />

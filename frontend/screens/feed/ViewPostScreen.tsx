@@ -56,7 +56,7 @@ export default function ViewPost({ route, navigation }: { route: any; navigation
       </View>
       <View style={{ flex: 1, paddingVertical: 20, justifyContent: "space-between" }}>
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('UserProfile', { id: post.author.id})}>
-            <Text style={[ text_styles.medium, { fontWeight: "600", color: "#fff" } ]}>View Seller Profile</Text>
+            <Text style={[ text_styles.medium, { fontWeight: "600", color: "#fff" } ]}> {post.is_buy == false ? "View Seller Profile" : "View Buyer Profile"}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
             <Text style={[ text_styles.medium, { fontWeight: "600", color: "#fff" } ]}> {post.is_buy == false ? "Contact Seller" : "Contact Buyer"} </Text>
