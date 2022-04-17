@@ -23,8 +23,9 @@ class MessageThreadList(mixins.ListModelMixin,
         receiver = User.objects.get(id=data['receiver'])
         return serializer.save(sender=self.request.user)
 
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
+    # Users should not be able to access all threads
+    # def get(self, request, *args, **kwargs):
+    #     return self.list(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
         data = self.request.data
