@@ -1,7 +1,7 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 import renderer from 'react-test-renderer';
-import StartScreen from '../auth/StartScreen'
+import StartScreen from '../StartScreen'
 import { TouchableOpacity } from 'react-native';
 
 describe('Start Screen component', () => {
@@ -21,10 +21,10 @@ describe('Start Screen component', () => {
 
 describe('Test Touchable Opacity Component', () => {
     it('Test click event', () => {
-        const mockClick = jest.fn()
-        const touchableOpacity = shallow((<TouchableOpacity onPress={mockClick}>Login</TouchableOpacity>));
+        const onPress = jest.fn()
+        const touchableOpacity = shallow((<TouchableOpacity onPress={onPress}>Login</TouchableOpacity>));
         touchableOpacity.find('TouchableOpacity').first().props().onPress();
-        expect(mockClick).toHaveBeenCalledTimes(1);
+        expect(onPress).toHaveBeenCalledTimes(1);
     });
 })
 

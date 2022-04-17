@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
-import ResetPasswordScreen from '../auth/ResetPasswordScreen'
-import { createTestProps } from '../../jest.setup'
+import ResetPasswordScreen from '../ResetPasswordScreen'
+import { createTestProps } from '../../../jest.setup'
 import renderer from 'react-test-renderer';
 
 describe('Reset Password Screen component', () => {
