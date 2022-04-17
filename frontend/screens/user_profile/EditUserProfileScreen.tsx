@@ -29,10 +29,8 @@ export default function EditUserProfileScreen({ route, navigation }: { route: an
     }
 
     const onEditConfirmPressed = async () => {
-        // const firstNameError = nameValidator(firstName.value, 'First name');
-        // const lastNameError = nameValidator(lastName.value, 'Last name');
-        const firstNameError = nameValidator(firstName.value);
-        const lastNameError = nameValidator(lastName.value);
+        const firstNameError = nameValidator(firstName.value, 'First name');
+        const lastNameError = nameValidator(lastName.value, 'Last name');
 
         if (firstNameError || lastNameError)
         {
