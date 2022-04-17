@@ -51,12 +51,12 @@ export default function ViewPost({ route, navigation }: { route: any; navigation
         <Text style={[ text_styles.medium ]}>{post.content}</Text>
       </View>
       <View style={{flexDirection: "row", marginTop: 5}}>
-        <Text style={[styles.postDate, {fontWeight:"700"}]}>Posted On: </Text>
+        <Text style={[styles.postDateText, {fontWeight:"700"}]}>Posted On: </Text>
         <Text style={styles.postDate}>{date_posted.format("M")}/{date_posted.format('D')}/{date_posted.format('YYYY')}</Text>
       </View>
       <View style={{ flex: 1, paddingVertical: 20, justifyContent: "space-between" }}>
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('UserProfile', { id: post.author.id})}>
-            <Text style={[ text_styles.medium, { fontWeight: "600", color: "#fff" } ]}>View seller profile</Text>
+            <Text style={[ text_styles.medium, { fontWeight: "600", color: "#fff" } ]}>View Seller Profile</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
             <Text style={[ text_styles.medium, { fontWeight: "600", color: "#fff" } ]}> {post.is_buy == false ? "Contact Seller" : "Contact Buyer"} </Text>
@@ -140,6 +140,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     elevation: 3,
     backgroundColor: 'black',
+    width: '60%'
   },
   buttonOpen: {
     backgroundColor: "#F194FF",
@@ -166,11 +167,16 @@ const styles = StyleSheet.create({
     fontSize: normalize(17),
     textAlign: "left",
   },
+  postDateText: {
+    flexDirection: 'row',
+    fontSize: normalize(17),
+    textAlign: "left",
+    paddingLeft: 20,
+  },
   postDate: {
     flexDirection: 'row',
     fontSize: normalize(17),
     textAlign: "left",
-    paddingHorizontal: 20,
   },
   postItemContent: {
     paddingHorizontal: 20,

@@ -117,6 +117,8 @@ function PostNavigator() {
       <PostStack.Screen
       name="UserProfile"
       component={UserProfileScreen}
+      options={{
+        title:'',}}
       />
     </PostStack.Navigator>
   );

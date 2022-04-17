@@ -62,7 +62,8 @@ export default function UserProfileScreen({ route, navigation } : any) {
   return (
       <View style={styles.container}>
         <View style={styles.info_container}>
-          <View style={{marginVertical: 20, height: 1, width: '80%'}}/>
+          {userId === myContext.user ? <View style={{marginVertical: 20, height: 1, width: '80%'}}/> 
+          : null}
             <View style={{flexDirection: 'row'}}>
               <ProfilePhoto src={user.avatar}/>
               <View style={{flexDirection: 'column', width: '60%', paddingHorizontal: '4%', justifyContent: 'center'}}>
