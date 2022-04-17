@@ -51,6 +51,7 @@ const linking: LinkingOptions<RootStackParamList> = {
           Profile: {
             screens: {
               UserProfileScreen: 'userProfile',
+              // EditUserProfileScreen: 'editUserProfile',
             },
           },
         },

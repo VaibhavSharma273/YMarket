@@ -65,12 +65,28 @@ export default function UserProfileScreen({ route, navigation } : any) {
           <View style={{marginVertical: 20, height: 1, width: '80%'}}/>
             <View style={{flexDirection: 'row'}}>
               <ProfilePhoto src={user.avatar}/>
-              <View style={{flexDirection: 'column', width: '60%', paddingHorizontal: '4%'}}>
-                <Text style={styles.title}>{String(user.firstName) + ' ' + String(user.lastName)}</Text>
-                <View style={{marginVertical: 3, height: 1, width: '80%'}}/> 
-                <Text style={styles.contact}>{user.email}</Text>
-                <View style={{marginVertical: 3, height: 1, width: '80%'}}/> 
-                <Text style={styles.bio}>{user.bio ? user.bio : ""}</Text>
+              <View style={{flexDirection: 'column', width: '60%', paddingHorizontal: '4%', justifyContent: 'center'}}>
+                <Text numberOfLines={1}
+                      adjustsFontSizeToFit
+                      style={styles.title}>
+                        {String(user.firstName) + ' ' + String(user.lastName)}
+                </Text>
+                <Text numberOfLines={1}
+                      adjustsFontSizeToFit
+                      style={styles.contact}>{user.email}
+                </Text>
+                <Text numberOfLines={2}
+                    adjustsFontSizeToFit
+                    style={styles.bio}>
+                      {user.bio ? 
+                        <>
+                          {user.bio.length < 42 ?
+                            user.bio :
+                            `${user.bio.substring(0, 42)}...`
+                          }
+                        </> : ""}
+              </Text>
+                <View style={{marginVertical: 6, height: 1, width: '80%'}}/> 
               </View>
             </View>
           </View>
@@ -78,7 +94,9 @@ export default function UserProfileScreen({ route, navigation } : any) {
           { userId === myContext.user ? <View style={styles.bottom_container}>
             <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate("EditUserProfile", { initialValues: user, updateCallback: updateUserProfile })}>
+            // onPress={() => navigation.push("EditUserProfileScreen", { initialValues: user, updateCallback: updateUserProfile })}
+            onPress={() => navigation.navigate("EditUserProfile", { initialValues: user, updateCallback: updateUserProfile })}
+            >
             <Text style={styles.logout}>Edit Profile</Text>
             </TouchableOpacity>
             <View style={{marginVertical: 4}}/>
@@ -97,10 +115,11 @@ export default function UserProfileScreen({ route, navigation } : any) {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
+      paddingTop: '5%',
       // justifyContent: 'center',
     },
     info_container: {
-      paddingLeft: '10%',
+      paddingLeft: '5%',
     },
     title: {
       fontSize: normalize(20),

@@ -128,8 +128,13 @@ const Profile = createNativeStackNavigator();
 function ProfileNavigator() {
   return (
     <Profile.Navigator>
-      <Profile.Screen name="UserProfile" component={UserProfileScreen} />
-      <Profile.Screen name="EditUserProfile" component={EditUserProfileScreen} />
+      <Profile.Screen name="UserProfile" component={UserProfileScreen} 
+                      options={{
+                        headerShown: false}}/>
+      <Profile.Screen name="EditUserProfile" component={EditUserProfileScreen}
+                      options ={{
+                        title: '',
+                      }}/>
     </Profile.Navigator>
   );
 }

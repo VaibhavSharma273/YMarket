@@ -38,7 +38,7 @@ export default function ViewPost({ route, navigation }: { route: any; navigation
       </View>
       <View style={{flexDirection: "row", marginTop: 5, paddingHorizontal: 20}}>
         <View style = {[styles.categoryContainer, {paddingHorizontal: 0, marginHorizontal: 0, backgroundColor: '#fff'}]}>
-          <Text style={[styles.postDate, {fontWeight:"700"}]}>Category: </Text>
+          <Text style={[styles.category, {fontWeight:"700"}]}>Category: </Text>
         </View>
         <View style = {styles.categoryContainer}>
           <Text style={styles.postCategoryText}>{post.is_buy == false ? "sell" : "buy"}</Text>
@@ -161,10 +161,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 20,
   },
+  category: {
+    flexDirection: 'row',
+    fontSize: normalize(17),
+    textAlign: "left",
+  },
   postDate: {
     flexDirection: 'row',
     fontSize: normalize(17),
     textAlign: "left",
+    paddingHorizontal: 20,
   },
   postItemContent: {
     paddingHorizontal: 20,

@@ -20,7 +20,7 @@ export default function EditUserProfileScreen({ route, navigation }: { route: an
     const myContext = useContext(AppContext);
     
     const updateImage = (newImage: any, add: boolean) => {
-      console.log(newImage);
+      // console.log(newImage);
         if (add) {
             setImage(newImage);
         } else {
@@ -29,8 +29,10 @@ export default function EditUserProfileScreen({ route, navigation }: { route: an
     }
 
     const onEditConfirmPressed = async () => {
-        const firstNameError = nameValidator(firstName.value, 'First name');
-        const lastNameError = nameValidator(lastName.value, 'Last name');
+        // const firstNameError = nameValidator(firstName.value, 'First name');
+        // const lastNameError = nameValidator(lastName.value, 'Last name');
+        const firstNameError = nameValidator(firstName.value);
+        const lastNameError = nameValidator(lastName.value);
 
         if (firstNameError || lastNameError)
         {
@@ -44,9 +46,9 @@ export default function EditUserProfileScreen({ route, navigation }: { route: an
         formData.append('first_name', firstName.value);
         formData.append('last_name', lastName.value);
         formData.append('biography', bio);
-        console.log(image, typeof(image));
+        // console.log(image, typeof(image));
         if (image === "") {
-          console.log("A");
+          // console.log("A");
             formData.append('avatar_url', image);
         } else if (image) {
           formData.append('files', JSON.parse(JSON.stringify({
@@ -54,7 +56,7 @@ export default function EditUserProfileScreen({ route, navigation }: { route: an
                 name: 'image1.jpg',
                 type: 'image/jpg'
             })));
-            console.log("B");
+            // console.log("B");
         }
 
         const response = await fetch(`${hostURL}api/users/profile/${myContext.user}/`, 
@@ -71,6 +73,7 @@ export default function EditUserProfileScreen({ route, navigation }: { route: an
           const avatar = result.avatar_url;
           updateCallback(firstName.value, lastName.value, avatar, bio);
           navigation.navigate('UserProfile');
+          // navigation.goBack();
         })
         .catch(error => console.log("error: ", error));
     }
@@ -83,7 +86,7 @@ export default function EditUserProfileScreen({ route, navigation }: { route: an
                     {"Edit profile"}
                 </Text>
             </View>
-            <View style={{paddingTop:'4%'}} />
+            <View style={{paddingTop:'2%'}} />
             <Text style={styles.title}>First Name</Text>
             <TextInput style={{height: 50}}
             returnKeyType="next"
@@ -92,6 +95,7 @@ export default function EditUserProfileScreen({ route, navigation }: { route: an
             error={!!firstName.error}
             errorText={firstName.error}
             />
+            <View style={{paddingTop:'2%'}} />
             <Text style={styles.title}>Last Name</Text>
             <TextInput style={{height: 50}}
             returnKeyType="next"
@@ -100,13 +104,16 @@ export default function EditUserProfileScreen({ route, navigation }: { route: an
             error={!!lastName.error}
             errorText={lastName.error}
             />
+            <View style={{paddingTop:'2%'}} />
             <Text style={styles.title}>Biography</Text>
             <TextInput style={{height:150}}
+                placeholder="42 Character Limit"
                 returnKeyType="next"
                 multiline={true}
                 value={bio}
                 onChangeText={(text: string) => setBio(text)}
             />
+            <View style={{paddingTop:'2%'}} />
             <Text style={styles.title}>Avatar</Text>
             <UploadImage updateImages={updateImage} defaultValue={image}/>
 
@@ -129,7 +136,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     width: '115%',
     paddingLeft: '6%',
-    paddingTop: '13%',
+    // paddingTop: '3%',
     paddingBottom: '8%',
     //backgroundColor: 'white',
   },
