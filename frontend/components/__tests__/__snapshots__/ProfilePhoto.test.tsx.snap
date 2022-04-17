@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<Image
+  source={1}
+  style={
+    Object {
+      "borderRadius": 200,
+      "height": 100,
+      "marginBottom": 20,
+      "width": 100,
+    }
+  }
+/>
+`;

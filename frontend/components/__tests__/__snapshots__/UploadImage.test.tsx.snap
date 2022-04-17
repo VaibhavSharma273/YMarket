@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "#f6f6f6",
+      "borderColor": "gray",
+      "borderRadius": 5,
+      "borderWidth": 1,
+      "elevation": 2,
+      "height": 140,
+      "marginBottom": 10,
+      "overflow": "hidden",
+      "position": "relative",
+      "width": "25%",
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "backgroundColor": "#0f4d92",
+        "bottom": 0,
+        "height": "28%",
+        "opacity": 1,
+        "position": "absolute",
+        "right": 0,
+        "width": "100%",
+      }
+    }
+  >
+    <View
+      accessible={true}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "alignItems": "center",
+          "display": "flex",
+          "justifyContent": "center",
+          "opacity": 1,
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "color": "#f6f6f6",
+            "fontSize": 24,
+            "paddingTop": 3,
+          }
+        }
+      >
+        Upload
+         Image
+      </Text>
+      <Text />
+    </View>
+  </View>
+</View>
+`;
