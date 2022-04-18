@@ -48,9 +48,10 @@ const linking: LinkingOptions<RootStackParamList> = {
               SearchCategoryScreen: 'searchCategory',
             },
           },
-          UserProfile: {
+          Profile: {
             screens: {
               UserProfileScreen: 'userProfile',
+              // EditUserProfileScreen: 'editUserProfile',
             },
           },
         },
