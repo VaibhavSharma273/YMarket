@@ -1,24 +1,22 @@
 import React from 'react';
-import {shallow, mount, ShallowWrapper} from 'enzyme';
-import LoginScreen from '../auth/LoginScreen'
-import { createTestProps, findByTestAttr } from '../../jest.setup'
-import {render, fireEvent} from '@testing-library/react-native';
+import { shallow, mount, ShallowWrapper } from 'enzyme';
+import LoginScreen from '../auth/LoginScreen';
+import { createTestProps, findByTestAttr } from '../../jest.setup';
+import { render, fireEvent } from '@testing-library/react-native';
 import renderer from 'react-test-renderer';
-
 
 describe('Login Screen component', () => {
     let component: ShallowWrapper;
     let props: any;
     beforeEach(() => {
         props = createTestProps({});
-        component = shallow(<LoginScreen {...props}/>);
-    })
+        component = shallow(<LoginScreen {...props} />);
+    });
     it(`renders correctly`, () => {
-        expect(component.length).toBe(1)
+        expect(component.length).toBe(1);
     });
     it('matches the snapshot', () => {
-        const tree = renderer.create(<LoginScreen {...props}/>)
-                             .toJSON();
+        const tree = renderer.create(<LoginScreen {...props} />).toJSON();
         expect(tree).toMatchSnapshot();
     });
 
@@ -33,7 +31,6 @@ describe('Login Screen component', () => {
     //     form.first()
     //         .simulate('changeText', "test@yale.edu");
     //     expect()
-
 
     //     // const { getByText } = render(<LoginScreen {...props}/>);
     //     // expect(getByText("Yale Email").textContent).toBe("")
