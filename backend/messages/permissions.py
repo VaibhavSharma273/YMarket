@@ -2,7 +2,7 @@ from rest_framework import permissions
 
 class IsInThread(permissions.BasePermission):
     """
-    Custom permission to only allow owners of an object to edit it.
+    Custom permission to only allow users within a conversation to access it
     """
 
     def has_object_permission(self, request, view, obj):
