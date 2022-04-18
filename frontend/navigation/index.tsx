@@ -17,8 +17,9 @@ import useColorScheme from '../hooks/useColorScheme';
 import AccessPostScreen from '../screens/create_post/AccessPostScreen';
 import CreatePostScreen from '../screens/create_post/CreatePostScreen';
 import EditPostScreen from '../screens/create_post/EditPostScreen';
-import SearchScreen from '../screens/SearchScreen';
-import UserProfileScreen from '../screens/UserProfileScreen';
+import UserProfileScreen from '../screens/user_profile/UserProfileScreen';
+import SearchScreen from '../screens/search/SearchScreen';
+import SearchCategoryScreen from '../screens/search/SearchCategoryScreen';
 import StartScreen from '../screens/auth/StartScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
 import ConfirmationScreen from '../screens/auth/ConfirmationScreen';
@@ -31,6 +32,7 @@ import { AuthTabParamList, RootStackParamList, RootTabParamList, RootTabScreenPr
 import LinkingConfiguration from './LinkingConfiguration';
 
 import AppContext from "../screens/AppContext";
+import EditUserProfileScreen from '../screens/user_profile/EditUserProfileScreen';
 
 const LightTheme = {
   dark: false,
@@ -112,7 +114,55 @@ function PostNavigator() {
         title: '',
         headerTintColor: '#0f4d92',
         }}/>
+      <PostStack.Screen
+      name="UserProfile"
+      component={UserProfileScreen}
+      options={{
+        title:'',}}
+      />
     </PostStack.Navigator>
+  );
+}
+
+// Profile stack
+const Profile = createNativeStackNavigator();
+
+function ProfileNavigator() {
+  return (
+    <Profile.Navigator>
+      <Profile.Screen name="UserProfile" component={UserProfileScreen} 
+                      options={{
+                        headerShown: false}}/>
+      <Profile.Screen name="EditUserProfile" component={EditUserProfileScreen}
+                      options ={{
+                        title: '',
+                      }}/>
+    </Profile.Navigator>
+  );
+}
+const SearchStack = createNativeStackNavigator();
+
+function SearchNavigator() {
+  return (
+    <SearchStack.Navigator 
+    initialRouteName="Search"
+    >
+      <SearchStack.Screen 
+      name="Search" component={SearchScreen} options ={{headerShown: false,}}/>
+      <SearchStack.Screen 
+      name="ViewPost" 
+      component={ViewPostScreen} 
+      options ={{
+        title: '',
+        headerTintColor: '#0f4d92',
+        }}/>
+      <SearchStack.Screen
+        name="SearchCategory"
+        component={SearchCategoryScreen}
+        options ={{headerTitle: "",
+                   headerTransparent: true}}
+      />
+    </SearchStack.Navigator>
   );
 }
 
@@ -139,21 +189,6 @@ function BottomTabNavigator() {
         options={({ navigation }: RootTabScreenProps<'PostStack'>) => ({
           title: 'Feed',
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
-          headerRight: () => (
-            <Pressable
-              //onPress={() => navigation.navigate('Modal')}
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-              })
-              }>
-              <FontAwesome
-                name="info-circle"
-                size={25}
-                color={Colors[colorScheme].text}
-                style={{ marginRight: 15 }}
-              />
-            </Pressable>
-          ),
         })}
       />
       <BottomTab.Screen
@@ -162,37 +197,23 @@ function BottomTabNavigator() {
         options={({ navigation }: RootTabScreenProps<'CreateStack'>) => ({
           title: 'Post',
           tabBarIcon: ({ color }) => <TabBarIcon name="plus" color={color} />,
-          headerRight: () => (
-            <Pressable
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-              })
-              }>
-              <FontAwesome
-                name="info-circle"
-                size={25}
-                color={Colors[colorScheme].text}
-                style={{ marginRight: 15 }}
-              />
-            </Pressable>
-          ),
         })}
       />
       <BottomTab.Screen
-        name="Search"
-        component={SearchScreen}
-        options={{
+        name="SearchStack"
+        component={SearchNavigator}
+        options={({ navigation }: RootTabScreenProps<'SearchStack'>) => ({
           title: 'Search',
           tabBarIcon: ({ color }) => <TabBarIcon name="search" color={color} />,
-        }}
+        })}
       />
       <BottomTab.Screen
-        name="UserProfile"
-        component={UserProfileScreen}
-        options={{
+        name="Profile"
+        component={ProfileNavigator}
+        options={({ navigation }: RootTabScreenProps<'Profile'>) => ({
           title: 'Profile',
           tabBarIcon: ({ color }) => <TabBarIcon name="user-circle" color={color} />,
-        }}
+        })}
       />
     </BottomTab.Navigator>
   );

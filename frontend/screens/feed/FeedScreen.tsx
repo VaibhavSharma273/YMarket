@@ -16,9 +16,7 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
     const path = 'api/post/'
     const response = await API.get(path)
                               .then((response) => {
-                                setTimeout(() => {
-                                  setPosts(response.data.reverse())
-                                }, 100);
+                                setPosts(response.data.reverse())
                               })
                               .catch((error) => {
                                 console.log(error)
@@ -32,6 +30,7 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
   }, [refreshing]);
 
   const renderItems = (item: { item: any;}) => {
+    // console.log(navigation)
     return <Post post={item.item} navigation = {navigation} is_edit = {false} />;
   };
   
