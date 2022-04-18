@@ -15,7 +15,7 @@ import { priceValidator } from '../../helpers/priceValidator';
 import axios from 'axios';
 
 import { getToken, setToken, deleteToken } from '../../storage/tokenStorage';
-import { baseURL, hostURL } from '../../constants/url';
+import { hostURL } from '../../constants/url';
 
 export default function CreatePostScreen({ navigation }: any) {
     const [title, setTitle] = useState({ value: '', error: '' });
