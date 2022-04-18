@@ -68,7 +68,7 @@ export default function ViewPost({ route, navigation }: { route: any; navigation
         <Text style={styles.postDate}>{date_posted.format("M")}/{date_posted.format('D')}/{date_posted.format('YYYY')}</Text>
       </View>
       <View style={{ flex: 1, paddingVertical: 20, justifyContent: "space-between" }}>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('UserProfile', { id: post.author.id})}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('UserProfile', { id: post.author.id, is_post: true})}>
             <Text style={[ text_styles.medium, { fontWeight: "600", color: "#fff" } ]}> {post.is_buy == false ? "View Seller Profile" : "View Buyer Profile"}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>

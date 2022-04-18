@@ -18,6 +18,7 @@ import { normalize } from '../../components/TextNormalize';
 export default function UserProfileScreen({ route, navigation } : any) {
   const params = route.params;
   const myContext = useContext(AppContext);
+  const is_post = params === undefined || params['is_post'] === undefined ? false : true;
   const userId = params === undefined || params['id'] === undefined ? myContext.user : params['id'];
   const [user, setUser] = useState({ firstName: '', lastName: '', email: '', avatar: '', bio: '' });
 
@@ -62,7 +63,7 @@ export default function UserProfileScreen({ route, navigation } : any) {
   return (
       <View style={styles.container}>
         <View style={styles.info_container}>
-          {userId === myContext.user ? <View style={{marginVertical: 20, height: 1, width: '80%'}}/> 
+          {!is_post ? <View style={{marginVertical: 20, height: 1, width: '80%'}}/> 
           : null}
             <View style={{flexDirection: 'row'}}>
               <ProfilePhoto src={user.avatar}/>
