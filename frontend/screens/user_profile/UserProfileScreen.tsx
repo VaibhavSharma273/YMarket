@@ -117,14 +117,12 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       paddingTop: '5%',
-      // justifyContent: 'center',
     },
     info_container: {
       paddingLeft: '5%',
     },
     title: {
       fontSize: normalize(20),
-      // paddingLeft: '5%',
       fontWeight: 'bold',
       color: '#00356b',
     },
@@ -135,12 +133,10 @@ const styles = StyleSheet.create({
     },
     contact: {
         fontSize: normalize(15),
-        // paddingLeft: '5%',
         color: "#5f712d",
       },
     bio: {
       fontSize: normalize(15),
-      // paddingLeft: '5%',
       color: "#4a4a4a",
     },
     separator: {
