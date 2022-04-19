@@ -4,6 +4,8 @@ from dj_rest_auth.registration.serializers import RegisterSerializer
 from posts.models import Post
 from posts.serializers import ImageURLSerializer
 from drf_queryfields import QueryFieldsMixin
+from messages.models import MessageThread
+from messages.serializers import MessageThreadSerializer
 
 UserModel = get_user_model()
 
@@ -15,15 +17,25 @@ class ProfilePostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ['id', 'title', 'content', 'date_posted','price', 'category', 'is_buy', 'postimages']
 
+class ProfileMessageThreadSerializer(serializers.ModelSerializer):
+    threads = MessageThreadSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = MessageThread
+        fields = ['id', 'sender', 'receiver', 'threads']
+
 class UserProfileSerializer(QueryFieldsMixin, serializers.ModelSerializer):
     posts = ProfilePostSerializer(many=True, read_only=True)
+    sent_convos = ProfileMessageThreadSerializer(many=True, read_only=True)
+    received_convos = ProfileMessageThreadSerializer(many=True, read_only=True)
+    
     # first name and last name are required on login but not for PUT requests
     first_name = serializers.CharField(max_length=150, required=False)
     last_name = serializers.CharField(max_length=150, required=False)
 
     class Meta:
         model = UserModel
-        fields = ['id', 'first_name', 'last_name', 'biography', 'avatar_url', 'email', 'posts']
+        fields = ['id', 'first_name', 'last_name', 'biography', 'avatar_url', 'email', 'posts', 'sent_convos', 'received_convos']
         read_only_fields = ['email']
 
 class CustomRegisterSerializer(RegisterSerializer):

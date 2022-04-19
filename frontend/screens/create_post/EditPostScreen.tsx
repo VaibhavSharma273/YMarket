@@ -15,7 +15,7 @@ import { priceValidator } from '../../helpers/priceValidator';
 import { normalize } from '../../components/TextNormalize';
 
 import { getToken, setToken, deleteToken } from '../../storage/tokenStorage';
-import { baseURL, hostURL } from '../../constants/url';
+import { hostURL } from '../../constants/url';
 
 export default function EditPostScreen({ route, navigation }: { route: any; navigation: any }) {
     const { postId, post } = route.params;
