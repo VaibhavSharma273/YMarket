@@ -12,8 +12,6 @@ class MessageSerializer(serializers.ModelSerializer):
 
 class MessageThreadSerializer(serializers.ModelSerializer):
     messages = MessageSerializer(many=True, read_only=True)
-    # sender = AuthorSerializer(read_only=True)
-    # receiver = AuthorSerializer(read_only=True)
 
     class Meta:
         model = MessageThread
