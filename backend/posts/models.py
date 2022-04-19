@@ -1,6 +1,8 @@
 import os
 from django.db import models
-from users.models import YmarketUser
+from django.conf import settings
+
+AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 def get_image_path(instance, filename):
     return os.path.join('data', 'posts', str(instance.id), filename)
@@ -10,7 +12,7 @@ class Post(models.Model):
     title = models.CharField(max_length=64, blank=False)
     content = models.TextField(blank=True)
     date_posted = models.DateTimeField(auto_now_add=True)
-    author = models.ForeignKey(YmarketUser, related_name="posts", on_delete=models.CASCADE)
+    author = models.ForeignKey(AUTH_USER_MODEL, related_name="posts", on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=9, decimal_places=2, blank=True, null=True)
     category = models.CharField(max_length=32, default='general')
     is_buy = models.BooleanField(null=False, blank=True) # True for buy, False for sell
