@@ -53,10 +53,11 @@ class MessageAPITestCase(APITestCase):
     def test_new_thread(self):
         self.authorize_user_1()
 
+        title = 'title'
         sender = self.user1.id
         receiver = self.user2.id
         body = 'message from user 1 to user 2'
-        data = {'sender': sender, 'receiver': receiver, 'body': body}
+        data = {'title': title, 'sender': sender, 'receiver': receiver, 'body': body}
 
         response = self.client.post(thread_path, data)
         assert response.status_code == status.HTTP_201_CREATED
@@ -87,10 +88,11 @@ class MessageAPITestCase(APITestCase):
     def test_add_new_message(self):
         self.authorize_user_1()
 
+        title = 'title'
         sender = self.user1.id
         receiver = self.user2.id
         body = 'message from user 1 to user 2'
-        data = {'sender': sender, 'receiver': receiver, 'body': body}
+        data = {'title': title, 'sender': sender, 'receiver': receiver, 'body': body}
         response = self.client.post(thread_path, data)
         assert response.status_code == status.HTTP_201_CREATED
 
@@ -105,28 +107,31 @@ class MessageAPITestCase(APITestCase):
     def test_add_message_nonexistent_thread(self):
         self.authorize_user_1()
 
+        title = 'title'
         sender = self.user1.id
         receiver = self.user2.id
         body = 'message from user 1 to user 2'
-        data = {'sender': sender, 'receiver': receiver, 'body': body}
+        data = {'title': title, 'sender': sender, 'receiver': receiver, 'body': body}
         response = self.client.post(thread_path, data)
         assert response.status_code == status.HTTP_201_CREATED
 
+        title = 'title'
         sender = self.user1.id
         receiver = self.user2.id
         body = 'second message from user 1 to user 2'
         thread = 39
-        data = {'sender': sender, 'receiver': receiver, 'body': body, 'thread': thread}
+        data = {'title': title, 'sender': sender, 'receiver': receiver, 'body': body, 'thread': thread}
         response = self.client.post(thread_path + str(thread) + '/', data)
         assert response.status_code == status.HTTP_404_NOT_FOUND
     
     def test_get_thread_by_user(self):
         self.authorize_user_1()
 
+        title = 'title'
         sender = self.user1.id
         receiver = self.user2.id
         body = 'message from user 1 to user 2'
-        data = {'sender': sender, 'receiver': receiver, 'body': body}
+        data = {'title': title, 'sender': sender, 'receiver': receiver, 'body': body}
         response = self.client.post(thread_path, data)
         assert response.status_code == status.HTTP_201_CREATED
 
