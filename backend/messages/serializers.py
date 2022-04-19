@@ -12,12 +12,10 @@ class MessageSerializer(serializers.ModelSerializer):
 
 class MessageThreadSerializer(serializers.ModelSerializer):
     messages = MessageSerializer(many=True, read_only=True)
-    sender = AuthorSerializer(read_only=True)
-    receiver = AuthorSerializer(read_only=True)
 
     class Meta:
         model = MessageThread
-        fields = ['sender', 'receiver', 'messages']
+        fields = ['title', 'sender', 'receiver', 'messages']
 
 class ProfileMessageThreadSerializer(serializers.ModelSerializer):
     sender = AuthorSerializer(read_only=True)
@@ -25,4 +23,4 @@ class ProfileMessageThreadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MessageThread
-        fields = ['id', 'sender', 'receiver']
+        fields = ['id', 'title', 'sender', 'receiver']
