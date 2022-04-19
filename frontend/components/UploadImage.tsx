@@ -6,7 +6,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { transparent } from 'react-native-paper/lib/typescript/styles/colors';
 import { normalize } from '../components/TextNormalize';
 
-export default function UploadImage({updateImages, defaultValue, number}: any) {
+export default function UploadImage({updateImages, defaultValue=null, number=1}: any) {
     const [image, setImage] = useState(defaultValue);
     const addImage = async () => {
         let _image = await ImagePicker.launchImageLibraryAsync({

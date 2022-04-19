@@ -10,6 +10,7 @@ import API from '../../api/ymarket_api';
 const windowWidth = Dimensions.get('window').width;
 
 import moment from "moment";
+import ProfilePhoto from '../../components/ProfilePhoto';
 
 export default function ViewPost({ route, navigation }: { route: any; navigation: any }) {
   // Identify post here:
@@ -37,7 +38,7 @@ export default function ViewPost({ route, navigation }: { route: any; navigation
       </View>
       <View style={{flexDirection: "row", marginTop: 5, paddingHorizontal: 20}}>
         <View style = {[styles.categoryContainer, {paddingHorizontal: 0, marginHorizontal: 0, backgroundColor: '#fff'}]}>
-          <Text style={[styles.postDate, {fontWeight:"700"}]}>Category: </Text>
+          <Text style={[styles.category, {fontWeight:"700"}]}>Category: </Text>
         </View>
         <View style = {styles.categoryContainer}>
           <Text style={styles.postCategoryText}>{post.is_buy == false ? "sell" : "buy"}</Text>
@@ -49,11 +50,14 @@ export default function ViewPost({ route, navigation }: { route: any; navigation
       <View style={styles.postItemContent}>
         <Text style={[ text_styles.medium ]}>{post.content}</Text>
       </View>
-      <View style={{flexDirection: "row", marginTop: 10, paddingHorizontal: 20}}>
-        <Text style={[styles.postDate, {fontWeight:"700"}]}>Posted On: </Text>
+      <View style={{flexDirection: "row", marginTop: 5}}>
+        <Text style={[styles.postDateText, {fontWeight:"700"}]}>Posted On: </Text>
         <Text style={styles.postDate}>{date_posted.format("M")}/{date_posted.format('D')}/{date_posted.format('YYYY')}</Text>
       </View>
-      <View style={{ flex: 1, paddingVertical: 20 }}>
+      <View style={{ flex: 1, paddingVertical: 20, justifyContent: "space-between" }}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('UserProfile', { id: post.author.id})}>
+            <Text style={[ text_styles.medium, { fontWeight: "600", color: "#fff" } ]}> {post.is_buy == false ? "View Seller Profile" : "View Buyer Profile"}</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
             <Text style={[ text_styles.medium, { fontWeight: "600", color: "#fff" } ]}> {post.is_buy == false ? "Contact Seller" : "Contact Buyer"} </Text>
           </TouchableOpacity>
@@ -132,9 +136,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 10,
     paddingHorizontal: 32,
+    margin: 2,
     borderRadius: 16,
     elevation: 3,
     backgroundColor: 'black',
+    width: '60%'
   },
   buttonOpen: {
     backgroundColor: "#F194FF",
@@ -155,6 +161,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 20,
     paddingTop: 20,
+  },
+  category: {
+    flexDirection: 'row',
+    fontSize: normalize(17),
+    textAlign: "left",
+  },
+  postDateText: {
+    flexDirection: 'row',
+    fontSize: normalize(17),
+    textAlign: "left",
+    paddingLeft: 20,
   },
   postDate: {
     flexDirection: 'row',

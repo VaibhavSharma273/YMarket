@@ -20,9 +20,7 @@ export default function AccessPostScreen({ navigation }: any) {
     const path = 'api/users/profile/' + myContext.user + '/?fields=posts'
     const response = await API.get(path)
                               .then((response) => {
-                                setTimeout(() => {
-                                  setUserPosts(response.data.posts.reverse())
-                                }, 100);
+                                setUserPosts(response.data.posts.reverse())
                               })
                               .catch((error) => {
                                 console.log(error)
