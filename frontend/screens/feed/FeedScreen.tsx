@@ -1,7 +1,7 @@
 import { RootTabScreenProps } from '../../types';
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { RefreshControl, Text, View, FlatList, StyleSheet } from 'react-native';
+import { RefreshControl, Text, View, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { normalize } from '../../components/TextNormalize';
 import LoadingIndicator from '../../components/LoadingIndicator';
 
@@ -11,6 +11,7 @@ import API from '../../api/ymarket_api';
 const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
   const [posts, setPosts] = useState<Array<any>>();
   const [refreshing, setRefreshing] = useState(false);
+  const [postType, setPostType] = useState(false);
 
   const getPosts = async () => {
     const path = 'api/post/'
@@ -44,7 +45,7 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
   if (!posts) {
     return <LoadingIndicator></LoadingIndicator>
   }
-
+  
   return (
     <View style = {styles.container}>
       <Text style = {styles.headerText}>
@@ -53,9 +54,17 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
       <Text style = {styles.subHeaderText}>
         {"Find the latest listings from all over campus here!"}
       </Text>
+      <View style = {styles.tabBar}>
+        <TouchableOpacity style={styles.tab} onPress = {() => setPostType(true)}>
+          <Text style={styles.tabText}>Buy Posts</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.tab} onPress = {() => setPostType(false)}>
+          <Text style={styles.tabText}>Sell Posts</Text>
+        </TouchableOpacity>
+      </View>
       <View style={styles.list}>
         <FlatList
-          data={posts}
+          data={posts.filter(post => post.is_buy === postType)}
           renderItem={memoizedPosts}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -91,6 +100,27 @@ const styles = StyleSheet.create({
     color: "#000",
     fontWeight: "300",
     fontSize: normalize(15)
+  },
+  tabBar: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  tab: {
+    flex: 1,
+    alignItems: "center",
+    marginTop: 10,
+  },
+  tabText: {
+    padding: 10,
+    paddingHorizontal: 15,
+    backgroundColor:'#d9d9d9',
+    shadowColor: "#000000",
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    shadowOffset: {
+      height: 1,
+      width: 1
+    }
   }
 });
 
