@@ -1,6 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import renderer from 'react-test-renderer';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import App from '../App.tsx';
 
