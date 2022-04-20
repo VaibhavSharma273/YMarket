@@ -1,7 +1,8 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import renderer from 'react-test-renderer';
-import App from '../App';
+// @ts-ignore
+import App from '../App.tsx';
 
 describe('App component', () => {
     it('renders correctly', () => {

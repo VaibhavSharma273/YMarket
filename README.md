@@ -17,10 +17,10 @@ To install the required dependencies, run the following in the root project dire
 pip install -r requirements.txt
 ```
 
-Then, in the root frontend directory, install yarn:
+Then, in the root frontend directory, install npm:
 
 ```bash
-yarn install
+npm install
 ```
 
 ## Running the App
@@ -52,7 +52,7 @@ Please look at the `dev` branch for the most updated version of the codebase.
 
 We are using `jest` to create tests. In each directory that contains files that need to be tested, there should be a `__tests__` folder, and possibly a `__snapshots__` sub-folder. So far, we have written a few basic unittests that check if a screen's contents have loaded and snapshot tests for the authorization screens.
 
-To run the tests, type `yarn test` into the terminal.
+To run the tests, type `npm test` into the terminal.
 
 ### Backend
 
