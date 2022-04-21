@@ -5,6 +5,7 @@ from posts.permissions import IsOwnerOrReadOnly, IsPostOwnerOrReadOnly
 from rest_framework import mixins
 from rest_framework import generics
 from rest_framework import status
+from rest_framework import filters
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
@@ -17,12 +18,11 @@ class PostList(mixins.ListModelMixin,
                   generics.GenericAPIView):
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['date_posted']
 
     def get_queryset(self): 
         queryset = Post.objects.all()
-
-        if self.request.GET.get("order") == "recent":
-            queryset = queryset.order_by("-date_posted")
 
         # check if the request wants to filter on title, content, and category for a particular word
         query = self.request.GET.get("search") 
@@ -59,6 +59,18 @@ class PostList(mixins.ListModelMixin,
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
+
+class UserPostList(mixins.ListModelMixin, generics.GenericAPIView):
+    serializer_class = PostSerializer
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['date_posted']
+
+    def get_queryset(self):
+        id = self.kwargs['pk']
+        return Post.objects.filter(author=id)
+    
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
 
 class PostDetail(mixins.RetrieveModelMixin,
                     mixins.UpdateModelMixin,

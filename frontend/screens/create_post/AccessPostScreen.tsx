@@ -12,15 +12,17 @@ import Post from '../feed/Post';
 import API from '../../api/ymarket_api';
 
 export default function AccessPostScreen({ navigation }: any) {
-    const [userPosts, setUserPosts] = useState<Array<any>>();
+    const [postOffset, setPostOffset] = useState<number>(0);
+    const [userPosts, setUserPosts] = useState<Array<any>>([]);
     const [refreshing, setRefreshing] = useState(false);
     const myContext = useContext(AppContext);
 
     const getUserPosts = async () => {
-        const path = 'api/users/profile/' + myContext.user + '/?fields=posts';
+        const path = `api/post/${myContext.user}/?limit=10&offset=${postOffset}&ordering=-date_posted`;
         const response = await API.get(path)
             .then((response) => {
-                setUserPosts(response.data.posts.reverse());
+                setUserPosts(postOffset === 0 ? response.data.results : [...userPosts, ...response.data.results]);
+                setPostOffset(postOffset + 10);
             })
             .catch((error) => {
                 console.log(error);
@@ -57,6 +59,12 @@ export default function AccessPostScreen({ navigation }: any) {
                     data={userPosts}
                     renderItem={memoizedPosts}
                     refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+                    onEndReached={() => {
+                        if (postOffset === userPosts.length) {
+                            getUserPosts();
+                        }
+                    }}
+                    onEndReachedThreshold={0.3} 
                 />
                 <TouchableOpacity style={styles.button} onPress={() => navigation.push('CreatePostScreen')}>
                     <View
