@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'dj_rest_auth.registration',
     'posts.apps.PostsConfig', 
     'users.apps.UsersConfig',
+    'messages.apps.MessagesConfig',
 ]
 
 MIDDLEWARE = [

@@ -9,51 +9,52 @@ import Post from './Post';
 import API from '../../api/ymarket_api';
 
 const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
-  const [posts, setPosts] = useState<Array<any>>();
+  const [buyPosts, setBuyPosts] = useState<Array<any>>([]);
+  const [sellPosts, setSellPosts] = useState<Array<any>>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [postType, setPostType] = useState(false);
 
-  const getPosts = async () => {
-    const path = 'api/post/'
-    const response = await API.get(path)
-                              .then((response) => {
-                                setPosts(response.data.reverse())
-                              })
-                              .catch((error) => {
-                                console.log(error)
-                              });
-  }
+    const getPosts = async () => {
+        const path = `api/post/?buy=${postType}`;
+        const response = await API.get(path)
+            .then((response) => {
+              if (postType) {
+                setBuyPosts(response.data.reverse());
+              } else {
+                setSellPosts(response.data.reverse());
+              }
+                
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
 
-  const onRefresh = useCallback(async () => {
-    setRefreshing(true);
-      getPosts()
-      setRefreshing(false) 
-  }, [refreshing]);
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        getPosts();
+        setRefreshing(false);
+    }, [refreshing]);
 
-  const renderItems = (item: { item: any;}) => {
-    // console.log(navigation)
-    return <Post post={item.item} navigation = {navigation} is_edit = {false} />;
-  };
-  
-  useEffect(() => {
-    getPosts()
-  }, []);
+    const renderItems = (item: { item: any }) => {
+        return <Post post={item.item} navigation={navigation} is_edit={false} />;
+    };
 
-  const memoizedPosts = useMemo(() => renderItems, [posts]);
+    useEffect(() => {
+        getPosts();
+    }, []);
+
+  const memoizedPosts = useMemo(() => renderItems, [buyPosts, sellPosts]);
 
   // return a loading indicator if posts have not been fetched yet
-  if (!posts) {
+  if (!buyPosts && !sellPosts) {
     return <LoadingIndicator></LoadingIndicator>
   }
   
   return (
     <View style = {styles.container}>
-      <Text style = {styles.headerText}>
-        {"Recent Listings"}
-      </Text>
-      <Text style = {styles.subHeaderText}>
-        {"Find the latest listings from all over campus here!"}
-      </Text>
+      <Text style = {styles.headerText}>{"Recent Listings"}</Text>
+      <Text style = {styles.subHeaderText}>{"Find the latest listings from all over campus here!"}</Text>
       <View style = {styles.tabBar}>
         <TouchableOpacity style={styles.tab} onPress = {() => setPostType(true)}>
           <Text style={styles.tabText}>Buy Posts</Text>
@@ -64,11 +65,9 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
       </View>
       <View style={styles.list}>
         <FlatList
-          data={posts.filter(post => post.is_buy === postType)}
+          data={postType ? buyPosts : sellPosts}
           renderItem={memoizedPosts}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         />
       </View>
     </View>
