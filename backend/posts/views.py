@@ -19,7 +19,10 @@ class PostList(mixins.ListModelMixin,
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self): 
-        queryset = Post.objects.all() 
+        queryset = Post.objects.all()
+
+        if self.request.GET.get("order") == "recent":
+            queryset = queryset.order_by("-date_posted")
 
         # check if the request wants to filter on title, content, and category for a particular word
         query = self.request.GET.get("search") 

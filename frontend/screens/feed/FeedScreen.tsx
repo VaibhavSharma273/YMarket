@@ -9,21 +9,26 @@ import Post from './Post';
 import API from '../../api/ymarket_api';
 
 const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
+  const [buyOffset, setBuyOffset] = useState<number>(0);
+  const [sellOffset, setSellOffset] = useState<number>(0);
   const [buyPosts, setBuyPosts] = useState<Array<any>>([]);
   const [sellPosts, setSellPosts] = useState<Array<any>>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [postType, setPostType] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-    const getPosts = async () => {
-        const path = `api/post/?buy=${postType}`;
-        const response = await API.get(path)
+    const getPosts = async (isBuy: boolean) => {
+        const path = `api/post/?buy=${isBuy}&limit=10&offset=${isBuy ? buyOffset : sellOffset}&order=recent`;
+        await API.get(path)
             .then((response) => {
-              if (postType) {
-                setBuyPosts(response.data.reverse());
+              if (isBuy) {
+                setBuyPosts(buyOffset === 0 ? response.data.results : [...buyPosts, ...response.data.results]);
+                setBuyOffset(buyOffset + 10);
               } else {
-                setSellPosts(response.data.reverse());
+                setSellPosts(sellOffset === 0 ? response.data.results : [...sellPosts, ...response.data.results]);
+                setSellOffset(sellOffset + 10);
               }
-                
+              setLoading(false);
             })
             .catch((error) => {
                 console.log(error);
@@ -32,7 +37,8 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
 
     const onRefresh = useCallback(async () => {
         setRefreshing(true);
-        getPosts();
+        postType ? setBuyOffset(0) : setSellOffset(0);
+        getPosts(postType);
         setRefreshing(false);
     }, [refreshing]);
 
@@ -41,13 +47,14 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
     };
 
     useEffect(() => {
-        getPosts();
+      getPosts(false);
+      getPosts(true);
     }, []);
 
   const memoizedPosts = useMemo(() => renderItems, [buyPosts, sellPosts]);
 
   // return a loading indicator if posts have not been fetched yet
-  if (!buyPosts && !sellPosts) {
+  if (loading) {
     return <LoadingIndicator></LoadingIndicator>
   }
   
@@ -66,8 +73,15 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
       <View style={styles.list}>
         <FlatList
           data={postType ? buyPosts : sellPosts}
+          keyExtractor={(item) => item.id.toString()}
           renderItem={memoizedPosts}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+          onEndReached={() => {
+            if (postType ? buyOffset === buyPosts.length : sellOffset === sellPosts.length) {
+              getPosts(postType);
+            }
+          }}
+          onEndReachedThreshold={0.3} 
         />
       </View>
     </View>
