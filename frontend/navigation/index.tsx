@@ -28,6 +28,8 @@ import LoginScreen from '../screens/auth/LoginScreen';
 import SplashScreen from '../screens/auth/SplashScreen';
 import FeedScreen from '../screens/feed/FeedScreen';
 import ViewPostScreen from '../screens/feed/ViewPostScreen';
+import ChannelsScreen from '../screens/messaging/ChannelsScreen';
+import ChatsScreen from '../screens/messaging/ChatsScreen';
 import { AuthTabParamList, RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 
@@ -167,6 +169,25 @@ function SearchNavigator() {
     );
 }
 
+const MessagingStack = createNativeStackNavigator();
+
+function MessagingNavigator() {
+    return (
+        <MessagingStack.Navigator initialRouteName="Channels">
+            <MessagingStack.Screen 
+                name="Channels" 
+                component={ChannelsScreen} 
+                options={{ headerShown: false }} 
+            />
+            <MessagingStack.Screen
+                name="Chats"
+                component={ChatsScreen}
+                options={{ headerTitle: '', headerTransparent: true }}
+            />
+        </MessagingStack.Navigator>
+    );
+}
+
 /**
  * A bottom tab navigator displays tab buttons on the bottom of the display to switch screens.
  * https://reactnavigation.org/docs/bottom-tab-navigator
@@ -197,7 +218,7 @@ function BottomTabNavigator() {
                 component={CreateNavigator}
                 options={({ navigation }: RootTabScreenProps<'CreateStack'>) => ({
                     title: 'Post',
-                    tabBarIcon: ({ color }) => <TabBarIcon name="plus" color={color} />,
+                    tabBarIcon: ({ color }) => <TabBarIcon name="tag" color={color} />,
                 })}
             />
             <BottomTab.Screen
@@ -206,6 +227,14 @@ function BottomTabNavigator() {
                 options={({ navigation }: RootTabScreenProps<'SearchStack'>) => ({
                     title: 'Search',
                     tabBarIcon: ({ color }) => <TabBarIcon name="search" color={color} />,
+                })}
+            />
+            <BottomTab.Screen
+                name="Messages"
+                component={MessagingNavigator}
+                options={({ navigation }: RootTabScreenProps<'Messages'>) => ({
+                    title: 'Messages',
+                    tabBarIcon: ({ color }) => <TabBarIcon name="comments-o" color={color} />,
                 })}
             />
             <BottomTab.Screen

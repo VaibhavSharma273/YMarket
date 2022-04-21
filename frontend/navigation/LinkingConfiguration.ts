@@ -48,6 +48,12 @@ const linking: LinkingOptions<RootStackParamList> = {
                             SearchCategoryScreen: 'searchCategory',
                         },
                     },
+                    Messages: {
+                        screens: {
+                            ChannelsScreen: 'channels',
+                            ChatssScreen: 'chats',
+                        },
+                    },
                     Profile: {
                         screens: {
                             UserProfileScreen: 'userProfile',
