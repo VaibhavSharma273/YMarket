@@ -5,7 +5,7 @@ from posts.models import Post
 from posts.serializers import ImageURLSerializer
 from drf_queryfields import QueryFieldsMixin
 from messages.models import MessageThread
-from messages.serializers import MessageThreadSerializer
+from messages.serializers import ProfileMessageThreadSerializer
 
 UserModel = get_user_model()
 
@@ -16,13 +16,6 @@ class ProfilePostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['id', 'title', 'content', 'date_posted','price', 'category', 'is_buy', 'postimages']
-
-class ProfileMessageThreadSerializer(serializers.ModelSerializer):
-    threads = MessageThreadSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = MessageThread
-        fields = ['id', 'sender', 'receiver', 'threads']
 
 class UserProfileSerializer(QueryFieldsMixin, serializers.ModelSerializer):
     posts = ProfilePostSerializer(many=True, read_only=True)
