@@ -8,6 +8,7 @@ from rest_framework import status
 from rest_framework import filters
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
 
 from django.db.models import Q 
 
@@ -16,28 +17,13 @@ from posts.imgur_helpers import upload_image_imgur
 class PostList(mixins.ListModelMixin,
                   mixins.CreateModelMixin,
                   generics.GenericAPIView):
+    queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated]
-    filter_backends = [filters.OrderingFilter]
+    filter_backends = [filters.OrderingFilter, filters.SearchFilter, DjangoFilterBackend]
     ordering_fields = ['date_posted']
-
-    def get_queryset(self): 
-        queryset = Post.objects.all()
-
-        # check if the request wants to filter on title, content, and category for a particular word
-        query = self.request.GET.get("search") 
-        if query is not None: 
-            queryset = queryset.filter(Q(title__icontains=query) | Q(content__icontains=query) | Q(category__icontains=query)).distinct()
-
-        # check if the request wants to filter on buy or sell
-        query = self.request.GET.get("buy")
-        if query is not None: 
-            if query == 'false':
-                queryset = queryset.filter(is_buy=False).distinct()
-            else: 
-                queryset = queryset.filter(is_buy=True).distinct()
-
-        return queryset 
+    filterset_fields = ['is_buy']
+    search_fields = ['title', 'content', 'category']
 
     def perform_create(self, serializer):
         return serializer.save(author=self.request.user)

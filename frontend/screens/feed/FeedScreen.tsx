@@ -18,7 +18,7 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
   const [loading, setLoading] = useState(true);
 
     const getPosts = async (isBuy: boolean) => {
-        const path = `api/post/?buy=${isBuy}&limit=10&offset=${isBuy ? buyOffset : sellOffset}&ordering=-date_posted`;
+        const path = `api/post/?is_buy=${isBuy}&limit=10&offset=${isBuy ? buyOffset : sellOffset}&ordering=-date_posted`;
         await API.get(path)
             .then((response) => {
               if (isBuy) {

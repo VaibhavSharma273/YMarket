@@ -18,7 +18,7 @@ class ProfilePostSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'content', 'date_posted','price', 'category', 'is_buy', 'postimages']
 
 class UserProfileSerializer(QueryFieldsMixin, serializers.ModelSerializer):
-    posts = ProfilePostSerializer(many=True, read_only=True)
+    # posts = ProfilePostSerializer(many=True, read_only=True)
     sent_convos = ProfileMessageThreadSerializer(many=True, read_only=True)
     received_convos = ProfileMessageThreadSerializer(many=True, read_only=True)
     
@@ -28,7 +28,7 @@ class UserProfileSerializer(QueryFieldsMixin, serializers.ModelSerializer):
 
     class Meta:
         model = UserModel
-        fields = ['id', 'first_name', 'last_name', 'biography', 'avatar_url', 'email', 'posts', 'sent_convos', 'received_convos']
+        fields = ['id', 'first_name', 'last_name', 'biography', 'avatar_url', 'email', 'sent_convos', 'received_convos']
         read_only_fields = ['email']
 
 class CustomRegisterSerializer(RegisterSerializer):
