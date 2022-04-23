@@ -63,11 +63,11 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
       <Text style = {styles.headerText}>{"Recent Listings"}</Text>
       <Text style = {styles.subHeaderText}>{"Find the latest listings from all over campus here!"}</Text>
       <View style = {styles.tabBar}>
-        <TouchableOpacity style={styles.tab} onPress = {() => setPostType(true)}>
-          <Text style={styles.tabText}>Buy Posts</Text>
+        <TouchableOpacity style={[styles.tabBtn, styles.buyBtn, postType === true && styles.tabActive]} onPress = {() => setPostType(true)}>
+          <Text style={[styles.tabLabel, postType === true&& styles.tabLabelActive]}>Buy Posts</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.tab} onPress = {() => setPostType(false)}>
-          <Text style={styles.tabText}>Sell Posts</Text>
+        <TouchableOpacity style={[styles.tabBtn, styles.sellBtn, postType === false && styles.tabActive]} onPress = {() => setPostType(false)}>
+          <Text style={[styles.tabLabel, postType === false && styles.tabLabelActive]}>Sell Posts</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.list}>
@@ -134,7 +134,73 @@ const styles = StyleSheet.create({
       height: 1,
       width: 1
     }
-  }
+  },
+  tabBtn: {
+    marginTop: 10,
+    backgroundColor: '#fff',
+    borderColor: '#000',
+    flex: 1,
+    fontSize: 16,
+    padding: 8
+  },
+  buyBtn: {
+    borderTopLeftRadius: 8,
+    borderBottomLeftRadius: 8,
+    marginRight: 0,
+    marginLeft: 20
+  },
+  sellBtn: {
+    borderTopRightRadius: 8,
+    borderBottomRightRadius: 8,
+    marginLeft: 0,
+    marginRight: 20
+  },
+  tabActive: {
+    backgroundColor: '#0f4d92',
+    borderColor: '#0f4d92',
+    borderRadius: 5,
+  },
+  tabLabel: {
+    color: 'black',
+    fontSize: normalize(15),
+    textAlign: 'center',
+    fontFamily: 'Arial'
+  },
+  tabLabelActive: {
+    color: 'white',
+    fontSize: normalize(15),
+    textAlign: 'center',
+    fontFamily: 'Arial'
+  },
 });
 
 export default Feed;
+
+
+// <TouchableOpacity style={[styles.searchActionBtn, styles.searchLeftActionBtn, selectedType === 0 && styles.searchActionBtnActive]} onPress={updateSelectedType(0)}>
+//           <Text style={[styles.searchActionLabel, selectedType === 0 && styles.searchActionLabelActive]}>Buyers</Text>
+//         </TouchableOpacity>
+
+// searchActionLabel: {
+//   color: 'black',
+//   fontSize: normalize(15),
+//   textAlign: 'center',
+//   fontFamily: 'Arial'
+// },
+// searchActionLabelActive: {
+//   color: 'white',
+//   fontSize: normalize(15),
+//   textAlign: 'center',
+//   fontFamily: 'Arial'
+// },
+
+// searchLeftActionBtn: {
+//   borderTopLeftRadius: 8,
+//   borderBottomLeftRadius: 8,
+//   marginRight: 0,
+// },
+// searchRightActionBtn: {
+//   borderTopRightRadius: 8,
+//   borderBottomRightRadius: 8,
+//   marginLeft: 0,
+// },
