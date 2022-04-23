@@ -17,6 +17,8 @@ import axios from 'axios';
 import { getToken, setToken, deleteToken } from '../../storage/tokenStorage';
 import { hostURL } from '../../constants/url';
 
+import LoadingIndicator from '../../components/LoadingIndicator';
+
 export default function CreatePostScreen({ navigation }: any) {
     const [title, setTitle] = useState({ value: '', error: '' });
     const [caption, setCaption] = useState({ value: '', error: '' });
@@ -24,6 +26,7 @@ export default function CreatePostScreen({ navigation }: any) {
     const [category, setCategory] = useState({ value: '' });
     const [postType, setPostType] = useState({ value: '' });
     const [images] = useState(['', '', '', '', '', '']);
+    const [loading, setLoading] = useState(false);
 
     const postTypes = ['Buy', 'Sell'];
     const categoryTypes = ['General', 'Clothing', 'Furniture', 'Books/Textbooks', 'Electronics', 'Other'];
@@ -41,6 +44,12 @@ export default function CreatePostScreen({ navigation }: any) {
                 cancelable: true,
             },
         );
+    };
+
+    const confirmPopup = async () => {
+      Alert.alert('Post Created! Refresh to see your new post.', '', [{ text: 'Done', onPress: () => navigation.goBack() }], {
+          cancelable: true,
+      });
     };
 
     const onCreatePostPressed = async () => {
@@ -83,64 +92,60 @@ export default function CreatePostScreen({ navigation }: any) {
         const category_val = category.value.toLowerCase();
         const post_type_val = postType.value;
 
-        const confirmPopup = async () => {
-            const createPost = async () => {
-                const path = hostURL + 'api/post/';
+        const createPost = async () => {
+          const path = hostURL + 'api/post/';
 
-                let is_buy = 'false';
+          let is_buy = 'false';
 
-                if (post_type_val.includes('Buy')) {
-                    is_buy = 'true';
-                }
+          if (post_type_val.includes('Buy')) {
+              is_buy = 'true';
+          }
 
-                const form_data = new FormData();
-                form_data.append('title', title_val);
-                form_data.append('content', caption_val);
-                form_data.append('price', price_val);
-                form_data.append('category', category_val);
-                form_data.append('is_buy', is_buy);
+          const form_data = new FormData();
+          form_data.append('title', title_val);
+          form_data.append('content', caption_val);
+          form_data.append('price', price_val);
+          form_data.append('category', category_val);
+          form_data.append('is_buy', is_buy);
 
-                for (let i = 0; i < 6; i++) {
-                    if (images[i] !== '') {
-                        const img = {
-                            uri: images[i],
-                            name: 'image.jpg',
-                            type: 'image/jpg',
-                        };
+          for (let i = 0; i < 6; i++) {
+              if (images[i] !== '') {
+                  const img = {
+                      uri: images[i],
+                      name: 'image.jpg',
+                      type: 'image/jpg',
+                  };
 
-                        form_data.append('files', JSON.parse(JSON.stringify(img)));
-                    }
-                }
+                  form_data.append('files', JSON.parse(JSON.stringify(img)));
+              }
+          }
 
-                const token = await getToken('access');
-                const response = await fetch(path, {
-                    method: 'POST',
-                    headers: {
-                        accept: 'application/json',
-                        'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryIn312MOjBWdkffIM',
-                        Authorization: 'Bearer ' + token,
-                    },
-                    body: form_data,
-                })
-                    .then((response) => {
-                        console.log('post create success!');
-                    })
-                    .catch((error) => {
-                        console.log(error.response);
-                    });
-            };
+          const token = await getToken('access');
+          const response = await fetch(path, {
+              method: 'POST',
+              headers: {
+                  accept: 'application/json',
+                  'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryIn312MOjBWdkffIM',
+                  Authorization: 'Bearer ' + token,
+              },
+              body: form_data,
+              })
+              .then((response) => {
+                  console.log('post create success!');
+              })
+              .catch((error) => {
+                  console.log(error.response);
+              });
 
-            createPost();
-
-            Alert.alert('Post Created!', '', [{ text: 'Done', onPress: () => navigation.goBack() }], {
-                cancelable: true,
-            });
+              setLoading(false)
+              await confirmPopup()
         };
 
-        confirmPopup();
+        setLoading(true);
+        createPost()
     };
 
-    return (
+    return loading ? <LoadingIndicator /> :(
         <ScrollView>
             <View style={styles.container}>
                 <View style={{ flexDirection: 'row' }}>

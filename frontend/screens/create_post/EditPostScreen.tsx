@@ -17,6 +17,8 @@ import { normalize } from '../../components/TextNormalize';
 import { getToken, setToken, deleteToken } from '../../storage/tokenStorage';
 import { hostURL } from '../../constants/url';
 
+import LoadingIndicator from '../../components/LoadingIndicator';
+
 export default function EditPostScreen({ route, navigation }: { route: any; navigation: any }) {
     const { postId, post } = route.params;
 
@@ -35,6 +37,7 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
         pType = 'Sell';
     }
     const [postType, setPostType] = useState({ value: pType });
+    const [loading, setLoading] = useState(false);
 
     const imageURLs = ['', '', '', '', '', ''];
     const postImageIDs = [-1, -1, -1, -1, -1, -1];
@@ -66,6 +69,12 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
                 cancelable: true,
             },
         );
+    };
+
+    const confirmPopup = async () => {
+      Alert.alert('Post Edited! Refresh to see your changes.', '', [{ text: 'Done', onPress: () => navigation.goBack() }], {
+          cancelable: true,
+      });
     };
 
     const onDeletePostPressed = async () => {
@@ -189,26 +198,23 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
                     Authorization: 'Bearer ' + token,
                 },
                 body: form_data,
-            })
+                })
                 .then((response) => {
                     console.log('post edit success!');
                 })
                 .catch((error) => {
                     console.log(error.response);
                 });
+
+                setLoading(false)
+                await confirmPopup()
         };
 
-        const confirmPopup = async () => {
-            editPost();
-            Alert.alert('Post Edited!', '', [{ text: 'Done', onPress: () => navigation.goBack() }], {
-                cancelable: true,
-            });
-        };
-
-        confirmPopup();
+        setLoading(true)
+        editPost()
     };
 
-    return (
+    return loading ? <LoadingIndicator /> : (
         <ScrollView>
             <View style={styles.container}>
                 <View style={{ flexDirection: 'row' }}>
