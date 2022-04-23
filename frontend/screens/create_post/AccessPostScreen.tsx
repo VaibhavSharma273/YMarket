@@ -31,6 +31,7 @@ export default function AccessPostScreen({ navigation }: any) {
 
     const onRefresh = useCallback(async () => {
         setRefreshing(true);
+        setPostOffset(0);
         getUserPosts();
         setRefreshing(false);
     }, [refreshing]);
