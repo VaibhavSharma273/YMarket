@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { SafeAreaView, StyleSheet, FlatList, RefreshControl } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { SafeAreaView, StyleSheet } from 'react-native';
 // import { SearchBar } from 'react-native-elements';
-import { Text, View } from '../../components/Themed';
 
 import API from '../../api/ymarket_api';
-import Post from '../feed/Post';
 import { RootTabScreenProps } from '../../types';
 
 import PostList from '../../components/PostList';

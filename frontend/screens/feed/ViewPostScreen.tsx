@@ -1,17 +1,15 @@
 import { Image, Text, View, StyleSheet, Dimensions, Pressable, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import mock from './data/mock';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { normalize, text_styles } from '../../components/TextNormalize';
-import API from '../../api/ymarket_api';
+import ProfilePhoto from '../../components/ProfilePhoto';
 
 import moment from 'moment';
 import { FlatListSlider } from 'react-native-flatlist-slider';
 import RenderImage from './renderImage';
 
 const windowWidth = Dimensions.get('window').width;
-import ProfilePhoto from '../../components/ProfilePhoto';
 
 export default function ViewPost({ route, navigation }: { route: any; navigation: any }) {
     // Identify post here:

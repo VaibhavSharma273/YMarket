@@ -1,19 +1,16 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { StyleSheet, SafeAreaView, StatusBar, Button } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import API from '../../api/ymarket_api';
-
-import { Text, View } from '../../components/Themed';
 import { RootTabScreenProps } from '../../types';
-import ProfilePhoto from '../../components/ProfilePhoto';
-
-import { getToken, setToken, deleteToken } from '../../storage/tokenStorage';
-import { TouchableOpacity } from 'react-native';
+import { deleteToken } from '../../storage/tokenStorage';
 import AppContext from '../AppContext';
+
 import UploadImage from '../../components/UploadImage';
 import LoadingIndicator from '../../components/LoadingIndicator';
-
 import { normalize } from '../../components/TextNormalize';
+import ProfilePhoto from '../../components/ProfilePhoto';
+import { Text, View } from '../../components/Themed';
 
 export default function UserProfileScreen({ route, navigation }: any) {
     const params = route.params;

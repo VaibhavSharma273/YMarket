@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -14,7 +14,7 @@ import { priceValidator } from '../../helpers/priceValidator';
 
 import { normalize } from '../../components/TextNormalize';
 
-import { getToken, setToken, deleteToken } from '../../storage/tokenStorage';
+import { getToken } from '../../storage/tokenStorage';
 import { hostURL } from '../../constants/url';
 
 import LoadingIndicator from '../../components/LoadingIndicator';
@@ -72,9 +72,14 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
     };
 
     const confirmPopup = async () => {
-      Alert.alert('Post Edited! Refresh to see your changes.', '', [{ text: 'Done', onPress: () => navigation.goBack() }], {
-          cancelable: true,
-      });
+        Alert.alert(
+            'Post Edited! Refresh to see your changes.',
+            '',
+            [{ text: 'Done', onPress: () => navigation.goBack() }],
+            {
+                cancelable: true,
+            },
+        );
     };
 
     const onDeletePostPressed = async () => {
@@ -198,7 +203,7 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
                     Authorization: 'Bearer ' + token,
                 },
                 body: form_data,
-                })
+            })
                 .then((response) => {
                     console.log('post edit success!');
                 })
@@ -206,15 +211,17 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
                     console.log(error.response);
                 });
 
-                setLoading(false)
-                await confirmPopup()
+            setLoading(false);
+            await confirmPopup();
         };
 
-        setLoading(true)
-        editPost()
+        setLoading(true);
+        editPost();
     };
 
-    return loading ? <LoadingIndicator /> : (
+    return loading ? (
+        <LoadingIndicator />
+    ) : (
         <ScrollView>
             <View style={styles.container}>
                 <View style={{ flexDirection: 'row' }}>
