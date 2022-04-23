@@ -40,8 +40,6 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
 
     const onRefresh = useCallback(async () => {
         setRefreshing(true);
-        console.log(postTypeRef.current);
-        console.log(postType);
         postTypeRef.current ? setBuyOffset(0) : setSellOffset(0);
         getPosts(postTypeRef.current);
         setRefreshing(false);
