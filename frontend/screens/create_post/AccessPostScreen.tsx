@@ -64,7 +64,7 @@ export default function AccessPostScreen({ navigation }: any) {
                             getUserPosts();
                         }
                     }}
-                    onEndReachedThreshold={0.3} 
+                    onEndReachedThreshold={0.3}
                 />
                 <TouchableOpacity style={styles.button} onPress={() => navigation.push('CreatePostScreen')}>
                     <View
