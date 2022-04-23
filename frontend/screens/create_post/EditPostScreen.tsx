@@ -73,7 +73,7 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
 
     const confirmPopup = async () => {
         Alert.alert(
-            'Post Edited! Refresh to see your changes.',
+            'Post edited! Refresh to see your changes.',
             '',
             [{ text: 'Done', onPress: () => navigation.goBack() }],
             {

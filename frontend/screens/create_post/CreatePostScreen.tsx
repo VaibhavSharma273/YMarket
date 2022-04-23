@@ -46,7 +46,7 @@ export default function CreatePostScreen({ navigation }: any) {
 
     const confirmPopup = async () => {
         Alert.alert(
-            'Post Created! Refresh to see your new post.',
+            'Post created! Refresh to see your new post.',
             '',
             [{ text: 'Done', onPress: () => navigation.goBack() }],
             {
