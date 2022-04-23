@@ -1,6 +1,6 @@
 import { RootTabScreenProps } from '../../types';
 
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { RefreshControl, Text, View, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { normalize } from '../../components/TextNormalize';
 import LoadingIndicator from '../../components/LoadingIndicator';
@@ -16,6 +16,7 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
     const [refreshing, setRefreshing] = useState(false);
     const [postType, setPostType] = useState(false);
     const [loading, setLoading] = useState(true);
+    const postTypeRef = useRef(false);
 
     const getPosts = async (isBuy: boolean) => {
         const path = `api/post/?is_buy=${isBuy}&limit=10&offset=${
@@ -39,8 +40,10 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
 
     const onRefresh = useCallback(async () => {
         setRefreshing(true);
-        postType ? setBuyOffset(0) : setSellOffset(0);
-        getPosts(postType);
+        console.log(postTypeRef.current);
+        console.log(postType);
+        postTypeRef.current ? setBuyOffset(0) : setSellOffset(0);
+        getPosts(postTypeRef.current);
         setRefreshing(false);
     }, [refreshing]);
 
@@ -67,13 +70,17 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
             <View style={styles.tabBar}>
                 <TouchableOpacity
                     style={[styles.tabBtn, styles.buyBtn, postType === true && styles.tabActive]}
-                    onPress={() => setPostType(true)}
+                    onPress={async () => {
+                        setPostType(true), (postTypeRef.current = true);
+                    }}
                 >
                     <Text style={[styles.tabLabel, postType === true && styles.tabLabelActive]}>Buy Posts</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={[styles.tabBtn, styles.sellBtn, postType === false && styles.tabActive]}
-                    onPress={() => setPostType(false)}
+                    onPress={() => {
+                        setPostType(false), (postTypeRef.current = false);
+                    }}
                 >
                     <Text style={[styles.tabLabel, postType === false && styles.tabLabelActive]}>Sell Posts</Text>
                 </TouchableOpacity>
