@@ -12,6 +12,8 @@ export default function ChatsScreen({ navigation, route }: any){
     const thread_id = route.params.thread
     const user = route.params.user
 
+    var message_id = 0;
+
     const messageList = mock[0].messages
     var messagesArray: never[] = []
 
@@ -33,7 +35,7 @@ export default function ChatsScreen({ navigation, route }: any){
     for (let i = 0; i < messageList.length; i++){
       messagesArray.unshift(
       {
-          _id: (messageList[i].sender == user) ? 1 : 2,
+          _id: message_id,
           text: messageList[i].body,
           createdAt: messageList[i].sent_at,
           user: {
@@ -41,6 +43,7 @@ export default function ChatsScreen({ navigation, route }: any){
             sent: true,
         },
       });
+      message_id = message_id + 1;
     }
   }
 

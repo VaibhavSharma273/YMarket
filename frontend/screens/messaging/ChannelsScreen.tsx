@@ -1,32 +1,65 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Platform, StyleSheet, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import { normalize } from '../../components/TextNormalize';
 import { Text, View } from '../../components/Themed';
 import mock from '../messaging/data/channels_mock';
 import { Header } from 'react-native-elements';
+import API from '../../api/ymarket_api';
+import AppContext from '../AppContext';
+import { getToken, setToken, deleteToken } from '../../storage/tokenStorage';
 
 export default function ChannelsScreen({ navigation }: any){
     // 0 is buyers, 1 is sellers
     const [selectedType, setSelectedType] = useState(0);
-
-
-    console.log(mock[0].id)
+    const myContext = useContext(AppContext);
+    const userId = myContext.user;
+    const [user, setUser] = useState({ received: [], sent: [],});
 
     const updateSelectedType = (selectedType: number) => () => {
         setSelectedType(() => selectedType);
       };
 
+    const getUserThreads = async () => {
+      const path = 'api/users/profile/' + userId;
+      const response = await API.get(path)
+          .then((response) => {
+              const received_convos = response.data.received_convos;
+              const sent_convos = response.data.sent_convos;
+              setUser({ received: received_convos, sent: sent_convos });
+
+              console.log(received_convos)
+          })
+          .catch((error) => {
+            console.log(error);
+        });
+    };
+
+    useEffect(() => {
+      getUserThreads();
+    }, []);
+
+
     const renderItems = ({ item }: { item:any }) => {
         return (
             <TouchableOpacity style={styles.listItem} onPress={() =>
-                navigation.push('Chats', { thread: item.id, user: mock[0].id })}>
+                navigation.push('Chats', { thread: item.id, user: userId })}>
                 {selectedType == 0 ? <Text style={styles.listItemLabel}>{item.sender.email}</Text> :  
                     <Text style={styles.listItemLabel}>{item.receiver.email}</Text>
                 }
             </TouchableOpacity>
         );
     }
+
+    const onLogoutPressed = async () => {
+      await API.post('/api/users/logout/').catch((error) => console.log(error.response.data));
+
+      await deleteToken('access');
+      await deleteToken('refresh');
+      myContext.logout();
+  };
+
+
     return (
         <View style={styles.container}>
             <Header
@@ -40,18 +73,23 @@ export default function ChannelsScreen({ navigation }: any){
 
       <View style={styles.searchActionContainer}>
         <TouchableOpacity style={[styles.searchActionBtn, styles.searchLeftActionBtn, selectedType === 0 && styles.searchActionBtnActive]} onPress={updateSelectedType(0)}>
-          <Text style={[styles.searchActionLabel, selectedType === 0 && styles.searchActionLabelActive]}>Buyers</Text>
+          <Text style={[styles.searchActionLabel, selectedType === 0 && styles.searchActionLabelActive]}>Received</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.searchActionBtn, styles.searchRightActionBtn, selectedType === 1 && styles.searchActionBtnActive]} onPress={updateSelectedType(1)}>
-          <Text style={[styles.searchActionLabel, selectedType === 1 && styles.searchActionLabelActive]}>Sellers</Text>
+          <Text style={[styles.searchActionLabel, selectedType === 1 && styles.searchActionLabelActive]}>Sent</Text>
         </TouchableOpacity>
       </View>
             <View style={styles.list}>
             <FlatList
-                data={(selectedType == 0 ? mock[0].received_convos : mock[0].sent_convos)}
+                data={(selectedType == 0 ? user.received : user.sent)}
                 renderItem={renderItems}
             />
             </View>
+
+            <TouchableOpacity  onPress={onLogoutPressed} test-id="login-button">
+                <Text>Test</Text>
+            </TouchableOpacity>
+
         </View>
       );
     };

@@ -1,5 +1,6 @@
 mock = [
     {
+        title: 'post title',
         sender: 'other',
         receiver: 'user',
         messages: [
