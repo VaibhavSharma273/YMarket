@@ -68,7 +68,7 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
             <View style={styles.tabBar}>
                 <TouchableOpacity
                     style={[styles.tabBtn, styles.buyBtn, postType === true && styles.tabActive]}
-                    onPress={async () => {
+                    onPress={() => {
                         setPostType(true), (postTypeRef.current = true);
                     }}
                 >
