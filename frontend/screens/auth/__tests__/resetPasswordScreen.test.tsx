@@ -9,14 +9,13 @@ describe('Reset Password Screen component', () => {
     let props: any;
     beforeEach(() => {
         props = createTestProps({});
-        component = shallow(<ResetPasswordScreen {...props}/>);
-    })
+        component = shallow(<ResetPasswordScreen {...props} />);
+    });
     it(`renders correctly`, () => {
-        expect(component.length).toBe(1)
+        expect(component.length).toBe(1);
     });
     it('matches the snapshot', () => {
-        const tree = renderer.create(<ResetPasswordScreen {...props}/>)
-                             .toJSON();
+        const tree = renderer.create(<ResetPasswordScreen {...props} />).toJSON();
         expect(tree).toMatchSnapshot();
     });
 });

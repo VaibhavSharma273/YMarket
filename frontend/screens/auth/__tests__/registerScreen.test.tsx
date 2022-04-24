@@ -9,15 +9,13 @@ describe('Register Screen component', () => {
     let props: any;
     beforeEach(() => {
         props = createTestProps({});
-        component = shallow(<RegisterScreen {...props}/>);
-    })
+        component = shallow(<RegisterScreen {...props} />);
+    });
     it(`renders correctly`, () => {
-        expect(component.length).toBe(1)
+        expect(component.length).toBe(1);
     });
     it('matches the snapshot', () => {
-        const tree = renderer.create(<RegisterScreen {...props}/>)
-                             .toJSON();
+        const tree = renderer.create(<RegisterScreen {...props} />).toJSON();
         expect(tree).toMatchSnapshot();
     });
 });
-
