@@ -4,7 +4,7 @@ import renderer from 'react-test-renderer';
 import BackButton from '../BackButton';
 
 it(`renders correctly`, () => {
-  const tree = renderer.create(<BackButton/>).toJSON();
+    const tree = renderer.create(<BackButton />).toJSON();
 
-  expect(tree).toMatchSnapshot();
+    expect(tree).toMatchSnapshot();
 });

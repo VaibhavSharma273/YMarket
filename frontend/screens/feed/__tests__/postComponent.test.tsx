@@ -6,11 +6,11 @@ import mock from '../data/mock';
 
 const createTestProps = () => ({
     navigation: {
-      navigate: jest.fn()
+        navigate: jest.fn(),
     },
     post: mock[0],
-    is_edit: false
-  });
+    is_edit: false,
+});
 
 describe('Post Display component', () => {
     let component: ShallowWrapper;

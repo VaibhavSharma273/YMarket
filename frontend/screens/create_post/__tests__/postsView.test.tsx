@@ -6,9 +6,9 @@ import PostsView from '../PostsView';
 it(`renders correctly`, () => {
     const props = {
         post: jest.fn(),
-        navigation: jest.fn()
-    }
-  const tree = renderer.create(<PostsView {...props}/>).toJSON();
+        navigation: jest.fn(),
+    };
+    const tree = renderer.create(<PostsView {...props} />).toJSON();
 
-  expect(tree).toMatchSnapshot();
+    expect(tree).toMatchSnapshot();
 });

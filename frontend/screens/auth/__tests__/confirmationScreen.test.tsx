@@ -1,7 +1,7 @@
 import React from 'react';
-import {shallow, ShallowWrapper} from 'enzyme';
-import ConfirmationScreen from '../ConfirmationScreen'
-import { createTestProps } from '../../../jest.setup'
+import { shallow, ShallowWrapper } from 'enzyme';
+import ConfirmationScreen from '../ConfirmationScreen';
+import { createTestProps } from '../../../jest.setup';
 import renderer from 'react-test-renderer';
 
 describe('Confirmation Screen component', () => {

@@ -6,9 +6,9 @@ import Category from '../Category';
 it(`renders correctly`, () => {
     const props = {
         category: jest.fn(),
-        navigation: jest.fn()
+        navigation: jest.fn(),
     };
-  const tree = renderer.create(<Category {...props} />).toJSON();
+    const tree = renderer.create(<Category {...props} />).toJSON();
 
-  expect(tree).toMatchSnapshot();
+    expect(tree).toMatchSnapshot();
 });

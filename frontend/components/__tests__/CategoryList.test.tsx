@@ -5,9 +5,9 @@ import CategoryList from '../CategoryList';
 
 it(`renders correctly`, () => {
     const props = {
-        navigation: jest.fn()
+        navigation: jest.fn(),
     };
-  const tree = renderer.create(<CategoryList {...props} />).toJSON();
+    const tree = renderer.create(<CategoryList {...props} />).toJSON();
 
-  expect(tree).toMatchSnapshot();
+    expect(tree).toMatchSnapshot();
 });

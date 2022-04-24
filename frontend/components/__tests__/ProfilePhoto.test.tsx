@@ -4,7 +4,7 @@ import renderer from 'react-test-renderer';
 import ProfilePhoto from '../ProfilePhoto';
 
 it(`renders correctly`, () => {
-  const tree = renderer.create(<ProfilePhoto/>).toJSON();
+    const tree = renderer.create(<ProfilePhoto />).toJSON();
 
-  expect(tree).toMatchSnapshot();
+    expect(tree).toMatchSnapshot();
 });

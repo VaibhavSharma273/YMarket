@@ -8,8 +8,8 @@ it(`renders correctly`, () => {
         updateImages: jest.fn(),
         defaultValue: jest.fn(),
         number: jest.fn(),
-    }
-  const tree = renderer.create(<UploadImage {...props}/>).toJSON();
+    };
+    const tree = renderer.create(<UploadImage {...props} />).toJSON();
 
-  expect(tree).toMatchSnapshot();
+    expect(tree).toMatchSnapshot();
 });
