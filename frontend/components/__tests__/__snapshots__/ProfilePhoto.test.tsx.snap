@@ -2,6 +2,7 @@
 
 exports[`renders correctly 1`] = `
 <Image
+  onError={[Function]}
   source={1}
   style={
     Object {

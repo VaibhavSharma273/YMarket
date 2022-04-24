@@ -73,14 +73,14 @@ exports[`Post Display component matches the snapshot 1`] = `
       }
     >
       <Text
-        numberOfLines={1}
+        numberOfLines={2}
         style={
           Array [
             Object {
               "fontSize": 37,
             },
             Object {
-              "flex": 1,
+              "flex": 4,
               "fontWeight": "600",
             },
           ]
