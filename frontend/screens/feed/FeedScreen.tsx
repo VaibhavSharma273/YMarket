@@ -90,8 +90,8 @@ const Feed = ({ navigation }: RootTabScreenProps<'PostStack'>) => {
                     renderItem={memoizedPosts}
                     refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                     onEndReached={() => {
-                        if (postType ? buyOffset === buyPosts.length : sellOffset === sellPosts.length) {
-                            getPosts(postType);
+                        if (postTypeRef.current ? buyOffset === buyPosts.length : sellOffset === sellPosts.length) {
+                            getPosts(postTypeRef.current);
                         }
                     }}
                     onEndReachedThreshold={0.3}
