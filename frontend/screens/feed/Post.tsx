@@ -34,7 +34,7 @@ const Post = (props: { post: any; navigation: any; is_edit: any }) => {
                             {post.title}
                         </Text>
                         {post.price == null ? null : (
-                            <Text numberOfLines={1} style={[text_styles.medium, { textAlign: 'right', flex: 1 }]}>
+                            <Text numberOfLines={1} style={[text_styles.medium, { textAlign: 'right', flex: 2 }]}>
                                 ${post.price}
                             </Text>
                         )}
@@ -56,7 +56,7 @@ const Post = (props: { post: any; navigation: any; is_edit: any }) => {
                             {post.title}
                         </Text>
                         {post.price == null ? null : (
-                            <Text numberOfLines={1} style={[text_styles.medium, { textAlign: 'right', flex: 1 }]}>
+                            <Text numberOfLines={1} style={[text_styles.medium, { textAlign: 'right', flex: 2 }]}>
                                 ${post.price}
                             </Text>
                         )}
