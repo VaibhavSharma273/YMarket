@@ -15,6 +15,7 @@ export default function AccessPostScreen({ navigation }: any) {
     const [postOffset, setPostOffset] = useState<number>(0);
     const [userPosts, setUserPosts] = useState<Array<any>>([]);
     const [refreshing, setRefreshing] = useState(false);
+    const [loading, setLoading] = useState(true);
     const myContext = useContext(AppContext);
 
     const getUserPosts = async () => {
@@ -23,6 +24,7 @@ export default function AccessPostScreen({ navigation }: any) {
             .then((response) => {
                 setUserPosts(postOffset === 0 ? response.data.results : [...userPosts, ...response.data.results]);
                 setPostOffset(postOffset + 10);
+                setLoading(false)
             })
             .catch((error) => {
                 console.log(error);
@@ -47,7 +49,7 @@ export default function AccessPostScreen({ navigation }: any) {
     const memoizedPosts = useMemo(() => renderItems, [userPosts]);
 
     // return a loading indicator if posts have not been fetched yet
-    if (!userPosts) {
+    if (loading) {
         return <LoadingIndicator></LoadingIndicator>;
     }
 
