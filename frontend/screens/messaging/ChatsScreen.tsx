@@ -8,6 +8,7 @@ import { normalize } from '../../components/TextNormalize';
 import API from '../../api/ymarket_api';
 import mock from '../messaging/data/mock';
 import { getToken, setToken, deleteToken } from '../../storage/tokenStorage';
+import { hostURL } from '../../constants/url';
 
 export default function ChatsScreen({ navigation, route }: any){
     const [messages, setMessages] = useState([]);
@@ -84,12 +85,12 @@ export default function ChatsScreen({ navigation, route }: any){
     setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
     const updateBackend = async () => {
       const token = await getToken('access');
-      const path = 'api/messages/thread/' + thread_id;
+      const path = hostURL + 'api/messages/thread/' + thread_id;
       const form_data = new FormData();
-      form_data.append('body', messages.text);
+      form_data.append('body', messages[0].text);
       form_data.append('sender', user);
       form_data.append('receiver', recipient);
-      console.log('PUT HERE')
+      console.log(recipient)
       const response = await fetch(path, {
           method: 'PUT',
           headers: {
@@ -103,7 +104,7 @@ export default function ChatsScreen({ navigation, route }: any){
               console.log('messages update success!');
           })
           .catch((error) => {
-              console.log('error.response');
+              console.log(error.response);
           });
     }
     updateBackend()
@@ -223,6 +224,6 @@ const styles = StyleSheet.create({
       textAlign: 'center',
       fontWeight: 'bold',
       color: '#0f4d92',
-      fontSize: normalize(24),
+      fontSize: normalize(20),
     },
 });
