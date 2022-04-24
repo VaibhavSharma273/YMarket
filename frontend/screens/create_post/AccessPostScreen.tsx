@@ -24,7 +24,7 @@ export default function AccessPostScreen({ navigation }: any) {
             .then((response) => {
                 setUserPosts(postOffset === 0 ? response.data.results : [...userPosts, ...response.data.results]);
                 setPostOffset(postOffset + 10);
-                setLoading(false)
+                setLoading(false);
             })
             .catch((error) => {
                 console.log(error);
