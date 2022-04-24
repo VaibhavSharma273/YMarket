@@ -1,13 +1,7 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-
-import API from '../../api/ymarket_api';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { Text, View } from '../../components/Themed';
-import { TouchableOpacity } from 'react-native';
-
-import { deleteToken } from '../../storage/tokenStorage';
-
 import Logo from '../../components/Logo';
 
 export default function StartScreen({ navigation }: any) {

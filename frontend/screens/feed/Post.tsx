@@ -31,15 +31,10 @@ const Post = (props: { post: any; navigation: any; is_edit: any }) => {
                     {renderPostContent()}
                     <View style={styles.listItemFooter}>
                         <Text numberOfLines={2} style={[text_styles.medium, { fontWeight: '600', flex: 4 }]}>
-                            {post.is_buy == false ? null : (
-                                <Text numberOfLines={2} style={[text_styles.medium, { color: '#0f4d92', flex: 4 }]}>
-                                    Buying:{' '}
-                                </Text>
-                            )}
                             {post.title}
                         </Text>
                         {post.price == null ? null : (
-                            <Text numberOfLines={1} style={[text_styles.medium, { textAlign: 'right', flex: 1 }]}>
+                            <Text numberOfLines={1} style={[text_styles.medium, { textAlign: 'right', flex: 2 }]}>
                                 ${post.price}
                             </Text>
                         )}
@@ -58,15 +53,10 @@ const Post = (props: { post: any; navigation: any; is_edit: any }) => {
                     {renderPostContent()}
                     <View style={styles.listItemFooter}>
                         <Text numberOfLines={2} style={[text_styles.medium, { fontWeight: '600', flex: 4 }]}>
-                            {post.is_buy == false ? null : (
-                                <Text numberOfLines={2} style={[text_styles.medium, { color: '#0f4d92', flex: 4 }]}>
-                                    Buying:{' '}
-                                </Text>
-                            )}
                             {post.title}
                         </Text>
                         {post.price == null ? null : (
-                            <Text numberOfLines={1} style={[text_styles.medium, { textAlign: 'right', flex: 1 }]}>
+                            <Text numberOfLines={1} style={[text_styles.medium, { textAlign: 'right', flex: 2 }]}>
                                 ${post.price}
                             </Text>
                         )}
