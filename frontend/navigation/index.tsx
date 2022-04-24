@@ -119,6 +119,14 @@ function PostNavigator() {
                     title: '',
                 }}
             />
+            <PostStack.Screen
+                name="Chats"
+                component={ChatsScreen}
+                options={{
+                    title: '',
+                    headerShown: false ,
+                }}
+            />
         </PostStack.Navigator>
     );
 }
@@ -143,6 +151,14 @@ function ProfileNavigator() {
                     title: '',
                 }}
             />
+            <PostStack.Screen
+                name="ViewPost"
+                component={ViewPostScreen}
+                options={{
+                    title: '',
+                    headerTintColor: '#0f4d92',
+                }}
+            />
         </Profile.Navigator>
     );
 }
@@ -163,7 +179,7 @@ function SearchNavigator() {
             <SearchStack.Screen
                 name="SearchCategory"
                 component={SearchCategoryScreen}
-                options={{ headerTitle: '', headerTransparent: true }}
+                options={{ headerTitle: '', headerTransparent: true, }}
             />
         </SearchStack.Navigator>
     );
@@ -182,7 +198,8 @@ function MessagingNavigator() {
             <MessagingStack.Screen
                 name="Chats"
                 component={ChatsScreen}
-                options={{ headerTitle: '', headerTransparent: true }}
+                options={{ title: '',
+                headerShown: false ,}}
             />
         </MessagingStack.Navigator>
     );

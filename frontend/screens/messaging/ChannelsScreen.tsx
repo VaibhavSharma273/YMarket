@@ -10,7 +10,7 @@ import AppContext from '../AppContext';
 import { getToken, setToken, deleteToken } from '../../storage/tokenStorage';
 
 export default function ChannelsScreen({ navigation }: any){
-    // 0 is buyers, 1 is sellers
+    // 0 is received, 1 is sent
     const [selectedType, setSelectedType] = useState(0);
     const myContext = useContext(AppContext);
     const userId = myContext.user;
@@ -21,18 +21,28 @@ export default function ChannelsScreen({ navigation }: any){
       };
 
     const getUserThreads = async () => {
-      const path = 'api/users/profile/' + userId;
-      const response = await API.get(path)
-          .then((response) => {
-              const received_convos = response.data.received_convos;
-              const sent_convos = response.data.sent_convos;
-              setUser({ received: received_convos, sent: sent_convos });
-
+      const rpath = 'api/messages/thread/received/' + userId;
+      var received_convos: never[] = []
+      var sent_convos: never[] = []
+      const rresponse = await API.get(rpath)
+          .then((rresponse) => {
+              received_convos = rresponse.data;
               console.log(received_convos)
           })
           .catch((error) => {
             console.log(error);
         });
+      const spath = 'api/messages/thread/sent/' + userId;
+      const sresponse = await API.get(spath)
+        .then((sresponse) => {
+            sent_convos = sresponse.data;
+            console.log(sent_convos)
+        })
+        .catch((error) => {
+          console.log(error);
+      });
+      setUser({received: received_convos, sent: sent_convos})
+
     };
 
     useEffect(() => {
@@ -43,10 +53,8 @@ export default function ChannelsScreen({ navigation }: any){
     const renderItems = ({ item }: { item:any }) => {
         return (
             <TouchableOpacity style={styles.listItem} onPress={() =>
-                navigation.push('Chats', { thread: item.id, user: userId })}>
-                {selectedType == 0 ? <Text style={styles.listItemLabel}>{item.sender.email}</Text> :  
-                    <Text style={styles.listItemLabel}>{item.receiver.email}</Text>
-                }
+                navigation.push('Chats', { title: (selectedType == 0 ? item.sender.email : item.receiver.email), thread: item.id, user: userId, })}>
+                  <Text style={styles.listItemLabel}>{item.title}</Text>
             </TouchableOpacity>
         );
     }

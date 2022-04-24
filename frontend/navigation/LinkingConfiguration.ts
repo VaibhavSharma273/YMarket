@@ -51,7 +51,7 @@ const linking: LinkingOptions<RootStackParamList> = {
                     Messages: {
                         screens: {
                             ChannelsScreen: 'channels',
-                            ChatssScreen: 'chats',
+                            ChatsScreen: 'chats',
                         },
                     },
                     Profile: {

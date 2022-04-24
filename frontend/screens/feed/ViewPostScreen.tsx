@@ -2,14 +2,15 @@ import { Image, Text, View, StyleSheet, Dimensions, Pressable, Modal } from 'rea
 import { Ionicons } from '@expo/vector-icons';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import mock from './data/mock';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { normalize, text_styles } from '../../components/TextNormalize';
 import API from '../../api/ymarket_api';
+import TextInput from '../../components/TextInput';
 
 import moment from 'moment';
 import { FlatListSlider } from 'react-native-flatlist-slider';
 import RenderImage from './renderImage';
-
+import AppContext from '../AppContext';
 const windowWidth = Dimensions.get('window').width;
 import ProfilePhoto from '../../components/ProfilePhoto';
 
@@ -19,6 +20,9 @@ export default function ViewPost({ route, navigation }: { route: any; navigation
 
     const [modalVisible, setModalVisible] = useState(false);
     const date_posted = moment(post.date_posted).utc();
+    const myContext = useContext(AppContext);
+    const userId = myContext.user;
+    const [firstMsg, setFirstMsg] = useState({ value: ''});
 
     // Render images for the post:
     const renderPostContent = () => {
@@ -37,6 +41,28 @@ export default function ViewPost({ route, navigation }: { route: any; navigation
             );
         }
     };
+
+    const onConfirmPressed = async() => {
+        const response = await API.post('api/messages/thread/', {
+           sender: userId,
+           receiver: post.author.id,
+           body: firstMsg.value,
+           title: post.title
+        })
+            .then(function (response) {
+                setModalVisible(!modalVisible)
+            })
+            .catch(function (error) {
+                if (error.response) {
+                    console.log(error.response);
+                } else {
+                    console.log(error.toJSON());
+                    console.log('Error', error.message);
+                }
+            });
+
+
+    }
 
     // Actual detailed view being returned
     return (
@@ -74,9 +100,9 @@ export default function ViewPost({ route, navigation }: { route: any; navigation
                         {date_posted.format('M')}/{date_posted.format('D')}/{date_posted.format('YYYY')}
                     </Text>
                 </View>
-                <View style={{ flex: 1, paddingVertical: 20, justifyContent: 'space-between' }}>
+                <View style={{ flex: 1, paddingVertical: 20, justifyContent: 'space-between', alignItems: 'center' }}>
                     <TouchableOpacity
-                        style={styles.button}
+                        style={styles.buttonOld}
                         onPress={() => navigation.navigate('UserProfile', { id: post.author.id, is_post: true })}
                     >
                         <Text style={[text_styles.medium, { fontWeight: '600', color: '#fff' }]}>
@@ -84,7 +110,7 @@ export default function ViewPost({ route, navigation }: { route: any; navigation
                             {post.is_buy == false ? 'View Seller Profile' : 'View Buyer Profile'}
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
+                    <TouchableOpacity style={styles.buttonOld} onPress={() => setModalVisible(true)}>
                         <Text style={[text_styles.medium, { fontWeight: '600', color: '#fff' }]}>
                             {' '}
                             {post.is_buy == false ? 'Contact Seller' : 'Contact Buyer'}{' '}
@@ -104,24 +130,36 @@ export default function ViewPost({ route, navigation }: { route: any; navigation
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <Text style={{ fontWeight: '600', fontSize: 20, alignSelf: 'center', paddingBottom: 10 }}>
-                            Contact Information
+                            Start a Conversation
                         </Text>
-                        <Text style={{ fontSize: 17, paddingBottom: 20 }}>
-                            Click the icon to copy the information to clipboard!
+                        <Text style={styles.paragraph}>
+                            Send your first message to {post.author.first_name} {post.author.last_name}!
                         </Text>
-                        <Text style={{ fontSize: 17, fontWeight: 'bold' }}>Email</Text>
-                        <View style={{ flexDirection: 'row', paddingBottom: 20, alignItems: 'center' }}>
-                            <Text style={{ fontSize: 17, flex: 1 }}>{post.author.email}</Text>
-                            <TouchableOpacity style={{ alignSelf: 'flex-end', flex: 1 }}>
-                                <Ionicons name="clipboard" size={17} color="black" />
-                            </TouchableOpacity>
-                        </View>
+                        <TextInput
+                            style={{ height: 150, width: 335 }}
+                            returnKeyType="next"
+                            multiline={true}
+                            value={firstMsg.value}
+                            onChangeText={(text: any) => setFirstMsg({ value: text })}
+                            description
+                            blurOnSubmit={true}
+                        />
+                        <View style={{flexDirection:'row', alignItems: 'center'}}>
                         <Pressable
                             style={[styles.button, styles.button]}
+                            onPress={() => 
+                                onConfirmPressed()
+                            }
+                        >
+                            <Text style={styles.textStyle}>Confirm </Text>
+                        </Pressable>
+                        <Pressable
+                            style={[styles.button, styles.button, {backgroundColor: '#cc0000'}]}
                             onPress={() => setModalVisible(!modalVisible)}
                         >
-                            <Text style={styles.textStyle}>Done</Text>
+                            <Text style={styles.textStyle}>Cancel</Text>
                         </Pressable>
+                        </View>
                     </View>
                 </View>
             </Modal>
@@ -164,6 +202,18 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     button: {
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 10,
+        paddingHorizontal: 32,
+        margin: 2,
+        borderRadius: 16,
+        elevation: 3,
+        backgroundColor: 'black',
+        width: '48%',
+    },
+    buttonOld: {
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
@@ -224,4 +274,8 @@ const styles = StyleSheet.create({
         fontSize: normalize(17),
         color: '#fff',
     },
+    paragraph: {
+        fontSize: normalize(15),
+        textAlign: 'center',
+      },
 });
