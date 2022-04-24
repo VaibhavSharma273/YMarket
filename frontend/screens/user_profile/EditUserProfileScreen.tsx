@@ -1,12 +1,9 @@
-import { MaterialIcons } from '@expo/vector-icons';
 import React, { useContext, useState } from 'react';
 import { TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
 import TextInput from '../../components/TextInput';
 import { Text, View } from '../../components/Themed';
 import UploadImage from '../../components/UploadImage';
-import API from '../../api/ymarket_api';
 import { nameValidator } from '../../helpers/nameValidator';
-import { emailValidator } from '../../helpers/emailValidator';
 import AppContext from '../AppContext';
 import { getToken } from '../../storage/tokenStorage';
 import { hostURL } from '../../constants/url';

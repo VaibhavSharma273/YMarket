@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -14,8 +14,10 @@ import { priceValidator } from '../../helpers/priceValidator';
 
 import { normalize } from '../../components/TextNormalize';
 
-import { getToken, setToken, deleteToken } from '../../storage/tokenStorage';
+import { getToken } from '../../storage/tokenStorage';
 import { hostURL } from '../../constants/url';
+
+import LoadingIndicator from '../../components/LoadingIndicator';
 
 export default function EditPostScreen({ route, navigation }: { route: any; navigation: any }) {
     const { postId, post } = route.params;
@@ -35,6 +37,7 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
         pType = 'Sell';
     }
     const [postType, setPostType] = useState({ value: pType });
+    const [loading, setLoading] = useState(false);
 
     const imageURLs = ['', '', '', '', '', ''];
     const postImageIDs = [-1, -1, -1, -1, -1, -1];
@@ -62,6 +65,17 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
             'Exit Edit a Post?',
             'Your changes will not be saved!',
             [{ text: 'Yes', onPress: () => navigation.goBack() }, { text: 'No' }],
+            {
+                cancelable: true,
+            },
+        );
+    };
+
+    const confirmPopup = async () => {
+        Alert.alert(
+            'Post edited! Refresh to see your changes.',
+            '',
+            [{ text: 'Done', onPress: () => navigation.goBack() }],
             {
                 cancelable: true,
             },
@@ -196,19 +210,18 @@ export default function EditPostScreen({ route, navigation }: { route: any; navi
                 .catch((error) => {
                     console.log(error.response);
                 });
+
+            setLoading(false);
+            await confirmPopup();
         };
 
-        const confirmPopup = async () => {
-            editPost();
-            Alert.alert('Post Edited!', '', [{ text: 'Done', onPress: () => navigation.goBack() }], {
-                cancelable: true,
-            });
-        };
-
-        confirmPopup();
+        setLoading(true);
+        editPost();
     };
 
-    return (
+    return loading ? (
+        <LoadingIndicator />
+    ) : (
         <ScrollView>
             <View style={styles.container}>
                 <View style={{ flexDirection: 'row' }}>

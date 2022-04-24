@@ -6,13 +6,13 @@ import React, { useState, useEffect, useContext } from 'react';
 import { normalize, text_styles } from '../../components/TextNormalize';
 import API from '../../api/ymarket_api';
 import TextInput from '../../components/TextInput';
+import ProfilePhoto from '../../components/ProfilePhoto';
 
 import moment from 'moment';
 import { FlatListSlider } from 'react-native-flatlist-slider';
 import RenderImage from './renderImage';
 import AppContext from '../AppContext';
 const windowWidth = Dimensions.get('window').width;
-import ProfilePhoto from '../../components/ProfilePhoto';
 
 export default function ViewPost({ route, navigation }: { route: any; navigation: any }) {
     // Identify post here:
