@@ -88,6 +88,7 @@ class UserSentMessageThreads(mixins.ListModelMixin, generics.GenericAPIView):
         return self.list(request, *args, **kwargs)
 
 class UserReceivedMessageThreads(mixins.ListModelMixin, generics.GenericAPIView):
+    serializer_class = ProfileMessageThreadSerializer
     def get_queryset(self):
         id = self.kwargs['pk']
         print(id)
