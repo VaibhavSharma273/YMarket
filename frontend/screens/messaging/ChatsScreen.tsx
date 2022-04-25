@@ -90,7 +90,6 @@ export default function ChatsScreen({ navigation, route }: any) {
             form_data.append('body', messages[0].text);
             form_data.append('sender', user);
             form_data.append('receiver', recipient.current);
-            console.log(recipient);
             const response = await fetch(path, {
                 method: 'PUT',
                 headers: {
@@ -104,7 +103,7 @@ export default function ChatsScreen({ navigation, route }: any) {
                     console.log('messages update success!');
                 })
                 .catch((error) => {
-                    console.log(error.response);
+                    console.log(error);
                 });
         };
         updateBackend();
