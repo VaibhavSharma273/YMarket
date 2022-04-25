@@ -1,4 +1,4 @@
-import { Image, Text, View, StyleSheet, Dimensions, Pressable, Modal } from 'react-native';
+import { Image, Text, View, StyleSheet, Dimensions, Pressable, Modal, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import mock from './data/mock';
@@ -22,7 +22,7 @@ export default function ViewPost({ route, navigation }: { route: any; navigation
     const date_posted = moment(post.date_posted).utc();
     const myContext = useContext(AppContext);
     const userId = myContext.user;
-    const [firstMsg, setFirstMsg] = useState({ value: ''});
+    const [firstMsg, setFirstMsg] = useState({ value: '' });
 
     // Render images for the post:
     const renderPostContent = () => {
@@ -42,27 +42,38 @@ export default function ViewPost({ route, navigation }: { route: any; navigation
         }
     };
 
-    const onConfirmPressed = async() => {
-        const response = await API.post('api/messages/thread/', {
-           sender: userId,
-           receiver: post.author.id,
-           body: firstMsg.value,
-           title: post.title
-        })
-            .then(function (response) {
-                setModalVisible(!modalVisible)
+    const onConfirmPressed = async () => {
+        const sendMessage = async () => {
+            const response = await API.post('api/messages/thread/', {
+                sender: userId,
+                receiver: post.author.id,
+                body: firstMsg.value,
+                title: post.title,
             })
-            .catch(function (error) {
-                if (error.response) {
-                    console.log(error.response);
-                } else {
-                    console.log(error.toJSON());
-                    console.log('Error', error.message);
-                }
-            });
+                .then((response) => {
+                    setModalVisible(!modalVisible);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        };
 
-
-    }
+        Alert.alert(
+            'Message sent!',
+            '',
+            [
+                {
+                    text: 'Done',
+                    onPress: () => {
+                        sendMessage();
+                    },
+                },
+            ],
+            {
+                cancelable: true,
+            },
+        );
+    };
 
     // Actual detailed view being returned
     return (
@@ -144,21 +155,16 @@ export default function ViewPost({ route, navigation }: { route: any; navigation
                             description
                             blurOnSubmit={true}
                         />
-                        <View style={{flexDirection:'row', alignItems: 'center'}}>
-                        <Pressable
-                            style={[styles.button, styles.button]}
-                            onPress={() => 
-                                onConfirmPressed()
-                            }
-                        >
-                            <Text style={styles.textStyle}>Confirm </Text>
-                        </Pressable>
-                        <Pressable
-                            style={[styles.button, styles.button, {backgroundColor: '#cc0000'}]}
-                            onPress={() => setModalVisible(!modalVisible)}
-                        >
-                            <Text style={styles.textStyle}>Cancel</Text>
-                        </Pressable>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Pressable style={[styles.button, styles.button]} onPress={() => onConfirmPressed()}>
+                                <Text style={styles.textStyle}>Confirm </Text>
+                            </Pressable>
+                            <Pressable
+                                style={[styles.button, styles.button, { backgroundColor: '#cc0000' }]}
+                                onPress={() => setModalVisible(!modalVisible)}
+                            >
+                                <Text style={styles.textStyle}>Cancel</Text>
+                            </Pressable>
                         </View>
                     </View>
                 </View>
@@ -277,5 +283,5 @@ const styles = StyleSheet.create({
     paragraph: {
         fontSize: normalize(15),
         textAlign: 'center',
-      },
+    },
 });

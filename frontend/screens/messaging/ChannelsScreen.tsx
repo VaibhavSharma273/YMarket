@@ -10,10 +10,10 @@ import AppContext from '../AppContext';
 import { getToken, setToken, deleteToken } from '../../storage/tokenStorage';
 import LoadingIndicator from '../../components/LoadingIndicator';
 
-export default function ChannelsScreen({ navigation }: any){
+export default function ChannelsScreen({ navigation }: any) {
     // 0 is received, 1 is sent
     const [selectedType, setSelectedType] = useState(0);
-    const selectedTypeRef = useRef(0)
+    const selectedTypeRef = useRef(0);
     const myContext = useContext(AppContext);
     const userId = myContext.user;
     const [refreshing, setRefreshing] = useState(false);
@@ -22,145 +22,172 @@ export default function ChannelsScreen({ navigation }: any){
     const [loading, setLoading] = useState(true);
 
     const onRefresh = useCallback(async () => {
-      setRefreshing(true);
-      getUserThreads(selectedTypeRef.current);
-      setRefreshing(false);
-  }, [refreshing]);
+        setRefreshing(true);
+        getUserThreads(selectedTypeRef.current);
+        setRefreshing(false);
+    }, [refreshing]);
 
     const getUserThreads = async (isSent: number) => {
-      const received_path = 'api/messages/thread/received/' + userId;
-      const sent_path = 'api/messages/thread/sent/' + userId;
-      if (isSent) {
-        const sent_response = await API.get(sent_path)
-        .then((sent_response) => {
-            setSentThreads(sent_response.data.reverse())
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      } else {
-        const received_response = await API.get(received_path)
-        .then((received_response) => {
-            setReceivedThreads(received_response.data.reverse())
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      }
-      setLoading(false)
+        const received_path = 'api/messages/thread/received/' + userId;
+        const sent_path = 'api/messages/thread/sent/' + userId;
+        if (isSent) {
+            const sent_response = await API.get(sent_path)
+                .then((sent_response) => {
+                    setSentThreads(sent_response.data.reverse());
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        } else {
+            const received_response = await API.get(received_path)
+                .then((received_response) => {
+                    setReceivedThreads(received_response.data.reverse());
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
+        setLoading(false);
     };
 
     useEffect(() => {
-      getUserThreads(0)
-      getUserThreads(1)
+        getUserThreads(0);
+        getUserThreads(1);
     }, []);
 
-    const renderItems = ({ item }: { item:any }) => {
-      const name = (selectedTypeRef.current === 0 ? item.sender.first_name + " " + item.sender.last_name : item.receiver.first_name + " " + item.receiver.last_name )
+    const renderItems = ({ item }: { item: any }) => {
+        const name =
+            selectedTypeRef.current === 0
+                ? item.sender.first_name + ' ' + item.sender.last_name
+                : item.receiver.first_name + ' ' + item.receiver.last_name;
         return (
-            <TouchableOpacity style={styles.listItem} onPress={() =>
-                navigation.push('Chats', { title: name, thread: item.id, user: userId, })}>
-                  <Text style={styles.listItemLabel}>{item.title}</Text>
+            <TouchableOpacity
+                style={styles.listItem}
+                onPress={() => navigation.push('Chats', { title: name, thread: item.id, user: userId })}
+            >
+                <Text style={styles.listItemLabel}>{item.title}</Text>
             </TouchableOpacity>
         );
-    }
+    };
 
     const memoizedThreads = useMemo(() => renderItems, [sentThreads, receivedThreads]);
 
     if (loading) {
-      <LoadingIndicator></LoadingIndicator>
+        <LoadingIndicator></LoadingIndicator>;
     }
 
     return (
         <View style={styles.container}>
             <Header
-             backgroundColor='white'
-             containerStyle={{
-               borderBottomColor: '#e2e2e2',
-               borderBottomWidth: 1
-             }}
+                backgroundColor="white"
+                containerStyle={{
+                    borderBottomColor: '#e2e2e2',
+                    borderBottomWidth: 1,
+                }}
                 centerComponent={<Text style={styles.headerText}>{'Messages'}</Text>}
             />
 
-      <View style={styles.searchActionContainer}>
-        <TouchableOpacity style={[styles.searchActionBtn, styles.searchLeftActionBtn, selectedType === 0 && styles.searchActionBtnActive]} onPress={() => {setSelectedType(0), (selectedTypeRef.current = 0);}}>
-          <Text style={[styles.searchActionLabel, selectedType === 0 && styles.searchActionLabelActive]}>Received</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.searchActionBtn, styles.searchRightActionBtn, selectedType === 1 && styles.searchActionBtnActive]} onPress={() => {setSelectedType(1), (selectedTypeRef.current = 1);}}>
-          <Text style={[styles.searchActionLabel, selectedType === 1 && styles.searchActionLabelActive]}>Sent</Text>
-        </TouchableOpacity>
-      </View>
+            <View style={styles.searchActionContainer}>
+                <TouchableOpacity
+                    style={[
+                        styles.searchActionBtn,
+                        styles.searchLeftActionBtn,
+                        selectedType === 0 && styles.searchActionBtnActive,
+                    ]}
+                    onPress={() => {
+                        setSelectedType(0), (selectedTypeRef.current = 0);
+                    }}
+                >
+                    <Text style={[styles.searchActionLabel, selectedType === 0 && styles.searchActionLabelActive]}>
+                        Received
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={[
+                        styles.searchActionBtn,
+                        styles.searchRightActionBtn,
+                        selectedType === 1 && styles.searchActionBtnActive,
+                    ]}
+                    onPress={() => {
+                        setSelectedType(1), (selectedTypeRef.current = 1);
+                    }}
+                >
+                    <Text style={[styles.searchActionLabel, selectedType === 1 && styles.searchActionLabelActive]}>
+                        Sent
+                    </Text>
+                </TouchableOpacity>
+            </View>
             <View style={styles.list}>
-            <FlatList
-                data={(selectedType ? sentThreads : receivedThreads)}
-                renderItem={memoizedThreads}
-                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-            />
+                <FlatList
+                    data={selectedType ? sentThreads : receivedThreads}
+                    renderItem={memoizedThreads}
+                    refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+                />
             </View>
         </View>
-      );
-    };
-    
-    const styles = StyleSheet.create({
-      container: {
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
         backgroundColor: '#fff',
         flex: 1,
         flexDirection: 'column',
-      },
-      inputContainer: {
+    },
+    inputContainer: {
         marginTop: 8,
-      },
-      input: {
+    },
+    input: {
         borderColor: '#000',
         borderRadius: 8,
         borderWidth: 1,
         fontSize: 16,
         marginHorizontal: 8,
         padding: 12,
-      },
-      searchActionContainer: {
+    },
+    searchActionContainer: {
         borderRadius: 8,
         flexDirection: 'row',
         margin: 8,
-      },
-      searchActionBtn: {
+    },
+    searchActionBtn: {
         backgroundColor: '#fff',
         borderColor: '#000',
         flex: 1,
         fontSize: 16,
-        padding: 8
-      },
-      searchLeftActionBtn: {
+        padding: 8,
+    },
+    searchLeftActionBtn: {
         borderTopLeftRadius: 8,
         borderBottomLeftRadius: 8,
         marginRight: 0,
-      },
-      searchRightActionBtn: {
+    },
+    searchRightActionBtn: {
         borderTopRightRadius: 8,
         borderBottomRightRadius: 8,
         marginLeft: 0,
-      },
-      searchActionBtnActive: {
+    },
+    searchActionBtnActive: {
         backgroundColor: '#0f4d92',
         borderColor: '#0f4d92',
         borderRadius: 5,
-      },
-      searchActionLabel: {
+    },
+    searchActionLabel: {
         color: 'black',
         fontSize: normalize(15),
         textAlign: 'center',
-        fontFamily: 'Arial'
-      },
-      searchActionLabelActive: {
+        fontFamily: 'Arial',
+    },
+    searchActionLabelActive: {
         color: 'white',
         fontSize: normalize(15),
         textAlign: 'center',
-        fontFamily: 'Arial'
-      },
-      list: {
+        fontFamily: 'Arial',
+    },
+    list: {
         flex: 1,
-      },
-      listItem: {
+    },
+    listItem: {
         flex: 1,
         flexDirection: 'row',
         marginHorizontal: 8,
@@ -168,22 +195,21 @@ export default function ChannelsScreen({ navigation }: any){
         paddingBottom: 20,
         alignItems: 'center',
         borderBottomWidth: 1,
-        borderBottomColor: '#e2e2e2'
-      },
-      listItemImage: {
+        borderBottomColor: '#e2e2e2',
+    },
+    listItemImage: {
         width: 32,
         height: 32,
-        marginRight: 8
-      },
-      listItemLabel: {
+        marginRight: 8,
+    },
+    listItemLabel: {
         fontFamily: 'Arial',
         fontSize: normalize(17),
-      },
-      headerText: {
+    },
+    headerText: {
         textAlign: 'center',
         fontWeight: 'bold',
         color: '#0f4d92',
         fontSize: normalize(24),
-      },
-    });
-    
+    },
+});

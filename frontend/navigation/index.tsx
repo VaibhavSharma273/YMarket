@@ -124,7 +124,7 @@ function PostNavigator() {
                 component={ChatsScreen}
                 options={{
                     title: '',
-                    headerShown: false ,
+                    headerShown: false,
                 }}
             />
         </PostStack.Navigator>
@@ -179,7 +179,7 @@ function SearchNavigator() {
             <SearchStack.Screen
                 name="SearchCategory"
                 component={SearchCategoryScreen}
-                options={{ headerTitle: '', headerTransparent: true, }}
+                options={{ headerTitle: '', headerTransparent: true }}
             />
         </SearchStack.Navigator>
     );
@@ -190,17 +190,8 @@ const MessagingStack = createNativeStackNavigator();
 function MessagingNavigator() {
     return (
         <MessagingStack.Navigator initialRouteName="Channels">
-            <MessagingStack.Screen 
-                name="Channels" 
-                component={ChannelsScreen} 
-                options={{ headerShown: false }} 
-            />
-            <MessagingStack.Screen
-                name="Chats"
-                component={ChatsScreen}
-                options={{ title: '',
-                headerShown: false ,}}
-            />
+            <MessagingStack.Screen name="Channels" component={ChannelsScreen} options={{ headerShown: false }} />
+            <MessagingStack.Screen name="Chats" component={ChatsScreen} options={{ title: '', headerShown: false }} />
         </MessagingStack.Navigator>
     );
 }
