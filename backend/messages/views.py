@@ -76,9 +76,6 @@ class MessageThreadDetail(mixins.RetrieveModelMixin,
 
 class UserSentMessageThreads(mixins.ListModelMixin, generics.GenericAPIView):
     serializer_class = ProfileMessageThreadSerializer
-    # filter_backends = [filters.OrderingFilter]
-    # ordering_fields = ['date_posted']
-    # FILTER THESE once dev is merged
 
     def get_queryset(self):
         id = self.kwargs['pk']
@@ -89,6 +86,7 @@ class UserSentMessageThreads(mixins.ListModelMixin, generics.GenericAPIView):
 
 class UserReceivedMessageThreads(mixins.ListModelMixin, generics.GenericAPIView):
     serializer_class = ProfileMessageThreadSerializer
+    
     def get_queryset(self):
         id = self.kwargs['pk']
         print(id)
