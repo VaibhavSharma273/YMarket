@@ -1,1 +1,1 @@
-export const hostURL = 'http://172.27.194.163:8000/';
+export const hostURL = 'http://<IP ADDRESS>:8000/';

@@ -175,13 +175,16 @@ export default function ChatsScreen({ navigation, route }: any) {
             <View style={styles.header}>
                 <TouchableOpacity
                     style={{
-                        marginRight: '10%',
+                        paddingLeft: 15,
                     }}
                     onPress={() => navigation.goBack()}
                 >
-                    <FontAwesome name="angle-left" color="#0F4D92" size={30} style={{ marginBottom: -3 }} />
+                    <FontAwesome name="angle-left" color="#0F4D92" size={30} />
                 </TouchableOpacity>
-                <Text style={styles.headerText}>{title}</Text>
+                <View style={styles.name_container}>
+                    <Text style={styles.headerText}>{title}</Text>
+                </View>
+                <View style={{ paddingRight: 15 }} />
             </View>
             <View
                 style={{
@@ -231,6 +234,10 @@ const styles = StyleSheet.create({
         height: 1,
         width: '80%',
     },
+    name_container: {
+        justifyContent: 'center',
+        paddingRight: 10,
+    },
     headerText: {
         textAlign: 'center',
         fontWeight: 'bold',
@@ -239,8 +246,7 @@ const styles = StyleSheet.create({
     },
     header: {
         paddingTop: '15%',
-        marginStart: '4%',
         flexDirection: 'row',
-        alignItems: 'center',
+        justifyContent: 'space-between',
     },
 });
