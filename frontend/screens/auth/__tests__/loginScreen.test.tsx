@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow, mount, ShallowWrapper } from 'enzyme';
-import LoginScreen from '../auth/LoginScreen';
-import { createTestProps, findByTestAttr } from '../../jest.setup';
+import LoginScreen from '../LoginScreen';
+import { createTestProps, findByTestAttr } from '../../../jest.setup';
 import { render, fireEvent } from '@testing-library/react-native';
 import renderer from 'react-test-renderer';
 
