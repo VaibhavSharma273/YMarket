@@ -16,7 +16,7 @@ export default function ChatsScreen({ navigation, route }: any){
     const user = route.params.user
     const testTitle = 'test'
     const title = (route.params.title ? route.params.title : testTitle)
-    const [recipient, setRecipient] = useState('')
+    const recipient = useRef('')
 
     var message_id = 0;
     var messageList: never[] = []
@@ -32,11 +32,13 @@ export default function ChatsScreen({ navigation, route }: any){
 
               if (sender == user)
               {
-                setRecipient(receiver)
+                recipient.current = receiver
+                // setRecipient(receiver)
               }
               else
               {
-                setRecipient(sender)
+                recipient.current = sender
+                // setRecipient(sender)
               }
 
               messageList = message_list
@@ -89,7 +91,7 @@ export default function ChatsScreen({ navigation, route }: any){
       const form_data = new FormData();
       form_data.append('body', messages[0].text);
       form_data.append('sender', user);
-      form_data.append('receiver', recipient);
+      form_data.append('receiver', recipient.current);
       console.log(recipient)
       const response = await fetch(path, {
           method: 'PUT',

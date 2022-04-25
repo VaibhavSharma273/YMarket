@@ -27,7 +27,7 @@ export default function ChannelsScreen({ navigation }: any){
       const rresponse = await API.get(rpath)
           .then((rresponse) => {
               received_convos = rresponse.data;
-              console.log(received_convos)
+              // console.log(received_convos)
           })
           .catch((error) => {
             console.log(error);
@@ -36,7 +36,7 @@ export default function ChannelsScreen({ navigation }: any){
       const sresponse = await API.get(spath)
         .then((sresponse) => {
             sent_convos = sresponse.data;
-            console.log(sent_convos)
+            // console.log(sent_convos)
         })
         .catch((error) => {
           console.log(error);
@@ -94,9 +94,9 @@ export default function ChannelsScreen({ navigation }: any){
             />
             </View>
 
-            <TouchableOpacity  onPress={onLogoutPressed} test-id="login-button">
-                <Text>Test</Text>
-            </TouchableOpacity>
+            {/* <TouchableOpacity  onPress={onLogoutPressed} test-id="login-button">
+                <Text>Test÷</Text>
+            </TouchableOpacity> */}
 
         </View>
       );
