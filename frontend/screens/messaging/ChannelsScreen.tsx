@@ -1,6 +1,6 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useRef, useCallback, useMemo } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Platform, StyleSheet, TextInput, TouchableOpacity, FlatList } from 'react-native';
+import { Platform, StyleSheet, TextInput, TouchableOpacity, FlatList, RefreshControl } from 'react-native';
 import { normalize } from '../../components/TextNormalize';
 import { Text, View } from '../../components/Themed';
 import mock from '../messaging/data/channels_mock';
@@ -8,47 +8,73 @@ import { Header } from 'react-native-elements';
 import API from '../../api/ymarket_api';
 import AppContext from '../AppContext';
 import { getToken, setToken, deleteToken } from '../../storage/tokenStorage';
+import LoadingIndicator from '../../components/LoadingIndicator';
 
 export default function ChannelsScreen({ navigation }: any){
     // 0 is received, 1 is sent
     const [selectedType, setSelectedType] = useState(0);
+    const selectedTypeRef = useRef(0)
     const myContext = useContext(AppContext);
     const userId = myContext.user;
-    const [user, setUser] = useState({ received: [], sent: [],});
+    const [refreshing, setRefreshing] = useState(false);
+    const [sentThreads, setSentThreads] = useState<Array<any>>([]);
+    const [receivedThreads, setReceivedThreads] = useState<Array<any>>([]);
 
-    const updateSelectedType = (selectedType: number) => () => {
-        setSelectedType(() => selectedType);
-      };
+    const onRefresh = useCallback(async () => {
+      setRefreshing(true);
+      getUserThreads(selectedTypeRef.current);
+      setRefreshing(false);
+  }, [refreshing]);
 
-    const getUserThreads = async () => {
-      const rpath = 'api/messages/thread/received/' + userId;
-      var received_convos: never[] = []
-      var sent_convos: never[] = []
-      const rresponse = await API.get(rpath)
-          .then((rresponse) => {
-              received_convos = rresponse.data;
-              console.log(received_convos)
-          })
-          .catch((error) => {
-            console.log(error);
-        });
-      const spath = 'api/messages/thread/sent/' + userId;
-      const sresponse = await API.get(spath)
-        .then((sresponse) => {
-            sent_convos = sresponse.data;
-            console.log(sent_convos)
+    const getUserThreads = async (isSent: number) => {
+      const received_path = 'api/messages/thread/received/' + userId;
+      const sent_path = 'api/messages/thread/sent/' + userId;
+      if (isSent) {
+        const sent_response = await API.get(sent_path)
+        .then((sent_response) => {
+            setSentThreads(sent_response.data)
         })
         .catch((error) => {
           console.log(error);
-      });
-      setUser({received: received_convos, sent: sent_convos})
+        });
+      } else {
+        const received_response = await API.get(received_path)
+        .then((received_response) => {
+            setReceivedThreads(received_response.data)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      }
+      // var received_convos: never[] = []
+      // var sent_convos: never[] = []
+      // const rresponse = await API.get(rpath)
+      //     .then((rresponse) => {
+      //         received_convos = rresponse.data;
+      //         setReceivedThreads(received_convos)
+      //         // console.log(received_convos)
+      //     })
+      //     .catch((error) => {
+      //       console.log(error);
+      //   });
+      // const spath = 'api/messages/thread/sent/' + userId;
+      // const sresponse = await API.get(spath)
+      //   .then((sresponse) => {
+      //       sent_convos = sresponse.data;
+      //       setSentThreads(sent_convos)
+      //       // console.log(sent_convos)
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      // });
+      // setUser({received: received_convos, sent: sent_convos})
 
     };
 
     useEffect(() => {
-      getUserThreads();
+      getUserThreads(0)
+      getUserThreads(1)
     }, []);
-
 
     const renderItems = ({ item }: { item:any }) => {
         return (
@@ -59,14 +85,7 @@ export default function ChannelsScreen({ navigation }: any){
         );
     }
 
-    const onLogoutPressed = async () => {
-      await API.post('/api/users/logout/').catch((error) => console.log(error.response.data));
-
-      await deleteToken('access');
-      await deleteToken('refresh');
-      myContext.logout();
-  };
-
+    const memoizedThreads = useMemo(() => renderItems, [sentThreads, receivedThreads]);
 
     return (
         <View style={styles.container}>
@@ -80,23 +99,24 @@ export default function ChannelsScreen({ navigation }: any){
             />
 
       <View style={styles.searchActionContainer}>
-        <TouchableOpacity style={[styles.searchActionBtn, styles.searchLeftActionBtn, selectedType === 0 && styles.searchActionBtnActive]} onPress={updateSelectedType(0)}>
+        <TouchableOpacity style={[styles.searchActionBtn, styles.searchLeftActionBtn, selectedType === 0 && styles.searchActionBtnActive]} onPress={() => {setSelectedType(0), (selectedTypeRef.current = 0);}}>
           <Text style={[styles.searchActionLabel, selectedType === 0 && styles.searchActionLabelActive]}>Received</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.searchActionBtn, styles.searchRightActionBtn, selectedType === 1 && styles.searchActionBtnActive]} onPress={updateSelectedType(1)}>
+        <TouchableOpacity style={[styles.searchActionBtn, styles.searchRightActionBtn, selectedType === 1 && styles.searchActionBtnActive]} onPress={() => {setSelectedType(1), (selectedTypeRef.current = 1);}}>
           <Text style={[styles.searchActionLabel, selectedType === 1 && styles.searchActionLabelActive]}>Sent</Text>
         </TouchableOpacity>
       </View>
             <View style={styles.list}>
             <FlatList
-                data={(selectedType == 0 ? user.received : user.sent)}
-                renderItem={renderItems}
+                data={(selectedType ? sentThreads : receivedThreads)}
+                renderItem={memoizedThreads}
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
             />
             </View>
 
-            <TouchableOpacity  onPress={onLogoutPressed} test-id="login-button">
-                <Text>Test</Text>
-            </TouchableOpacity>
+            {/* <TouchableOpacity  onPress={onLogoutPressed} test-id="login-button">
+                <Text>Test÷</Text>
+            </TouchableOpacity> */}
 
         </View>
       );

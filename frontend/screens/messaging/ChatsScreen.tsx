@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useLayoutEffect, useRef } from 'react';
-import { Platform, StyleSheet, TouchableOpacity, Vibration,} from 'react-native';
+import { Platform, RefreshControl, StyleSheet, TouchableOpacity, Vibration,} from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { Header } from 'react-native-elements';
 import { Text, View } from '../../components/Themed';
@@ -11,18 +11,25 @@ import { getToken, setToken, deleteToken } from '../../storage/tokenStorage';
 import { hostURL } from '../../constants/url';
 
 export default function ChatsScreen({ navigation, route }: any){
-    const [messages, setMessages] = useState([]);
+    const [messages, setMessages] = useState<Array<any>>([]);
     const thread_id = route.params.thread
     const user = route.params.user
-    const testTitle = 'test'
+    const testTitle = 'No Title'
     const title = (route.params.title ? route.params.title : testTitle)
-    const [recipient, setRecipient] = useState('')
+    const recipient = useRef('')
+    const [refreshing, setRefreshing] = useState(false);
 
-    var message_id = 0;
-    var messageList: never[] = []
-    var messagesArray: never[] = []
+    const onRefresh = useCallback(async () => {
+      setRefreshing(true);
+      getThread()
+      setRefreshing(false);
+  }, [refreshing]);
 
     const getThread = async () => {
+      var message_id = 0
+      var messageList: any[] = []
+      var messagesArray: any[] = []
+
       const path = 'api/messages/thread/' + thread_id;
       const response = await API.get(path)
           .then((response) => {
@@ -32,11 +39,13 @@ export default function ChatsScreen({ navigation, route }: any){
 
               if (sender == user)
               {
-                setRecipient(receiver)
+                recipient.current = receiver
+                // setRecipient(receiver)
               }
               else
               {
-                setRecipient(sender)
+                recipient.current = sender
+                // setRecipient(sender)
               }
 
               messageList = message_list
@@ -59,6 +68,8 @@ export default function ChatsScreen({ navigation, route }: any){
         });
         message_id = message_id + 1;
       }
+
+      console.log(messagesArray.length)
 
       setMessages(messagesArray)
     }
@@ -89,7 +100,7 @@ export default function ChatsScreen({ navigation, route }: any){
       const form_data = new FormData();
       form_data.append('body', messages[0].text);
       form_data.append('sender', user);
-      form_data.append('receiver', recipient);
+      form_data.append('receiver', recipient.current);
       console.log(recipient)
       const response = await fetch(path, {
           method: 'PUT',
@@ -205,10 +216,19 @@ export default function ChatsScreen({ navigation, route }: any){
       }}
       renderAvatar={null}
       renderTime ={renderTime}
+      listViewProps={{
+        inverted: true,
+        refreshControl: <RefreshControl
+        refreshing={refreshing}
+        onRefresh={onRefresh}
+      />
+      }}
     />
     </View>
   )
 }
+
+// refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 
 const styles = StyleSheet.create({
     container: {

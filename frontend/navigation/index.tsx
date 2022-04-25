@@ -235,7 +235,7 @@ function BottomTabNavigator() {
                 component={CreateNavigator}
                 options={({ navigation }: RootTabScreenProps<'CreateStack'>) => ({
                     title: 'Post',
-                    tabBarIcon: ({ color }) => <TabBarIcon name="tag" color={color} />,
+                    tabBarIcon: ({ color }) => <TabBarIcon name="plus" color={color} />,
                 })}
             />
             <BottomTab.Screen
