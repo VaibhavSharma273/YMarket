@@ -115,7 +115,7 @@ export default function ChatsScreen({ navigation, route }: any) {
             <Bubble
                 {...props}
                 wrapperStyle={{
-                    left: { backgroundColor: 'lightgray', padding: 4 },
+                    left: { backgroundColor: '#ededed', padding: 4 },
                     right: { backgroundColor: '#0F4D92', padding: 4 },
                 }}
             />
@@ -138,11 +138,11 @@ export default function ChatsScreen({ navigation, route }: any) {
             {...props}
             containerStyle={{
                 paddingTop: 6,
-                backgroundColor: '#d3d3d3',
+                backgroundColor: '#ededed',
                 borderRadius: 10,
                 borderWidth: 1,
-                borderColor: '#d3d3d3',
-                borderTopColor: '#d3d3d3',
+                borderColor: '#ededed',
+                borderTopColor: '#ededed',
                 marginHorizontal: 10,
                 marginBottom: 10,
             }}
