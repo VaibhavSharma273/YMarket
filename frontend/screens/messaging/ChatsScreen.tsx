@@ -115,7 +115,7 @@ export default function ChatsScreen({ navigation, route }: any){
       <Bubble
         {...props}
         wrapperStyle={{
-            left: {backgroundColor: 'gray', padding: 4},
+            left: {backgroundColor: '#A9A9A9', padding: 4},
             right: {backgroundColor: '#0F4D92', padding: 4},
         }}
       />
@@ -142,7 +142,7 @@ export default function ChatsScreen({ navigation, route }: any){
         borderWidth: 1,
         borderColor: '#d3d3d3',
         borderTopColor: '#d3d3d3',
-      }}
+        marginHorizontal: 7      }}
       primaryStyle={{ alignItems: 'center' }}
     />
   );
@@ -151,6 +151,7 @@ export default function ChatsScreen({ navigation, route }: any){
     <Composer
       {...props}
       placeholderTextColor= {'gray'}
+      containerStyle = {{margin: 10}}
     />
   );
 
@@ -172,21 +173,25 @@ export default function ChatsScreen({ navigation, route }: any){
 
   return (
     <View style={{ backgroundColor: 'white', flex: 1 }}>
-      <Header
-        backgroundColor='white'
-        containerStyle={{
-          borderBottomColor: '#e2e2e2',
-          borderBottomWidth: 1
+      <View style={styles.header}>
+        <TouchableOpacity style={{
+          marginRight: '10%'
         }}
-        leftComponent={ <TouchableOpacity style={{
-                  marginRight: 10
-              }}
-                  onPress={ () => navigation.goBack() }
-              >
-                <FontAwesome name="angle-left" color='#0F4D92' size={30} style={{ marginBottom: -3 }}/>
-              </TouchableOpacity>}
-        centerComponent={<Text style={styles.headerText}>{title}</Text>}
+          onPress={ () => navigation.goBack() }>
+        <FontAwesome name="angle-left" color='#0F4D92' size={30} style={{ marginBottom: -3 }}/>
+      </TouchableOpacity>
+      <Text style={styles.headerText}>{title}</Text>
+      </View>
+      <View
+        style={{
+        borderBottomColor: '#d3d3d3',
+        borderBottomWidth: 1,
+        width: '95%',
+        alignSelf:'center',
+        paddingTop: '3%'
+      }}
       />
+
     <GiftedChat
       messages={messages}
       scrollToBottom = {true}
@@ -224,6 +229,12 @@ const styles = StyleSheet.create({
       textAlign: 'center',
       fontWeight: 'bold',
       color: '#0f4d92',
-      fontSize: normalize(20),
+      fontSize: normalize(17),
+    },
+    header: {
+      paddingTop: '15%',
+      marginStart: '4%',
+      flexDirection: 'row',
+      alignItems: 'center',
     },
 });
