@@ -19,6 +19,7 @@ export default function ChannelsScreen({ navigation }: any){
     const [refreshing, setRefreshing] = useState(false);
     const [sentThreads, setSentThreads] = useState<Array<any>>([]);
     const [receivedThreads, setReceivedThreads] = useState<Array<any>>([]);
+    const [loading, setLoading] = useState(true);
 
     const onRefresh = useCallback(async () => {
       setRefreshing(true);
@@ -32,7 +33,7 @@ export default function ChannelsScreen({ navigation }: any){
       if (isSent) {
         const sent_response = await API.get(sent_path)
         .then((sent_response) => {
-            setSentThreads(sent_response.data)
+            setSentThreads(sent_response.data.reverse())
         })
         .catch((error) => {
           console.log(error);
@@ -40,35 +41,13 @@ export default function ChannelsScreen({ navigation }: any){
       } else {
         const received_response = await API.get(received_path)
         .then((received_response) => {
-            setReceivedThreads(received_response.data)
+            setReceivedThreads(received_response.data.reverse())
         })
         .catch((error) => {
           console.log(error);
         });
       }
-      // var received_convos: never[] = []
-      // var sent_convos: never[] = []
-      // const rresponse = await API.get(rpath)
-      //     .then((rresponse) => {
-      //         received_convos = rresponse.data;
-      //         setReceivedThreads(received_convos)
-      //         // console.log(received_convos)
-      //     })
-      //     .catch((error) => {
-      //       console.log(error);
-      //   });
-      // const spath = 'api/messages/thread/sent/' + userId;
-      // const sresponse = await API.get(spath)
-      //   .then((sresponse) => {
-      //       sent_convos = sresponse.data;
-      //       setSentThreads(sent_convos)
-      //       // console.log(sent_convos)
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      // });
-      // setUser({received: received_convos, sent: sent_convos})
-
+      setLoading(false)
     };
 
     useEffect(() => {
@@ -77,15 +56,20 @@ export default function ChannelsScreen({ navigation }: any){
     }, []);
 
     const renderItems = ({ item }: { item:any }) => {
+      const name = (selectedTypeRef.current === 0 ? item.sender.first_name + " " + item.sender.last_name : item.receiver.first_name + " " + item.receiver.last_name )
         return (
             <TouchableOpacity style={styles.listItem} onPress={() =>
-                navigation.push('Chats', { title: (selectedType == 0 ? item.sender.email : item.receiver.email), thread: item.id, user: userId, })}>
+                navigation.push('Chats', { title: name, thread: item.id, user: userId, })}>
                   <Text style={styles.listItemLabel}>{item.title}</Text>
             </TouchableOpacity>
         );
     }
 
     const memoizedThreads = useMemo(() => renderItems, [sentThreads, receivedThreads]);
+
+    if (loading) {
+      <LoadingIndicator></LoadingIndicator>
+    }
 
     return (
         <View style={styles.container}>
@@ -113,11 +97,6 @@ export default function ChannelsScreen({ navigation }: any){
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
             />
             </View>
-
-            {/* <TouchableOpacity  onPress={onLogoutPressed} test-id="login-button">
-                <Text>Test÷</Text>
-            </TouchableOpacity> */}
-
         </View>
       );
     };

@@ -1,13 +1,11 @@
 import React, { useState, useCallback, useEffect, useLayoutEffect, useRef } from 'react';
-import { Platform, RefreshControl, StyleSheet, TouchableOpacity, Vibration,} from 'react-native';
+import { RefreshControl, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { Header } from 'react-native-elements';
 import { Text, View } from '../../components/Themed';
-import { GiftedChat, Bubble, InputToolbar, Message, MessageText, Composer, Time, Avatar } from 'react-native-gifted-chat';
+import { GiftedChat, Bubble, InputToolbar, MessageText, Composer, Time } from 'react-native-gifted-chat';
 import { normalize } from '../../components/TextNormalize';
 import API from '../../api/ymarket_api';
-import mock from '../messaging/data/mock';
-import { getToken, setToken, deleteToken } from '../../storage/tokenStorage';
+import { getToken } from '../../storage/tokenStorage';
 import { hostURL } from '../../constants/url';
 
 export default function ChatsScreen({ navigation, route }: any){
@@ -37,19 +35,16 @@ export default function ChatsScreen({ navigation, route }: any){
               const sender = response.data.sender
               const receiver = response.data.receiver
 
-              if (sender == user)
+              if (sender === user)
               {
                 recipient.current = receiver
-                // setRecipient(receiver)
               }
               else
               {
                 recipient.current = sender
-                // setRecipient(sender)
               }
 
               messageList = message_list
-              console.log('get request:' + message_list)
           })
           .catch((error) => {
             console.log(error);
@@ -68,9 +63,6 @@ export default function ChatsScreen({ navigation, route }: any){
         });
         message_id = message_id + 1;
       }
-
-      console.log(messagesArray.length)
-
       setMessages(messagesArray)
     }
 
@@ -126,7 +118,7 @@ export default function ChatsScreen({ navigation, route }: any){
       <Bubble
         {...props}
         wrapperStyle={{
-            left: {backgroundColor: '#A9A9A9', padding: 4},
+            left: {backgroundColor: 'lightgray', padding: 4},
             right: {backgroundColor: '#0F4D92', padding: 4},
         }}
       />
@@ -137,7 +129,7 @@ export default function ChatsScreen({ navigation, route }: any){
     <MessageText
       {...props}
       textStyle={{
-        left: { color: 'white' },
+        left: { color: 'black' },
         right: { color: 'white' },
       }}
       customTextStyle={{ fontSize: normalize(15), lineHeight: normalize(15) }}
@@ -153,7 +145,8 @@ export default function ChatsScreen({ navigation, route }: any){
         borderWidth: 1,
         borderColor: '#d3d3d3',
         borderTopColor: '#d3d3d3',
-        marginHorizontal: 7      }}
+        marginHorizontal: 10,
+      marginBottom: 10      }}
       primaryStyle={{ alignItems: 'center' }}
     />
   );
@@ -172,10 +165,10 @@ export default function ChatsScreen({ navigation, route }: any){
       {...props}
         timeTextStyle={{
           left: {
-            color: '#d3d3d3',
+            color: 'black',
           },
           right: {
-            color: '#d3d3d3',
+            color: 'white',
           },
         }}
       />
@@ -186,7 +179,7 @@ export default function ChatsScreen({ navigation, route }: any){
     <View style={{ backgroundColor: 'white', flex: 1 }}>
       <View style={styles.header}>
         <TouchableOpacity style={{
-          marginRight: '10%'
+          marginRight: '10%',
         }}
           onPress={ () => navigation.goBack() }>
         <FontAwesome name="angle-left" color='#0F4D92' size={30} style={{ marginBottom: -3 }}/>
@@ -210,6 +203,7 @@ export default function ChatsScreen({ navigation, route }: any){
       renderInputToolbar={renderInputToolbar}
       renderMessageText={renderMessageText}
       renderComposer = {renderComposer}
+      renderChatFooter={() => <View style={{ height: "5%" }} />}
       onSend={messages => onSend(messages)}
       user={{
         _id: 1,
@@ -227,8 +221,6 @@ export default function ChatsScreen({ navigation, route }: any){
     </View>
   )
 }
-
-// refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 
 const styles = StyleSheet.create({
     container: {
