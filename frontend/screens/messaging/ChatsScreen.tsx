@@ -11,7 +11,7 @@ import { getToken, setToken, deleteToken } from '../../storage/tokenStorage';
 import { hostURL } from '../../constants/url';
 
 export default function ChatsScreen({ navigation, route }: any){
-    const [messages, setMessages] = useState([]);
+    const [messages, setMessages] = useState<Array<any>>([]);
     const thread_id = route.params.thread
     const user = route.params.user
     const testTitle = 'test'
@@ -19,8 +19,8 @@ export default function ChatsScreen({ navigation, route }: any){
     const recipient = useRef('')
 
     var message_id = 0;
-    var messageList: never[] = []
-    var messagesArray: never[] = []
+    var messageList: any[] = []
+    var messagesArray: any[] = []
 
     const getThread = async () => {
       const path = 'api/messages/thread/' + thread_id;
