@@ -59,7 +59,7 @@ export default function ViewPost({ route, navigation }: { route: any; navigation
         };
 
         Alert.alert(
-            'Message sent!',
+            'Message sent! Refresh to see your new conversation about this post.',
             '',
             [
                 {
