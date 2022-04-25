@@ -1,0 +1,111 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Post Display component matches the snapshot 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "transparent",
+      "borderRadius": 16,
+      "elevation": 3,
+      "shadowColor": "#000",
+      "shadowOffset": Object {
+        "height": 1,
+        "width": 0,
+      },
+      "shadowOpacity": 0.22,
+      "shadowRadius": 2.22,
+    }
+  }
+>
+  <View
+    accessible={true}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "backgroundColor": "#fff",
+        "borderRadius": 16,
+        "marginBottom": 10,
+        "marginLeft": 20,
+        "marginRight": 20,
+        "marginTop": 10,
+        "opacity": 1,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "flex": 1,
+          "minHeight": 320,
+        }
+      }
+    >
+      <Image
+        source={
+          Object {
+            "uri": "https://cdn.shopify.com/s/files/1/0124/5662/4187/products/102078ba05f00ead3aec6f240ab7ebaf_46b686dd-2ac4-4d7b-9ac1-001770a055f5_1000x1000.jpg?v=1620184068",
+          }
+        }
+        style={
+          Object {
+            "aspectRatio": 1,
+            "borderTopLeftRadius": 16,
+            "borderTopRightRadius": 16,
+            "flex": 1,
+          }
+        }
+      />
+    </View>
+    <View
+      style={
+        Object {
+          "flexDirection": "row",
+          "padding": 8,
+          "paddingLeft": 16,
+        }
+      }
+    >
+      <Text
+        numberOfLines={2}
+        style={
+          Array [
+            Object {
+              "fontSize": 37,
+            },
+            Object {
+              "flex": 4,
+              "fontWeight": "600",
+            },
+          ]
+        }
+      >
+        Chair
+      </Text>
+      <Text
+        numberOfLines={1}
+        style={
+          Array [
+            Object {
+              "fontSize": 37,
+            },
+            Object {
+              "flex": 2,
+              "textAlign": "right",
+            },
+          ]
+        }
+      >
+        $
+        90
+      </Text>
+    </View>
+  </View>
+</View>
+`;

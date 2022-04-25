@@ -45,8 +45,10 @@ INSTALLED_APPS = [
     'allauth.account',
     'dj_rest_auth',
     'dj_rest_auth.registration',
+    'django_filters',
     'posts.apps.PostsConfig', 
     'users.apps.UsersConfig',
+    'messages.apps.MessagesConfig',
 ]
 
 MIDDLEWARE = [
@@ -114,7 +116,7 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 # simplejwt
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
 }
 
 # dj-rest-auth
@@ -185,8 +187,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
     ],
-    # "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
-    # "PAGE_SIZE": 10
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination"
 }
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media') 

@@ -5,8 +5,10 @@ from posts.permissions import IsOwnerOrReadOnly, IsPostOwnerOrReadOnly
 from rest_framework import mixins
 from rest_framework import generics
 from rest_framework import status
+from rest_framework import filters
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
 
 from django.db.models import Q 
 
@@ -15,15 +17,13 @@ from posts.imgur_helpers import upload_image_imgur
 class PostList(mixins.ListModelMixin,
                   mixins.CreateModelMixin,
                   generics.GenericAPIView):
+    queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated]
-
-    def get_queryset(self): 
-        queryset = Post.objects.all() 
-        query = self.request.GET.get("search") 
-        if query is not None: 
-            queryset = queryset.filter(Q(title__icontains=query) | Q(content__icontains=query)).distinct() 
-        return queryset 
+    filter_backends = [filters.OrderingFilter, filters.SearchFilter, DjangoFilterBackend]
+    ordering_fields = ['date_posted']
+    filterset_fields = ['is_buy']
+    search_fields = ['title', 'content', 'category']
 
     def perform_create(self, serializer):
         return serializer.save(author=self.request.user)
@@ -45,6 +45,18 @@ class PostList(mixins.ListModelMixin,
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
+
+class UserPostList(mixins.ListModelMixin, generics.GenericAPIView):
+    serializer_class = PostSerializer
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['date_posted']
+
+    def get_queryset(self):
+        id = self.kwargs['pk']
+        return Post.objects.filter(author=id)
+    
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
 
 class PostDetail(mixins.RetrieveModelMixin,
                     mixins.UpdateModelMixin,

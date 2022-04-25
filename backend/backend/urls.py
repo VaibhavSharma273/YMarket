@@ -22,4 +22,5 @@ urlpatterns = [
     path('api/', include("posts.urls")),
     path('api/users/', include('users.urls')),
     path('api/token/refresh/', get_refresh_view().as_view(), name='token_refresh'),
+    path('api/messages/', include("messages.urls")),
 ]
