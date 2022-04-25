@@ -96,7 +96,7 @@ exports[`Post Display component matches the snapshot 1`] = `
               "fontSize": 37,
             },
             Object {
-              "flex": 1,
+              "flex": 2,
               "textAlign": "right",
             },
           ]
