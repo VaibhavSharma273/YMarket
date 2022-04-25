@@ -6,16 +6,17 @@ from posts.serializers import AuthorSerializer
 UserModel = get_user_model()
 
 class MessageSerializer(serializers.ModelSerializer):
-     class Meta:
+    class Meta:
         model = Message
-        fields = ['body', 'thread', 'sender', 'receiver', 'sent_at']
+        fields = ['body', 'sender', 'receiver', 'sent_at']
 
 class MessageThreadSerializer(serializers.ModelSerializer):
     messages = MessageSerializer(many=True, read_only=True)
+    title = serializers.CharField(required=False)
 
     class Meta:
         model = MessageThread
-        fields = ['title', 'sender', 'receiver', 'messages']
+        fields = ['id', 'title', 'sender', 'receiver', 'messages']
 
 class ProfileMessageThreadSerializer(serializers.ModelSerializer):
     sender = AuthorSerializer(read_only=True)

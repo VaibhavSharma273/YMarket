@@ -1,7 +1,7 @@
 from messages.models import MessageThread, Message
 from django.contrib.auth import get_user_model
 
-from messages.serializers import MessageSerializer, MessageThreadSerializer
+from messages.serializers import MessageSerializer, MessageThreadSerializer, ProfileMessageThreadSerializer
 from rest_framework import mixins
 from rest_framework import generics
 from rest_framework import status
@@ -73,3 +73,24 @@ class MessageThreadDetail(mixins.RetrieveModelMixin,
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
+
+class UserSentMessageThreads(mixins.ListModelMixin, generics.GenericAPIView):
+    serializer_class = ProfileMessageThreadSerializer
+
+    def get_queryset(self):
+        id = self.kwargs['pk']
+        return MessageThread.objects.filter(sender=id)
+    
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+class UserReceivedMessageThreads(mixins.ListModelMixin, generics.GenericAPIView):
+    serializer_class = ProfileMessageThreadSerializer
+    
+    def get_queryset(self):
+        id = self.kwargs['pk']
+        print(id)
+        return MessageThread.objects.filter(receiver=id)
+    
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)

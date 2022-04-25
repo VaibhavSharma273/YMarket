@@ -16,13 +16,13 @@ class Message(models.Model):
     A private message from user to user
     """
     body = models.TextField()
-    thread = models.ForeignKey(MessageThread, related_name='messages', on_delete= models.CASCADE)
+    thread = models.ForeignKey(MessageThread, related_name='messages', on_delete=models.CASCADE, blank=True)
     sender = models.ForeignKey(AUTH_USER_MODEL, related_name='sent_messages', on_delete=models.CASCADE)
     receiver = models.ForeignKey(AUTH_USER_MODEL, related_name='received_messages', on_delete=models.CASCADE)
     sent_at = models.DateTimeField(null=True, blank=True, auto_now_add=True)
 
     class Meta:
-        ordering = ['-sent_at']
+        ordering = ['sent_at']
 
     def __str__(self):
         return self.body

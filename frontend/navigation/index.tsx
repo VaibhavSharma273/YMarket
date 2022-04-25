@@ -28,6 +28,8 @@ import LoginScreen from '../screens/auth/LoginScreen';
 import SplashScreen from '../screens/auth/SplashScreen';
 import FeedScreen from '../screens/feed/FeedScreen';
 import ViewPostScreen from '../screens/feed/ViewPostScreen';
+import ChannelsScreen from '../screens/messaging/ChannelsScreen';
+import ChatsScreen from '../screens/messaging/ChatsScreen';
 import { AuthTabParamList, RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 
@@ -117,6 +119,14 @@ function PostNavigator() {
                     title: '',
                 }}
             />
+            <PostStack.Screen
+                name="Chats"
+                component={ChatsScreen}
+                options={{
+                    title: '',
+                    headerShown: false,
+                }}
+            />
         </PostStack.Navigator>
     );
 }
@@ -139,6 +149,14 @@ function ProfileNavigator() {
                 component={EditUserProfileScreen}
                 options={{
                     title: '',
+                }}
+            />
+            <PostStack.Screen
+                name="ViewPost"
+                component={ViewPostScreen}
+                options={{
+                    title: '',
+                    headerTintColor: '#0f4d92',
                 }}
             />
         </Profile.Navigator>
@@ -164,6 +182,17 @@ function SearchNavigator() {
                 options={{ headerTitle: '', headerTransparent: true }}
             />
         </SearchStack.Navigator>
+    );
+}
+
+const MessagingStack = createNativeStackNavigator();
+
+function MessagingNavigator() {
+    return (
+        <MessagingStack.Navigator initialRouteName="Channels">
+            <MessagingStack.Screen name="Channels" component={ChannelsScreen} options={{ headerShown: false }} />
+            <MessagingStack.Screen name="Chats" component={ChatsScreen} options={{ title: '', headerShown: false }} />
+        </MessagingStack.Navigator>
     );
 }
 
@@ -206,6 +235,14 @@ function BottomTabNavigator() {
                 options={({ navigation }: RootTabScreenProps<'SearchStack'>) => ({
                     title: 'Search',
                     tabBarIcon: ({ color }) => <TabBarIcon name="search" color={color} />,
+                })}
+            />
+            <BottomTab.Screen
+                name="Messages"
+                component={MessagingNavigator}
+                options={({ navigation }: RootTabScreenProps<'Messages'>) => ({
+                    title: 'Messages',
+                    tabBarIcon: ({ color }) => <TabBarIcon name="comments-o" color={color} />,
                 })}
             />
             <BottomTab.Screen

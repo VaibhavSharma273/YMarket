@@ -29,6 +29,7 @@ export type RootTabParamList = {
   CreateStack: undefined;
   Profile: undefined;
   SearchStack: undefined;
+  Messages: undefined;
 };
 
 export type AuthTabParamList = {
